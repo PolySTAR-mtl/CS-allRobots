@@ -10,6 +10,7 @@
 #include "PID.h"
 #include "can.h"
 #include "leds.h"
+#include "tim.h"
 #include "robot_configuration.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -43,7 +44,6 @@ typedef struct
 	uint16_t    can_tx_id;
 	motor_info_t info;				// Specific info about the motor
 	int type; 								// Type du moteur, ex:GM6020
-	//pid_struct_t pid_pos;			// Controler
 	struct pid_controller pid;		// Controler
 	float consigne;
 	float command;
@@ -62,9 +62,18 @@ void can_send_command(void);
 void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff);
 
 /* Modifie la consigne tout en vérifiant les limites de postion */
-void add_consigne_position(motor_t* motor, float value);
+void add_consigne_position(motor_t* motor, float value, float coeff);
 
 /* Initialise le CAN 1 */
 void can1_init(void);
+
+/* Initialise le TIMER 1 pour les PWM */
+void PWM_init(void);
+
+/* Set le duty cycle de tous les channels PWM */ 
+void PWM_SetAllDuty(TIM_HandleTypeDef *tim, float duty_ch1, float duty_ch2);
+
+/* scales all PWM duty cycles between 0 and 1 */
+void PWM_ScaleAll(TIM_HandleTypeDef *tim);
 
 #endif

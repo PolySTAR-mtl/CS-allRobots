@@ -17,6 +17,7 @@ void can_send_command(){
   if((HAL_GetTick() - tickstart) < 10){
 		return;
 	}
+	tickstart = HAL_GetTick();
 	
 	int32_t trams[3] = {0x200, 0x1FF, 0x2FF};
 	for(int i = 0 ; i < 3 ; i++){
@@ -74,9 +75,8 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 }
 
 /* Modifie la consigne tout en vérifiant les limites de postion */
-void add_consigne_position(motor_t* motor, float value){
-	float consigne_position = motor->consigne;
-	consigne_position += value;
+void add_consigne_position(motor_t* motor, float value, float coeff){
+	float consigne_position = motor->consigne + (value * coeff);
 	if(consigne_position > 360) consigne_position -= (float) 360.0;
 	if(consigne_position < 0) 	consigne_position += (float) 360.0;
 	if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
@@ -102,4 +102,50 @@ void can1_init(){
   HAL_CAN_ConfigFilter(&hcan1, &can_filter);        // init can filter
   HAL_CAN_Start(&hcan1);                          // start can
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); // enable can rx interrupt
+}
+
+
+
+
+
+/* Initialise le TIMER 1 pour les PWM */
+void PWM_init(void)
+{
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); // start pwm output
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+}
+
+/* Set le duty cycle de tous les channels PWM */ 
+void PWM_SetAllDuty(TIM_HandleTypeDef *tim, float duty_ch1, float duty_ch2){
+	duty_ch1 = duty_ch1/10 + 0.10f; //rescale before send
+	duty_ch2 = duty_ch2/10 + 0.10f;
+	tim->Instance->CCR1 = (10000*duty_ch1) - 1;
+	tim->Instance->CCR2 = (10000*duty_ch2) - 1;
+}
+
+/* scales all PWM duty cycles between 0 and 1 
+Cette fonction permet d'étalonner le snail pour que ca commande 0 = min, et 1 = max
+
+Pour utiliser cette fonction, il faut le faire moteur PWM par moteur PWM
+	1- Débrancher l'alimentation de tous les moteurs PWM
+	2- Brancher l'alimentation du moteur PWM a étalonner sur la sortie XT30 de la BOARD A - POWER 1
+  2- Envoyer sur la board A grâce au ST LINK un programe avec cette fonction appelé dans le main.c, avant la boucle infinie
+	3- Brancher l'alimentation 24V de la board A, le programme va se lancer : 
+		a) va couper l'alimentation 24V du snail
+    b) Met l'impulsion PWM au max
+    c) Attends, allume le snail, attends
+		d) Coupe tous le signal PWM
+
+*/
+void PWM_ScaleAll(TIM_HandleTypeDef *tim){ //il faudrait jouer sur l'allumage des ports d'alimentation des snails (voir Nathan pour plus de détails)
+	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin, GPIO_PIN_RESET); // switch off 24v power
+	PWM_SetAllDuty(&htim1,1,1);
+	HAL_Delay(10);
+	
+	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin, GPIO_PIN_SET); // switch on 24v power
+	HAL_Delay(3500);
+	
+	PWM_SetAllDuty(&htim1,0,0);
+	HAL_Delay(500);
+	while(1);
 }

@@ -33,6 +33,8 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BoardA_handle.h"
+#include "traitement.h"
+#include "robot_configuration.h"
 
 /* USER CODE END Includes */
 

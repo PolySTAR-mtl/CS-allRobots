@@ -58,10 +58,35 @@ void signOfLife_refereeSystem(){
 
 /* Gère le signe de vie, LED C: Si on recoit des données sur le bus CAN1 */
 void signOfLife_can1(){
-  if ((HAL_GetTick() - signOfLife_CAN1_tick) < 100){
+  if ((HAL_GetTick() - motors[TOURELLE_YAW].signOfLife_tick) < 100){
 		BOARD_LED_C_ON();
 	}else{
 		BOARD_LED_C_OFF();
+	}
+	if ((HAL_GetTick() - motors[TOURELLE_PITCH].signOfLife_tick) < 100){
+		BOARD_LED_D_ON();
+	}else{
+		BOARD_LED_D_OFF();
+	}
+	if ((HAL_GetTick() - motors[FRONT_RIGHT].signOfLife_tick) < 100){
+		BOARD_LED_E_ON();
+	}else{
+		BOARD_LED_E_OFF();
+	}
+	if ((HAL_GetTick() - motors[FRONT_LEFT].signOfLife_tick) < 100){
+		BOARD_LED_F_ON();
+	}else{
+		BOARD_LED_F_OFF();
+	}
+	if ((HAL_GetTick() - motors[BACK_RIGHT].signOfLife_tick) < 100){
+		BOARD_LED_G_ON();
+	}else{
+		BOARD_LED_G_OFF();
+	}
+	if ((HAL_GetTick() - motors[BACK_LEFT].signOfLife_tick) < 100){
+		BOARD_LED_H_ON();
+	}else{
+		BOARD_LED_H_OFF();
 	}
 }
 

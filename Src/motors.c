@@ -86,6 +86,11 @@ void add_consigne_position(motor_t* motor, float value, float coeff){
 
 /* Initialise le CAN 1 */
 void can1_init(){
+  hcan1.Init.TimeSeg1 = CAN_BS1_9TQ;
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   CAN_FilterTypeDef  can_filter;
 
   can_filter.FilterBank = 0;                       // filter 0

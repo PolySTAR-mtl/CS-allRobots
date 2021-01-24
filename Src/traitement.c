@@ -26,12 +26,6 @@ void traitement_pids_compute(){
 void traitement_1(){
 	add_consigne_position(&motors[TOURELLE_PITCH], (float)receiver_RadioController.data.ch2_float, 0.00005);
 	add_consigne_position(&motors[TOURELLE_YAW], 	(float)receiver_RadioController.data.ch1_float, -0.00005);
-			
-	if(motors[TOURELLE_PITCH].info.angle_360 > 293){
-		BOARD_LED_GREEN_ON();
-	}else{
-		BOARD_LED_GREEN_OFF();
-	}
 	
 	
 	switch(receiver_RadioController.data.sw1){

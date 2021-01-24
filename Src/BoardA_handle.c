@@ -95,17 +95,25 @@ Exemple : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.an
 */
 void uart_debug(){
 	static uint32_t tickstart = 0;
+	static char buff[1000] = {0};
+	static char buff2[1000] = {0};
 	if(tickstart == 0){
 		tickstart = HAL_GetTick();
 	}
-  if ((HAL_GetTick() - tickstart) < 1000){
+  if ((HAL_GetTick() - tickstart) < 200){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	uart_debug_command("[2J"); //Clear entire screen
-	uart_debug_printf("\r\nFRONT_LEFT\r\n");
-	uart_debug_printf("\tSpeed: %f\r\n", motors[FRONT_LEFT].info.speed);
+	snprintf(buff2, 1000, "%f,%f,%f,", motors[FRONT_LEFT].consigne, motors[FRONT_LEFT].command, motors[FRONT_LEFT].info.speed);
+	snprintf(buff, 1000, "%f,%f,%f,", motors[FRONT_RIGHT].consigne, motors[FRONT_RIGHT].command, motors[FRONT_RIGHT].info.speed);
+	strcat(buff2, buff);
+	snprintf(buff, 1000, "%f,%f,%f,", motors[BACK_LEFT].consigne, motors[BACK_LEFT].command, motors[BACK_LEFT].info.speed);
+	strcat(buff2, buff);
+	snprintf(buff, 1000, "%f,%f,%f_", motors[BACK_RIGHT].consigne, motors[BACK_RIGHT].command, motors[BACK_RIGHT].info.speed);
+	strcat(buff2, buff);
+	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
+	uart_debug_command("[2J"); //Clear entire screen
 	uart_debug_printf("\r\nTOURELLE YAW\r\n");
 	uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
 	uart_debug_printf("\tSpeed: %d\r\n", motors[TOURELLE_YAW].info.speed);

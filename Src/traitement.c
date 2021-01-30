@@ -25,7 +25,7 @@ void traitement_pids_compute(){
 /* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
 void traitement_1(){
 	add_consigne_position(&motors[TOURELLE_PITCH], (float)receiver_RadioController.data.ch2_float, 0.00005);
-	add_consigne_position(&motors[TOURELLE_YAW], 	(float)receiver_RadioController.data.ch1_float, -0.00005);
+	add_consigne_position(&motors[TOURELLE_YAW], 	(float)receiver_RadioController.data.ch1_float, 0.00005);
 	
 	
 	switch(receiver_RadioController.data.sw1){

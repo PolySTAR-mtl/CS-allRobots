@@ -100,14 +100,14 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 	PWM_init();
-	//PWM_ScaleAll(&htim1); //etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
+	//PWM_ScaleAll(&htim1, false); //etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
 	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin|BOARD_POWER2_CTRL_Pin|BOARD_POWER3_CTRL_Pin|BOARD_POWER4_CTRL_Pin, GPIO_PIN_SET); // switch on 24v power
 	BOARD_LED_ALL_OFF
 	oled_init();
 	uart1_init();
 	uart6_init();
 	can1_init();
-	robotInit(3); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
+	robotInit(5); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
 	extern motor_t motors[MAX_MOTORS];
 	
   /* USER CODE END 2 */

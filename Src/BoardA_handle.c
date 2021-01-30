@@ -95,7 +95,7 @@ Exemple : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.an
 */
 void uart_debug(){
 	static uint32_t tickstart = 0;
-	static char buff[1000] = {0};
+	//static char buff[1000] = {0};
 	static char buff2[1000] = {0};
 	if(tickstart == 0){
 		tickstart = HAL_GetTick();
@@ -104,13 +104,7 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, "%f,%f,%f,", motors[FRONT_LEFT].consigne, motors[FRONT_LEFT].command, motors[FRONT_LEFT].info.speed);
-	snprintf(buff, 1000, "%f,%f,%f,", motors[FRONT_RIGHT].consigne, motors[FRONT_RIGHT].command, motors[FRONT_RIGHT].info.speed);
-	strcat(buff2, buff);
-	snprintf(buff, 1000, "%f,%f,%f,", motors[BACK_LEFT].consigne, motors[BACK_LEFT].command, motors[BACK_LEFT].info.speed);
-	strcat(buff2, buff);
-	snprintf(buff, 1000, "%f,%f,%f_", motors[BACK_RIGHT].consigne, motors[BACK_RIGHT].command, motors[BACK_RIGHT].info.speed);
-	strcat(buff2, buff);
+	snprintf(buff2, 1000, " PITCH(%f/%f) YAW(%f/%f)\r\n", motors[TOURELLE_PITCH].info.angle_360, motors[TOURELLE_PITCH].consigne, motors[TOURELLE_YAW].info.angle_360, motors[TOURELLE_YAW].consigne);
 	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
 	uart_debug_command("[2J"); //Clear entire screen

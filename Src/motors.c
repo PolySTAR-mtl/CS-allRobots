@@ -76,7 +76,7 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 
 /* Modifie la consigne tout en vérifiant les limites de postion */
 void add_consigne_position(motor_t* motor, float value, float coeff){
-	float consigne_position = motor->consigne + (value * coeff);
+	float consigne_position = motor->consigne + (motor->direction * value * coeff);
 	if(consigne_position > 360) consigne_position -= (float) 360.0;
 	if(consigne_position < 0) 	consigne_position += (float) 360.0;
 	if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
@@ -142,13 +142,14 @@ Pour utiliser cette fonction, il faut le faire moteur PWM par moteur PWM
 		d) Coupe tous le signal PWM
 
 */
-void PWM_ScaleAll(TIM_HandleTypeDef *tim){ //il faudrait jouer sur l'allumage des ports d'alimentation des snails (voir Nathan pour plus de détails)
+void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection){ //il faudrait jouer sur l'allumage des ports d'alimentation des snails (voir Nathan pour plus de détails)
 	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin, GPIO_PIN_RESET); // switch off 24v power
 	PWM_SetAllDuty(&htim1,1,1);
 	HAL_Delay(10);
 	
 	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin, GPIO_PIN_SET); // switch on 24v power
-	HAL_Delay(3500);
+	if(switchRotationalDirection) HAL_Delay(7500);
+	else HAL_Delay(3500);
 	
 	PWM_SetAllDuty(&htim1,0,0);
 	HAL_Delay(500);

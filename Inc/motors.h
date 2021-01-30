@@ -47,6 +47,7 @@ typedef struct
 	struct pid_controller pid;		// Controler
 	float consigne;
 	float command;
+	float direction; //1 ou -1
 	float MAX_POSITION;
 	float MIN_POSITION;
 	uint32_t signOfLife_tick;
@@ -74,6 +75,6 @@ void PWM_init(void);
 void PWM_SetAllDuty(TIM_HandleTypeDef *tim, float duty_ch1, float duty_ch2);
 
 /* scales all PWM duty cycles between 0 and 1 */
-void PWM_ScaleAll(TIM_HandleTypeDef *tim);
+void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection);
 
 #endif

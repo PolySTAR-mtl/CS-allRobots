@@ -31,7 +31,7 @@ void receiver_RadioController_callback_handler()
 	/* prevent remote control zero deviation */
 	if (receiver_RadioController.data.ch1 <= 5 && receiver_RadioController.data.ch1 >= -5)
 	{
-			//receiver_RadioController.data.ch1 = 0;
+			receiver_RadioController.data.ch1 = 0;
 	}
 	if (receiver_RadioController.data.ch2 <= 5 && receiver_RadioController.data.ch2 >= -5)
 	{
@@ -69,13 +69,6 @@ void receiver_RadioController_callback_handler()
 
 	receiver_RadioController.data.wheel = (uart1_rx_buff[16] | uart1_rx_buff[17] << 8);
 	receiver_RadioController.data.wheel -= 1024;
-	if(receiver_RadioController.data.wheel <= 660)
-		receiver_RadioController.data.wheel = -receiver_RadioController.data.wheel;
-	else{
-		receiver_RadioController.data.wheel = 660 * receiver_RadioController.data.wheel / 14790 ;
-		if(receiver_RadioController.data.wheel > 660) receiver_RadioController.data.wheel = 660;
-	}
-	
 }
 
 

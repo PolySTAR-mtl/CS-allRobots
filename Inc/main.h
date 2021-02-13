@@ -95,6 +95,10 @@ void Error_Handler(void);
 #define BOARD_LED_B_GPIO_Port GPIOG
 #define BOARD_LED_C_Pin GPIO_PIN_6
 #define BOARD_LED_C_GPIO_Port GPIOG
+#define JETSON_TX_Pin GPIO_PIN_7
+#define JETSON_TX_GPIO_Port GPIOF
+#define JETSON_RX_Pin GPIO_PIN_6
+#define JETSON_RX_GPIO_Port GPIOF
 #define BOARD_LED_D_Pin GPIO_PIN_5
 #define BOARD_LED_D_GPIO_Port GPIOG
 #define BOARD_LED_E_Pin GPIO_PIN_4

@@ -17,6 +17,7 @@
 /* On crée les signes de vie, les variables vaudra le temps où elles ont été utilisés la dernière fois */
 uint32_t signOfLife_Receiver_RadioController_tick = 0;
 uint32_t signOfLife_refereeSystem_tick = 0;
+uint32_t signOfLife_jetson_tick = 0;
 uint32_t signOfLife_CAN1_tick = 0;
 
 /* On récupère les variables exterieurs pour affichage de debug */

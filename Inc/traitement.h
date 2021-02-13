@@ -12,6 +12,7 @@
 #include "leds.h"
 #include "receiver_RadioController.h"
 #include "referee_system.h"
+#include "jetson.h"
 #include "motors.h"
 #include "robot_configuration.h"
 #include "pid.h"

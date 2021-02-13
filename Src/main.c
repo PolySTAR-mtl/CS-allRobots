@@ -98,6 +98,7 @@ int main(void)
   MX_CAN1_Init();
   MX_UART8_Init();
   MX_TIM1_Init();
+  MX_UART7_Init();
   /* USER CODE BEGIN 2 */
 	PWM_init();
 	//PWM_ScaleAll(&htim1, false); //etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
@@ -106,6 +107,7 @@ int main(void)
 	oled_init();
 	uart1_init();
 	uart6_init();
+	uart7_init();
 	can1_init();
 	robotInit(5); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
 	extern motor_t motors[MAX_MOTORS];

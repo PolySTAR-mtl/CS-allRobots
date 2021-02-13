@@ -8,7 +8,8 @@
 
 
 uint8_t uart1_rx_buff[UART1_RX_BUFFLEN];
-receiver_RadioController_t receiver_RadioController;
+receiver_RadioController_t receiver_RadioController = {false};
+
 
 /* On récupère les variables exterieurs */
 extern uint32_t signOfLife_Receiver_RadioController_tick;
@@ -59,7 +60,7 @@ void receiver_RadioController_callback_handler()
 	if ((abs(receiver_RadioController.data.ch4) > 660)) receiver_RadioController.data.ch4 = 0;
 
 	receiver_RadioController.data.mouse.x = uart1_rx_buff[6] | (uart1_rx_buff[7] << 8); // x axis
-	receiver_RadioController.data.mouse.y = uart1_rx_buff[8] | (uart1_rx_buff[9] << 8);
+	receiver_RadioController.data.mouse.y = -(uart1_rx_buff[8] | (uart1_rx_buff[9] << 8));
 	receiver_RadioController.data.mouse.z = uart1_rx_buff[10] | (uart1_rx_buff[11] << 8);
 
 	receiver_RadioController.data.mouse.l = uart1_rx_buff[12];
@@ -69,6 +70,13 @@ void receiver_RadioController_callback_handler()
 
 	receiver_RadioController.data.wheel = (uart1_rx_buff[16] | uart1_rx_buff[17] << 8);
 	receiver_RadioController.data.wheel -= 1024;
+	if(receiver_RadioController.data.mouse.x != 0 ||
+					receiver_RadioController.data.mouse.y != 0 ||
+					receiver_RadioController.data.mouse.z != 0 ||
+					receiver_RadioController.data.mouse.l != 0 ||
+					receiver_RadioController.data.kb.key_code != 0){
+		receiver_RadioController.keyboard_mode = true;
+	}
 }
 
 

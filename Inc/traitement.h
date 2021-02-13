@@ -23,4 +23,5 @@ void traitement_pids_compute(void);
 /* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
 void traitement_1(void);
 
+void chassis_consigne(double Vx, double Vy, double W);
 #endif

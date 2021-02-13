@@ -10,7 +10,7 @@
       <TargetName>RobotMaster_allRobots</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -619,9 +619,9 @@
               <FilePath>..\Src\jetson.c</FilePath>
             </File>
             <File>
-              <FileName>jetson.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\jetson.h</FilePath>
+              <FileName>pilotes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\pilotes.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -632,6 +632,11 @@
               <FileName>traitement.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\traitement.c</FilePath>
+            </File>
+            <File>
+              <FileName>canon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\canon.c</FilePath>
             </File>
           </Files>
         </Group>

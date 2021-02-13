@@ -72,6 +72,7 @@ struct receiver_RadioController_data
 
 struct receiver_RadioController
 {
+		char keyboard_mode; //0: RC, 1: Mouse and keyboard
     struct receiver_RadioController_data data;
     struct receiver_RadioController_data last_data;
     uint16_t state;

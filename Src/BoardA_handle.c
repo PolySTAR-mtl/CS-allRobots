@@ -105,7 +105,7 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, " PITCH(%f/%f) YAW(%f/%f)\r\n", motors[TOURELLE_PITCH].info.angle_360, motors[TOURELLE_PITCH].consigne, motors[TOURELLE_YAW].info.angle_360, motors[TOURELLE_YAW].consigne);
+	snprintf(buff2, 1000, "Keyboard Z%i S%i Q%i D%i\r\n", receiver_RadioController.data.kb.bit.Z, receiver_RadioController.data.kb.bit.S, receiver_RadioController.data.kb.bit.Q, receiver_RadioController.data.kb.bit.D);
 	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
 	uart_debug_command("[2J"); //Clear entire screen
@@ -137,6 +137,7 @@ void uart_debug_command(char* command){
 	HAL_UART_Transmit(&huart8, (uint8_t*) BUF, 4, 10);
 }
 /**
+
   * @brief      enable global uart it and do not use DMA transfer done it
   * @param[in]  huart: uart IRQHandler id
   * @param[in]  pData: receive buff 

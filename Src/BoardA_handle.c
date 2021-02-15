@@ -105,13 +105,14 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, "Keyboard Z%i S%i Q%i D%i\r\n", receiver_RadioController.data.kb.bit.Z, receiver_RadioController.data.kb.bit.S, receiver_RadioController.data.kb.bit.Q, receiver_RadioController.data.kb.bit.D);
+	snprintf(buff2, 1000, "Mouse Z %i\r\n", receiver_RadioController.data.mouse.z);
 	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
 	uart_debug_command("[2J"); //Clear entire screen
 	uart_debug_printf("\r\nTOURELLE YAW\r\n");
 	uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
-	uart_debug_printf("\tSpeed: %d\r\n", motors[TOURELLE_YAW].info.speed);
+	uart_debug_
+	printf("\tSpeed: %d\r\n", motors[TOURELLE_YAW].info.speed);
 	uart_debug_printf("\tTorque: %d\r\n", motors[TOURELLE_YAW].info.torque);
 	uart_debug_printf("\tTemperature: %d\r\n", motors[TOURELLE_YAW].info.temp);
 	uart_debug_printf("\tCommand: %f\r\n", motors[TOURELLE_YAW].command);*/

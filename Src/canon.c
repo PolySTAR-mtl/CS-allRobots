@@ -27,6 +27,8 @@ void canon_shoot(float speed, float rate){
 			
 			PWM_SetAllDuty(&htim1, speed, speed); //Démarage des snails
 			shoot_rate = rate; //Sauvegarde de la cadance de tir
+			
+	motors[FEEDER].consigne = shoot_rate; //Démarage du feeder
 		}
 		
 		//Prise en compte des nouvelles valeurs que si nous sommes entrain de tirer

@@ -22,9 +22,9 @@ void piloteInit(uint8_t pilote_id){
 	pilote.sensitivity_chassis_RC_Vy = 10;
 	pilote.sensitivity_chassis_RC_W = 3;
 
-	pilote.sensitivity_chassis_keyboard_Vx = 500;
-	pilote.sensitivity_chassis_keyboard_Vy = 500;
-	pilote.sensitivity_chassis_mouse_W = 2;
+	pilote.sensitivity_chassis_keyboard_Vx = 1000;
+	pilote.sensitivity_chassis_keyboard_Vy = 1000;
+	pilote.sensitivity_chassis_mouse_W = 5;
 	
 	switch(pilote_id){ //Configuration personnalisée
 		/* Antonin */

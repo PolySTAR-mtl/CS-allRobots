@@ -10,21 +10,21 @@
 jetson_t jetson;
 
 /* On crée le buffer de récupération de données du referee System */
-uint8_t uart7_rx_buff[UART6_RX_BUFFLEN];
+uint8_t uart7_rx_buff[UART7_RX_BUFFLEN];
 
 /* On récupère les variables exterieurs */
 extern uint32_t signOfLife_jetson_tick;
 
 /* fonction appelée lorsqu'on recoit une unformation du récepteur */
 void jetson_callback_handler(int8_t lenght){
+	
 	/* frame_header (5-byte) */
 	uint8_t 	SOF 					= uart7_rx_buff[0];
 	uint16_t 	cmd_id 				= (uart7_rx_buff[1] << 8 | uart7_rx_buff[2]);
 	uint16_t 	data_length 	= uart7_rx_buff[3];
 	
-	if(SOF != 0xA5) return;
+	if(SOF != 0xFC) return;
 	signOfLife_jetson_tick = HAL_GetTick();
-	
 	
 	/* data (n-byte) */
 	switch(cmd_id){
@@ -36,9 +36,6 @@ void jetson_callback_handler(int8_t lenght){
 			break;
 		default: return;
 	}
-	
-	/* frame_tail (2-byte, CRC16, whole package check)  */
-	//uint16_t crc16 = (uart6_rx_buff[7+data_length] << 8 | uart6_rx_buff[7+data_length+1]);
 }
 
 /**

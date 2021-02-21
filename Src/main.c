@@ -26,12 +26,10 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "pilotes.h"
-#include "canon.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,6 +112,7 @@ int main(void)
 	robotInit(5); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
+	extern jetson_t jetson;
 	piloteInit(PILOTE_ANTONIN);
   /* USER CODE END 2 */
 
@@ -123,7 +122,7 @@ int main(void)
   {
 		signOfLife(); //LEDs BLINK
 		//oled_debug(); //Display debug menu on OLED
-		uart_debug(); //Display debug menu on UART
+		//uart_debug(); //Display debug menu on UART
 		traitement_1();							//Calcul les consignes des moteurs
 		traitement_shoot();					//Traitement du canon
 		traitement_pids_compute(); 	//Calcul les commandes des moteurs

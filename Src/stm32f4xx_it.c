@@ -420,8 +420,8 @@ void UART7_IRQHandler(void)
 		jetson_callback_handler(UART7_MAX_LEN - dma_data_counter);
 		
 		/* restart dma transmission */
-		__HAL_DMA_SET_COUNTER(huart6.hdmarx, UART7_MAX_LEN);
-		__HAL_DMA_ENABLE(huart6.hdmarx);
+		__HAL_DMA_SET_COUNTER(huart7.hdmarx, UART7_MAX_LEN);
+		__HAL_DMA_ENABLE(huart7.hdmarx);
 	}
   /* USER CODE END UART7_IRQn 0 */
   HAL_UART_IRQHandler(&huart7);

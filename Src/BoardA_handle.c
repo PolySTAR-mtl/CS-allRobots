@@ -23,6 +23,7 @@ uint32_t signOfLife_CAN1_tick = 0;
 /* On récupère les variables exterieurs pour affichage de debug */
 extern motor_t motors[MAX_MOTORS];
 extern receiver_RadioController_t receiver_RadioController;
+extern jetson_t jetson;
 
 /* Gère les signes de vie, LED RED: Si le programme tourne */
 void signOfLife(){
@@ -105,7 +106,7 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, "Mouse Z %i\r\n", receiver_RadioController.data.mouse.z);
+	snprintf(buff2, 1000, "%c,teta=%x,phi=%x,d=%x\r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
 	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
 	uart_debug_command("[2J"); //Clear entire screen

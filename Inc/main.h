@@ -35,6 +35,8 @@ extern "C" {
 #include "BoardA_handle.h"
 #include "traitement.h"
 #include "robot_configuration.h"
+#include "pilotes.h"
+#include "canon.h"
 
 /* USER CODE END Includes */
 
@@ -95,10 +97,6 @@ void Error_Handler(void);
 #define BOARD_LED_B_GPIO_Port GPIOG
 #define BOARD_LED_C_Pin GPIO_PIN_6
 #define BOARD_LED_C_GPIO_Port GPIOG
-#define JETSON_TX_Pin GPIO_PIN_7
-#define JETSON_TX_GPIO_Port GPIOF
-#define JETSON_RX_Pin GPIO_PIN_6
-#define JETSON_RX_GPIO_Port GPIOF
 #define BOARD_LED_D_Pin GPIO_PIN_5
 #define BOARD_LED_D_GPIO_Port GPIOG
 #define BOARD_LED_E_Pin GPIO_PIN_4
@@ -111,12 +109,16 @@ void Error_Handler(void);
 #define BOARD_LED_H_GPIO_Port GPIOG
 #define OLED_Analog_Pin GPIO_PIN_6
 #define OLED_Analog_GPIO_Port GPIOA
+#define JETSON_TX_Pin GPIO_PIN_8
+#define JETSON_TX_GPIO_Port GPIOE
 #define BOARD_LED_RED_Pin GPIO_PIN_11
 #define BOARD_LED_RED_GPIO_Port GPIOE
 #define OLED_MOSI_Pin GPIO_PIN_7
 #define OLED_MOSI_GPIO_Port GPIOA
 #define BOARD_LED_GREEN_Pin GPIO_PIN_14
 #define BOARD_LED_GREEN_GPIO_Port GPIOF
+#define JETSON_RX_Pin GPIO_PIN_7
+#define JETSON_RX_GPIO_Port GPIOE
 #define OLED_RST_Pin GPIO_PIN_10
 #define OLED_RST_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

@@ -7,6 +7,8 @@
 
 /* On récupère les variables exterieurs */
 extern motor_t motors[MAX_MOTORS];
+extern pilote_t pilote;
+extern receiver_RadioController_t receiver_RadioController;
 
 /* Envoie les commandes sur le bus CAN pour tous les moteurs CAN */
 void can_send_command(){
@@ -76,6 +78,14 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 
 /* Modifie la consigne tout en vérifiant les limites de postion */
 void add_consigne_position(motor_t* motor, float value, float coeff){
+	double sensitivity_deadzone;
+	if(receiver_RadioController.keyboard_mode){
+		sensitivity_deadzone = pilote.sensitivity_mouse_deadzone;
+	}else{
+		sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
+	}
+	if(value > -sensitivity_deadzone && value < sensitivity_deadzone) value = 0;
+	
 	float consigne_position = motor->consigne + (motor->direction * value * coeff);
 	if(consigne_position > 360) consigne_position -= (float) 360.0;
 	if(consigne_position < 0) 	consigne_position += (float) 360.0;

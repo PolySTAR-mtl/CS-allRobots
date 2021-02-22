@@ -30,7 +30,7 @@ void traitement_1(){
 	if(receiver_RadioController.keyboard_mode){
 		double chassis_w;
 		double tourelle_yaw;
-		if(receiver_RadioController.data.kb.bit.CTRL){
+		if(!receiver_RadioController.data.kb.bit.CTRL){
 			chassis_w = -receiver_RadioController.data.mouse.x;
 			tourelle_yaw = 0;
 		}else{
@@ -46,9 +46,9 @@ void traitement_1(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(0.15, 2000);
+			canon_shoot(0.15, 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(0.20, 5000);
+			canon_shoot(0.20, 1000);
 		}else{
 			canon_shoot_end();
 		}
@@ -58,24 +58,21 @@ void traitement_1(){
 	
 		switch(receiver_RadioController.data.sw1){
 			case 1:
-				motors[FEEDER].consigne = 0;
 				break;
 			case 3:
-				motors[FEEDER].consigne = 5000;
 				break;
 			case 2:
-				motors[FEEDER].consigne = 10000;
 				break;
 		}
 		switch(receiver_RadioController.data.sw2){
 			case 1:
-				PWM_SetAllDuty(&htim1, 0.0, 0.0);
+				canon_shoot(0, 0);
 				break;
 			case 3:
-				PWM_SetAllDuty(&htim1, 0.25, 0.25);
+				//canon_shoot(0.40, 1000);
 				break;
 			case 2:
-				PWM_SetAllDuty(&htim1, 0.50, 0.50);
+				//canon_shoot(1, 1000);
 				break;
 		}
 		
@@ -92,15 +89,21 @@ void chassis_consigne(double Vx, double Vy, double W){
 	double sensitivity_Vx;
 	double sensitivity_Vy;
 	double sensitivity_W;
+	double sensitivity_deadzone;
 	if(receiver_RadioController.keyboard_mode){
 		sensitivity_Vx = pilote.sensitivity_chassis_keyboard_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_keyboard_Vy;
 		sensitivity_W = pilote.sensitivity_chassis_mouse_W;
+		sensitivity_deadzone = 0;
 	}else{
 		sensitivity_Vx = pilote.sensitivity_chassis_RC_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_RC_Vy;
 		sensitivity_W = pilote.sensitivity_chassis_RC_W;
+		sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
 	}
+	if(Vx > -sensitivity_deadzone && Vx < sensitivity_deadzone) Vx = 0;
+	if(Vy > -sensitivity_deadzone && Vy < sensitivity_deadzone) Vy = 0;
+	
 	motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
 	motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
 	motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);

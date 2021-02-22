@@ -13,18 +13,23 @@ void piloteInit(uint8_t pilote_id){
 	Robot ID:
 		0: Antonin;
 	*/
-	pilote.sensitivity_ch_1 = 0.00005;
-	pilote.sensitivity_ch_2 = 0.00005;
-	pilote.sensitivity_mouse_x = 0.000005;
-	pilote.sensitivity_mouse_y = 0.000005;
+	/* Receiver */
+	pilote.sensitivity_RC_deadzone = 50; //Between 0 and 6600
+	pilote.sensitivity_ch_1 = 0.00003;
+	pilote.sensitivity_ch_2 = 0.00003;
 
-	pilote.sensitivity_chassis_RC_Vx = 10;
-	pilote.sensitivity_chassis_RC_Vy = 10;
-	pilote.sensitivity_chassis_RC_W = 3;
+	pilote.sensitivity_chassis_RC_Vx = 20;
+	pilote.sensitivity_chassis_RC_Vy = 20;
+	pilote.sensitivity_chassis_RC_W = 6;
+	
+	/* Mouse Keyboard */
+	pilote.sensitivity_mouse_deadzone = 50; //Between 0 and 6600
+	pilote.sensitivity_mouse_x = 0.0005;
+	pilote.sensitivity_mouse_y = 0.0005;
 
-	pilote.sensitivity_chassis_keyboard_Vx = 1000;
-	pilote.sensitivity_chassis_keyboard_Vy = 1000;
-	pilote.sensitivity_chassis_mouse_W = 5;
+	pilote.sensitivity_chassis_keyboard_Vx = 4300;
+	pilote.sensitivity_chassis_keyboard_Vy = 4300;
+	pilote.sensitivity_chassis_mouse_W = 160;
 	
 	switch(pilote_id){ //Configuration personnalisée
 		/* Antonin */

@@ -29,23 +29,6 @@ void receiver_RadioController_callback_handler()
 	receiver_RadioController.data.ch4 = (uart1_rx_buff[4] >> 1 | uart1_rx_buff[5] << 7) & 0x07FF;
 	receiver_RadioController.data.ch4 -= 1024;
 
-	/* prevent remote control zero deviation */
-	if (receiver_RadioController.data.ch1 <= 5 && receiver_RadioController.data.ch1 >= -5)
-	{
-			receiver_RadioController.data.ch1 = 0;
-	}
-	if (receiver_RadioController.data.ch2 <= 5 && receiver_RadioController.data.ch2 >= -5)
-	{
-			receiver_RadioController.data.ch2 = 0;
-	}
-	if (receiver_RadioController.data.ch3 <= 5 && receiver_RadioController.data.ch3 >= -5)
-	{
-			receiver_RadioController.data.ch3 = 0;
-	}
-	if (receiver_RadioController.data.ch4 <= 5 && receiver_RadioController.data.ch4 >= -5)
-	{
-			receiver_RadioController.data.ch4 = 0;
-	}
 	receiver_RadioController.data.ch1_float = (float) (receiver_RadioController.data.ch1 / 6.6); //Entre -100% et 100%
 	receiver_RadioController.data.ch2_float = (float) (receiver_RadioController.data.ch2 / 6.6);
 	receiver_RadioController.data.ch3_float = (float) (receiver_RadioController.data.ch3 / 6.6);

@@ -12,6 +12,8 @@
 
 typedef struct
 {
+	float sensitivity_RC_deadzone;
+	float sensitivity_mouse_deadzone;
 	float sensitivity_ch_1;
 	float sensitivity_ch_2;
 	float sensitivity_mouse_x;

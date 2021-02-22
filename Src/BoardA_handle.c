@@ -106,7 +106,7 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, "%c,teta=%x,phi=%x,d=%x\r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
+	snprintf(buff2, 1000, "%c,teta=%d,phi=%d,d=%d                  \r", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
 	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	/*
 	uart_debug_command("[2J"); //Clear entire screen

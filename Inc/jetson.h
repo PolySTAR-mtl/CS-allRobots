@@ -28,9 +28,9 @@ typedef __packed struct
 typedef __packed struct
 {
 	uint8_t target_located; 
-	uint16_t teta_target_location; 
-	uint16_t phi_target_location; 
-	uint16_t d_target_location; 
+	uint16_t teta_target_location; //mrad
+	int16_t phi_target_location; //mrad
+	uint16_t d_target_location; //mm
 } robot_target_coordinates_t;
 
 typedef __packed struct

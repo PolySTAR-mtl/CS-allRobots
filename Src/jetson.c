@@ -20,7 +20,7 @@ void jetson_callback_handler(int8_t lenght){
 	
 	/* frame_header (5-byte) */
 	uint8_t 	SOF 					= uart7_rx_buff[0];
-	uint16_t 	cmd_id 				= (uart7_rx_buff[1] << 8 | uart7_rx_buff[2]);
+	uint16_t 	cmd_id 				= (uart7_rx_buff[2] << 8 | uart7_rx_buff[1]);
 	uint16_t 	data_length 	= uart7_rx_buff[3];
 	
 	if(SOF != 0xFC) return;

@@ -9,11 +9,16 @@
 #include "canon.h"
 
 #define MAX_BASE_SPEED_COEFF  10
+#define PI 3.14159265358979323846
 
 /* On récupère les variables exterieurs */
 extern receiver_RadioController_t receiver_RadioController;	
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
+extern jetson_t jetson;
+
+/*mode de controle actuel*/
+enum mode_assistance_ai_t mode_assistance_ai = automatique;
 
 /* Calcul les pids de tous les moteurs (calcul des commandes en fonction des consignes */
 void traitement_pids_compute(){
@@ -27,6 +32,7 @@ void traitement_pids_compute(){
 
 /* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
 void traitement_1(){
+	
 	if(receiver_RadioController.keyboard_mode){
 		double chassis_w;
 		double tourelle_yaw;
@@ -37,6 +43,11 @@ void traitement_1(){
 			chassis_w = 0;
 			tourelle_yaw = receiver_RadioController.data.mouse.x;
 		}
+		
+		/*gere l'assistance automatique*/
+		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
+		//if(mode_assistance_ai==automatique) auto_follow_target();
+		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
 		add_consigne_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
 		
@@ -52,7 +63,11 @@ void traitement_1(){
 		}else{
 			canon_shoot_end();
 		}
-	}else{		
+	}else{	
+		
+		
+		//if(mode_assistance_ai==automatique) auto_follow_target();
+		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
 		add_consigne_position(&motors[TOURELLE_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
 	
@@ -69,10 +84,10 @@ void traitement_1(){
 				canon_shoot(0, 0);
 				break;
 			case 3:
-				//canon_shoot(0.40, 1000);
+				canon_shoot(0.40, 1000);
 				break;
 			case 2:
-				//canon_shoot(1, 1000);
+				canon_shoot(1, 1000);
 				break;
 		}
 		
@@ -109,3 +124,97 @@ void chassis_consigne(double Vx, double Vy, double W){
 	motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
 	motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
 }	
+
+/*change le mode de visee
+On pourrait ajouter un coefficient qui est 1 en manuel et <1 en automatique qui s'applique
+sur les consigne donnees par le pilote pour la tourelle
+*/
+void switch_assistance_ai(void){
+	switch(mode_assistance_ai){
+		case automatique : 
+			mode_assistance_ai = manuel; 
+		break;
+		case manuel : 
+			mode_assistance_ai = automatique; 
+		break;
+	}
+}
+
+/*
+Fonction qui controle la position des moteurs GM6020 de la tourelle pour que celle-ci point une cible
+*/
+void auto_follow_target(void){
+  
+	uint16_t teta,d;
+	int16_t phi;
+	uint8_t target_located;
+	
+	jetson.switch_informations.switch_target_mode = 0x72;
+	switch(jetson.switch_informations.switch_target_mode){
+		case 0x72 : 	/*Si la cible est une robot*/
+			teta = jetson.robot_target_coordinates.teta_target_location;
+			phi = jetson.robot_target_coordinates.phi_target_location;
+			d = jetson.robot_target_coordinates.d_target_location;
+			target_located = jetson.robot_target_coordinates.target_located;
+			break;
+		case 0x52 : /*Si la cible est une rune*/
+			teta = jetson.rune_target_coordinates.teta_target_location;
+			phi = jetson.rune_target_coordinates.phi_target_location;
+			d = jetson.rune_target_coordinates.d_target_location;
+	  	target_located = jetson.rune_target_coordinates.target_located;
+			break;
+	}
+	uart_debug();
+	
+			teta = jetson.robot_target_coordinates.teta_target_location;
+			phi = jetson.robot_target_coordinates.phi_target_location;
+			d = jetson.robot_target_coordinates.d_target_location;
+			target_located = jetson.robot_target_coordinates.target_located;
+	
+	if(target_located=='Y'){/*change les consignes juste si une cible est localisee*/
+		float consigne_yaw = motors[TOURELLE_YAW].consigne + phi*0.0001; 
+		float consigne_pitch = motors[TOURELLE_PITCH].consigne + teta*0.0001 - (PI/2)*1000; //1 millirad = (180/PI)/1000 degres
+		if(phi > 0){
+			consigne_yaw = motors[TOURELLE_YAW].consigne + 0.0005; 
+		}else{
+			consigne_yaw = motors[TOURELLE_YAW].consigne - 0.0005;
+		}
+		consigne_yaw = motors[TOURELLE_YAW].consigne;
+		if(teta > (PI/2)*1000){
+			consigne_pitch = motors[TOURELLE_PITCH].consigne + 0.0005; 
+		}else{
+			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;
+			
+		}
+		//consigne_pitch = motors[TOURELLE_PITCH].consigne;
+		//S'assure que la consigne ne est entre 0 et 360 
+		if(consigne_yaw > 360) consigne_yaw -= (float) 360.0;
+		if(consigne_yaw < 0) 	consigne_yaw += (float) 360.0;
+	
+		if(consigne_pitch > 360) consigne_pitch -= (float) 360.0;
+		if(consigne_pitch < 0) 	consigne_pitch += (float) 360.0;
+	
+		//S'assure que la consigne respecte les limites min et max
+		if(motors[TOURELLE_YAW].MAX_POSITION > 0 && consigne_yaw > motors[TOURELLE_YAW].MAX_POSITION) {
+			consigne_yaw = motors[TOURELLE_YAW].MAX_POSITION;
+		}
+		if(motors[TOURELLE_YAW].MIN_POSITION > 0 && consigne_yaw < motors[TOURELLE_YAW].MIN_POSITION){
+			consigne_yaw = motors[TOURELLE_YAW].MIN_POSITION;
+		}
+		if(motors[TOURELLE_PITCH].MAX_POSITION > 0 && consigne_pitch > motors[TOURELLE_PITCH].MAX_POSITION){
+			consigne_pitch = motors[TOURELLE_PITCH].MAX_POSITION;
+		}
+		if(motors[TOURELLE_PITCH].MIN_POSITION > 0 && consigne_pitch < motors[TOURELLE_PITCH].MIN_POSITION){
+			consigne_pitch = motors[TOURELLE_PITCH].MIN_POSITION;
+		}
+		
+		/*
+		TODO : ajustement du "consigne_pitch" en fonction de la distance "d" de la cible
+		*/
+		
+		/*Donne la nouvelle consigne aux moteurs*/
+		motors[TOURELLE_YAW].consigne = consigne_yaw;
+		motors[TOURELLE_PITCH].consigne = consigne_pitch;
+	}
+}
+

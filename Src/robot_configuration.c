@@ -114,9 +114,9 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
-			motors[TOURELLE_PITCH].MIN_POSITION = 120; //en deg
-			motors[TOURELLE_PITCH].MAX_POSITION = 213; //en deg    //213 120
-			motors[TOURELLE_PITCH].consigne = 213; //en deg //Valeur initiale
+			motors[TOURELLE_PITCH].MIN_POSITION = 1; //en deg
+			motors[TOURELLE_PITCH].MAX_POSITION = 67; //en deg    //213 120
+			motors[TOURELLE_PITCH].consigne = 54; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_PITCH].pid, 
 							&motors[TOURELLE_PITCH].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 
@@ -131,9 +131,9 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TOURELLE_YAW].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_YAW].can_tx_id = 2;
-			motors[TOURELLE_YAW].MIN_POSITION = 110.71; //en deg
-			motors[TOURELLE_YAW].MAX_POSITION = 308.44; //en deg
-			motors[TOURELLE_YAW].consigne = 208; //en deg //Valeur initiale
+			motors[TOURELLE_YAW].MIN_POSITION = 245; //en deg
+			motors[TOURELLE_YAW].MAX_POSITION = 359; //en deg
+			motors[TOURELLE_YAW].consigne = 325; //en deg //Valeur initiale
 			motors[TOURELLE_YAW].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_YAW].pid, 
 							&motors[TOURELLE_YAW].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 

@@ -106,14 +106,15 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	snprintf(buff2, 1000, "%c,teta=%d,phi=%d,d=%d                  \r", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
-	HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
-	/*
-	uart_debug_command("[2J"); //Clear entire screen
-	uart_debug_printf("\r\nTOURELLE YAW\r\n");
-	uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
-	uart_debug_
-	printf("\tSpeed: %d\r\n", motors[TOURELLE_YAW].info.speed);
+	//snprintf(buff2, 1000, "%c,teta=%d,phi=%d,d=%d                  \r", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
+	//HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
+	
+	//uart_debug_command("[2J"); //Clear entire screen
+	uart_debug_printf("%c,teta=%d,phi=%d,d=%d \r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
+	//uart_debug_printf("\r\nTOURELLE YAW\r\n");
+	//uart_debug_printf("\tAngle: %f \r\n", motors[TOURELLE_PITCH].info.angle_360);
+	//uart_debug_
+	/*printf("\tSpeed: %f\r\n", motors[TOURELLE_YAW].info.speed);
 	uart_debug_printf("\tTorque: %d\r\n", motors[TOURELLE_YAW].info.torque);
 	uart_debug_printf("\tTemperature: %d\r\n", motors[TOURELLE_YAW].info.temp);
 	uart_debug_printf("\tCommand: %f\r\n", motors[TOURELLE_YAW].command);*/

@@ -17,6 +17,14 @@
 #include "robot_configuration.h"
 #include "pid.h"
 
+/*decrit si on est en mode visee automatique ou manuelle*/
+enum mode_assistance_ai_t{
+	automatique, manuel
+};
+
+/*change le mode d'assisatance AI pour la visee*/
+void switch_assistance_ai(void);
+
 /* Calcul les pids de tous les moteurs (calcul des commandes en fonction des consignes */
 void traitement_pids_compute(void);
 
@@ -24,4 +32,8 @@ void traitement_pids_compute(void);
 void traitement_1(void);
 
 void chassis_consigne(double Vx, double Vy, double W);
+
+/*Effectue le suivi automatique des cibles */
+void auto_follow_target(void);
+
 #endif

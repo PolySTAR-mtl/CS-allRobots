@@ -14,7 +14,7 @@ void piloteInit(uint8_t pilote_id){
 		0: Antonin;
 	*/
 	/* Receiver */
-	pilote.sensitivity_RC_deadzone = 50; //Between 0 and 6600
+	pilote.sensitivity_RC_deadzone = 100; //Between 0 and 6600
 	pilote.sensitivity_ch_1 = 0.00003;
 	pilote.sensitivity_ch_2 = 0.00003;
 

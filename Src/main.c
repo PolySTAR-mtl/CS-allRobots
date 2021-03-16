@@ -121,13 +121,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	
 	while(1){
-		
-	if(signOfLife_Receiver_RadioController_tick !=0 ){
-		if(isControllerNeutral()){
-			break;
+		if(signOfLife_Receiver_RadioController_tick !=0 ){
+			if(isControllerNeutral()){
+				break;
+			}
 		}
 	}
-	}
+	
   while (1)
   {
 		signOfLife(); //LEDs BLINK

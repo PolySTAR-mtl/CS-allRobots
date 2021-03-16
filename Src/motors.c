@@ -58,19 +58,12 @@ void can_send_command(){
 void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 	for(int j = 0; j < MAX_MOTORS ; j++){
 		if(rx_id == motors[j].can_rx_id){
-			switch(motors[j].type){
-				case GM6020:
-					//Si c'est le premier paquet, aller le lire et initialiser la tourelle
-					if(motors[j].signOfLife_tick == 0) {
+			//Si c'est le premier paquet, aller le lire et initialiser la tourelle
+			if(motors[j].type == GM6020 && motors[j].signOfLife_tick == 0) {
 						fill_motor_data(&motors[j], rx_buff);
 						init_tourelle_data(&motors[j]);
-						break;
-					}
-				case M3508:
-				case M2006:
-					fill_motor_data(&motors[j], rx_buff);
-					break;
 			}
+			fill_motor_data(&motors[j], rx_buff);
 			return;
 		}
 	}
@@ -98,23 +91,24 @@ void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 
 /* Modifie la consigne tout en vérifiant les limites de postion */
 void add_consigne_position(motor_t* motor, float value, float coeff){
+	
 	//S'assure que le moteur répond avant d'envoyer des consignes
-	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick < 100){
-		double sensitivity_deadzone;
-		if(receiver_RadioController.keyboard_mode){
-			sensitivity_deadzone = pilote.sensitivity_mouse_deadzone;
-		}else{
-			sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
-		}
-		if(value > -sensitivity_deadzone && value < sensitivity_deadzone) value = 0;
-		
-		float consigne_position = motor->consigne + (motor->direction * value * coeff);
-		if(consigne_position > 360) consigne_position -= (float) 360.0;
-		if(consigne_position < 0) 	consigne_position += (float) 360.0;
-		if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
-		if(motor->MIN_POSITION > 0 && consigne_position < motor->MIN_POSITION) consigne_position = motor->MIN_POSITION;
-		motor->consigne = consigne_position;
+	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick < 100) return;
+	
+	double sensitivity_deadzone;
+	if(receiver_RadioController.keyboard_mode){
+		sensitivity_deadzone = pilote.sensitivity_mouse_deadzone;
+	}else{
+		sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
 	}
+	if(value > -sensitivity_deadzone && value < sensitivity_deadzone) value = 0;
+	
+	float consigne_position = motor->consigne + (motor->direction * value * coeff);
+	if(consigne_position > 360) consigne_position -= (float) 360.0;
+	if(consigne_position < 0) 	consigne_position += (float) 360.0;
+	if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
+	if(motor->MIN_POSITION > 0 && consigne_position < motor->MIN_POSITION) consigne_position = motor->MIN_POSITION;
+	motor->consigne = consigne_position;
 }
 
 /* Initialise le CAN 1 */

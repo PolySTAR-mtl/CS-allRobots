@@ -113,11 +113,21 @@ int main(void)
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
 	extern jetson_t jetson;
+	extern uint32_t signOfLife_Receiver_RadioController_tick;
 	piloteInit(PILOTE_ANTONIN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	
+	while(1){
+		if(signOfLife_Receiver_RadioController_tick !=0 ){
+			if(isControllerNeutral()){
+				break;
+			}
+		}
+	}
+	
   while (1)
   {
 		signOfLife(); //LEDs BLINK

@@ -8,6 +8,9 @@
 /* Crée le tableau contenant tous les moteurs du robot */
 motor_t motors[MAX_MOTORS];
 
+// Variable qui sauvegarde le type de robot
+int robot_type;
+
 /* CAN MOTORS DATASHEET
 	M3508: Control by current
 		TX :
@@ -30,7 +33,6 @@ motor_t motors[MAX_MOTORS];
 		RX :
 			ID 1-7: 0x204 + ID
 */
-
 
 
 /* Fonction qui premet de configurer le robot */

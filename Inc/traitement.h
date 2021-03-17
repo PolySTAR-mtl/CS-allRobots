@@ -36,4 +36,7 @@ void chassis_consigne(double Vx, double Vy, double W);
 /*Effectue le suivi automatique des cibles */
 void auto_follow_target(void);
 
+/*Retourne true si le controller est a une position neutre*/
+bool isControllerNeutral(void);
+
 #endif

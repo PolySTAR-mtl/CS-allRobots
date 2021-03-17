@@ -30,6 +30,34 @@ void traitement_pids_compute(){
 	}
 }
 
+/*Returns true if controller is in neutral state*/
+bool isControllerNeutral(){
+	
+	if(receiver_RadioController.data.ch1_float != 0){
+		return false;
+	}
+	if(receiver_RadioController.data.ch2_float != 0){
+		return false;
+	}
+	if(receiver_RadioController.data.ch3_float != 0){
+		return false;
+	}
+	if(receiver_RadioController.data.ch4_float != 0){
+		return false;
+	}
+	if(receiver_RadioController.data.sw1 != 1){
+		return false;
+	}
+	if(receiver_RadioController.data.sw2 != 1){
+		return false;
+	}
+	/*if(receiver_RadioController.data.wheel != 0){
+		return false;
+	}*/
+	return true;
+}
+
+
 /* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
 void traitement_1(){
 	

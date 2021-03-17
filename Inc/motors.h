@@ -65,6 +65,9 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff);
 /* Modifie la consigne tout en vérifiant les limites de postion */
 void add_consigne_position(motor_t* motor, float value, float coeff);
 
+/* Initialise la tourelle aux valeurs de départ des moteurs */
+void init_tourelle_data(motor_t* motor);
+
 /* Initialise le CAN 1 */
 void can1_init(void);
 
@@ -76,5 +79,8 @@ void PWM_SetAllDuty(TIM_HandleTypeDef *tim, float duty_ch1, float duty_ch2);
 
 /* scales all PWM duty cycles between 0 and 1 */
 void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection);
+
+/*Rempli la structure motor.info avec les données provenant du moteur */
+void fill_motor_data (motor_t* motor, uint8_t* rx_buff);
 
 #endif

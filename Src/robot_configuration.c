@@ -58,10 +58,12 @@ void robotInit(uint8_t robot_id){
 	float pid_chassis_p = 2;
 	float pid_chassis_i = 0.5;
 	float pid_chassis_d = 0.01;
+	
 	switch(robot_id){
 		/* Standard */
 		case 3:
 		case 4: //Robot Meca STD
+		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
 			motors[FRONT_LEFT].type = M3508;
 			motors[FRONT_LEFT].can_rx_id = 0x200+1; // ID = 1
@@ -159,6 +161,7 @@ void robotInit(uint8_t robot_id){
 
 			break;
 		case 5: //ROBOT DJI
+		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
 			motors[FRONT_LEFT].type = M3508;
 			motors[FRONT_LEFT].can_rx_id = 0x200+1; // ID = 1

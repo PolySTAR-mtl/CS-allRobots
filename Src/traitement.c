@@ -133,11 +133,18 @@ void chassis_consigne(double Vx, double Vy, double W){
 	double sensitivity_Vy;
 	double sensitivity_W;
 	double sensitivity_deadzone;
+	
+	double coefficientShiftChassis;
+	double coefficientEChassis;
+	
 	if(receiver_RadioController.keyboard_mode){
 		sensitivity_Vx = pilote.sensitivity_chassis_keyboard_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_keyboard_Vy;
 		sensitivity_W = pilote.sensitivity_chassis_mouse_W;
 		sensitivity_deadzone = 0;
+		
+		coefficientShiftChassis = pilote.coefficientShiftChassis;
+		coefficientEChassis = pilote.coefficientEChassis;
 	}else{
 		sensitivity_Vx = pilote.sensitivity_chassis_RC_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_RC_Vy;
@@ -147,10 +154,23 @@ void chassis_consigne(double Vx, double Vy, double W){
 	if(Vx > -sensitivity_deadzone && Vx < sensitivity_deadzone) Vx = 0;
 	if(Vy > -sensitivity_deadzone && Vy < sensitivity_deadzone) Vy = 0;
 	
-	motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
-	motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
-	motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
-	motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
+	if(receiver_RadioController.data.kb.bit.SHIFT){ //applique les coefficients sur la vitesse du chassis en focntion de la touche appuyee
+		motors[FRONT_LEFT].consigne 	= coefficientShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_LEFT].consigne 		= coefficientShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+	} else if(receiver_RadioController.data.kb.bit.E){
+		motors[FRONT_LEFT].consigne 	= coefficientEChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_LEFT].consigne 		= coefficientEChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+	}else{
+		motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
+		motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
+		motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
+		motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
+	}
+	
 }	
 
 /*change le mode de visee
@@ -194,6 +214,7 @@ void auto_follow_target(void){
 	}
 	uart_debug();
 	
+	// to delete soon (keep lines 181-194) :
 			teta = jetson.robot_target_coordinates.teta_target_location;
 			phi = jetson.robot_target_coordinates.phi_target_location;
 			d = jetson.robot_target_coordinates.d_target_location;
@@ -201,7 +222,7 @@ void auto_follow_target(void){
 	
 	if(target_located=='Y'){/*change les consignes juste si une cible est localisee*/
 		float consigne_yaw = motors[TOURELLE_YAW].consigne + phi*0.0001; 
-		float consigne_pitch = motors[TOURELLE_PITCH].consigne + teta*0.0001 - (PI/2)*1000; //1 millirad = (180/PI)/1000 degres
+		float consigne_pitch = motors[TOURELLE_PITCH].consigne + (teta - (PI/2)*1000)*0.0001; //1 millirad = (180/PI)/1000 degres
 		if(phi > 0){
 			consigne_yaw = motors[TOURELLE_YAW].consigne + 0.0005; 
 		}else{

@@ -159,7 +159,7 @@ void chassis_consigne(double Vx, double Vy, double W){
 		motors[FRONT_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
 		motors[BACK_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
 		motors[BACK_LEFT].consigne 		= coefficientShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
-	} else if(receiver_RadioController.data.kb.bit.E){
+	} else if(receiver_RadioController.data.kb.bit.E){ 
 		motors[FRONT_LEFT].consigne 	= coefficientEChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
 		motors[FRONT_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
 		motors[BACK_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
@@ -197,7 +197,7 @@ void auto_follow_target(void){
 	int16_t phi;
 	uint8_t target_located;
 	
-	jetson.switch_informations.switch_target_mode = 0x72;
+	jetson.switch_informations.switch_target_mode = 0x72; //Le target mode doit etre stocke autre part (car la trame switch_information on l'envoie on ne la recoit pas)
 	switch(jetson.switch_informations.switch_target_mode){
 		case 0x72 : 	/*Si la cible est une robot*/
 			teta = jetson.robot_target_coordinates.teta_target_location;
@@ -264,6 +264,16 @@ void auto_follow_target(void){
 		/*Donne la nouvelle consigne aux moteurs*/
 		motors[TOURELLE_YAW].consigne = consigne_yaw;
 		motors[TOURELLE_PITCH].consigne = consigne_pitch;
+	}
+}
+
+void send_switch_info(){
+	if(receiver_RadioController.data.kb.bit.Z){
+		jetson.switch_informations.switch_target = 0x4E;
+	}else if(receiver_RadioController.data.kb.bit.X){
+		jetson.switch_informations.switch_target = 0x4E; //pour le moment il y'a pas de difference entre switch left et switch right
+	}else{
+		jetson.switch_informations.switch_target = 0x00;
 	}
 }
 

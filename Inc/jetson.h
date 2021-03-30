@@ -22,7 +22,7 @@
 typedef __packed struct
 {
 	uint8_t switch_target; //Change la cible: 0x00; rien, 0x4C; change pour cible à gauche; change pour cible à droite
-	uint8_t switch_target_mode; //Change le type de cible: 0x72; robot, 0x52: rune
+	uint8_t switch_target_mode; //Change le type de cible: 0x72; robot, 0x52: rune 
 } switch_informations_t;
 
 typedef __packed struct

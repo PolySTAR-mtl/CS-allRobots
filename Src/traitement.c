@@ -221,10 +221,12 @@ void auto_follow_target(void){
 			phi = jetson.robot_target_coordinates.phi_target_location;
 			d = jetson.robot_target_coordinates.d_target_location;
 			target_located = jetson.robot_target_coordinates.target_located;
+	//
 	
 	if(target_located=='Y'){/*change les consignes juste si une cible est localisee*/
 		float consigne_yaw = motors[TOURELLE_YAW].consigne + phi*0.0001; 
 		float consigne_pitch = motors[TOURELLE_PITCH].consigne + (teta - (PI/2)*1000)*0.0001; //1 millirad = (180/PI)/1000 degres
+		
 		if(phi > 0){
 			consigne_yaw = motors[TOURELLE_YAW].consigne + 0.0005; 
 		}else{
@@ -234,9 +236,11 @@ void auto_follow_target(void){
 		if(teta > (PI/2)*1000){
 			consigne_pitch = motors[TOURELLE_PITCH].consigne + 0.0005; 
 		}else{
-			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;
-			
+			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;	
 		}
+		
+		//Peut être utiliser add_consigne_position() a la place des lignes 246 à 272
+		
 		//consigne_pitch = motors[TOURELLE_PITCH].consigne;
 		//S'assure que la consigne ne est entre 0 et 360 
 		if(consigne_yaw > 360) consigne_yaw -= (float) 360.0;

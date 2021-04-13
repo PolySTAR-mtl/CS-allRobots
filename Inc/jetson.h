@@ -51,6 +51,8 @@ typedef __packed struct
 	rune_target_coordinates_t rune_target_coordinates;
 } jetson_t;
 
+void jetson_uart_send_command(uint8_t command);
+
 void jetson_callback_handler(int8_t lenght);
 
 void uart7_init(void);

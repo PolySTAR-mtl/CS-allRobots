@@ -5,6 +5,7 @@
 *****************/
                   
 #include "receiver_RadioController.h"
+#include "jetson.h"
 
 
 uint8_t uart1_rx_buff[UART1_RX_BUFFLEN];
@@ -59,6 +60,13 @@ void receiver_RadioController_callback_handler()
 					receiver_RadioController.data.mouse.l != 0 ||
 					receiver_RadioController.data.kb.key_code != 0){
 		receiver_RadioController.keyboard_mode = true;
+	}
+					
+	//Envoie a la jetson l'info de changer de cible dès que le bouton X ou Z est presse
+	if(receiver_RadioController.data.kb.bit.X && !receiver_RadioController.last_data.kb.bit.X){
+		jetson_uart_send_command('R');
+	}else if(receiver_RadioController.data.kb.bit.Z && !receiver_RadioController.last_data.kb.bit.Z){
+	  jetson_uart_send_command('L');
 	}
 }
 

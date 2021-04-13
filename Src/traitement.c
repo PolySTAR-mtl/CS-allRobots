@@ -76,6 +76,8 @@ void traitement_1(){
 		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
 		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
+		
+		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
 		add_consigne_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
 		
@@ -267,13 +269,5 @@ void auto_follow_target(void){
 	}
 }
 
-void send_switch_info(){
-	if(receiver_RadioController.data.kb.bit.Z){
-		jetson.switch_informations.switch_target = 0x4E;
-	}else if(receiver_RadioController.data.kb.bit.X){
-		jetson.switch_informations.switch_target = 0x4E; //pour le moment il y'a pas de difference entre switch left et switch right
-	}else{
-		jetson.switch_informations.switch_target = 0x00;
-	}
-}
+
 

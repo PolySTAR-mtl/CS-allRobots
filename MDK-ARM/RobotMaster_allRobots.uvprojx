@@ -584,6 +584,11 @@
           <GroupName>Devices</GroupName>
           <Files>
             <File>
+              <FileName>referee_system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\referee_system.c</FilePath>
+            </File>
+            <File>
               <FileName>oled.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\oled.c</FilePath>
@@ -597,11 +602,6 @@
               <FileName>receiver_RadioController.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\receiver_RadioController.c</FilePath>
-            </File>
-            <File>
-              <FileName>referee_system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\referee_system.c</FilePath>
             </File>
             <File>
               <FileName>motors.c</FileName>

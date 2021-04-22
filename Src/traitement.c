@@ -45,10 +45,10 @@ bool isControllerNeutral(){
 	if(receiver_RadioController.data.ch4_float != 0){
 		return false;
 	}
-	if(receiver_RadioController.data.sw1 != 1){
-		return false;
-	}
-	if(receiver_RadioController.data.sw2 != 1){
+	//if(receiver_RadioController.data.sw1 != 1){
+		//return false;
+	//}
+	if(receiver_RadioController.data.sw2 != 2){
 		return false;
 	}
 	/*if(receiver_RadioController.data.wheel != 0){
@@ -110,13 +110,13 @@ void traitement_1(){
 				break;
 		}
 		switch(receiver_RadioController.data.sw2){
-			case 1:
+			case 2:
 				canon_shoot(0, 0);
 				break;
 			case 3:
 				canon_shoot(0.40, 1000);
 				break;
-			case 2:
+			case 1:
 				canon_shoot(1, 1000);
 				break;
 		}

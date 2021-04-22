@@ -73,7 +73,7 @@ void init_tourelle_data(motor_t* motor){
 	motor->consigne = motor->info.angle_360;
 	if(motor->MAX_POSITION < motor->info.angle_360 || motor->MIN_POSITION > motor->info.angle_360){
 			while(true){
-				BOARD_LED_GREEN_ON();
+				error_board_A(1);
 			}
 	}
 }
@@ -93,7 +93,7 @@ void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 void add_consigne_position(motor_t* motor, float value, float coeff){
 	
 	//S'assure que le moteur répond avant d'envoyer des consignes
-	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick < 100) return;
+	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick > 100) return;
 	
 	double sensitivity_deadzone;
 	if(receiver_RadioController.keyboard_mode){

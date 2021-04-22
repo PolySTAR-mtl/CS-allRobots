@@ -216,7 +216,7 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
-			motors[TOURELLE_PITCH].MIN_POSITION = 245; //en deg
+			motors[TOURELLE_PITCH].MIN_POSITION = 240; //en deg
 			motors[TOURELLE_PITCH].MAX_POSITION = 293; //en deg
 			motors[TOURELLE_PITCH].consigne = 250; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = 1; //permet de choisir la direction de controle (-1 ou 1)

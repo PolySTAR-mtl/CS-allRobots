@@ -7,6 +7,8 @@
 #include "traitement.h"
 #include "pilotes.h"
 #include "canon.h"
+#include "robot_configuration.h"
+
 
 #define MAX_BASE_SPEED_COEFF  10
 #define PI 3.14159265358979323846
@@ -16,6 +18,9 @@ extern receiver_RadioController_t receiver_RadioController;
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
 extern jetson_t jetson;
+
+
+extern float vitesse_snail; 
 
 /*mode de controle actuel*/
 enum mode_assistance_ai_t mode_assistance_ai = automatique;
@@ -85,9 +90,9 @@ void traitement_1(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(0.15, 1000);
+			canon_shoot(vitesse_snail/2, 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(0.20, 1000);
+			canon_shoot(vitesse_snail, 1000);
 		}else{
 			canon_shoot_end();
 		}
@@ -108,14 +113,14 @@ void traitement_1(){
 				break;
 		}
 		switch(receiver_RadioController.data.sw2){
-			case 1:
+			case 2:
 				canon_shoot(0, 0);
 				break;
 			case 3:
-				canon_shoot(0.40, 1000);
+				canon_shoot(vitesse_snail/2, 1000);
 				break;
-			case 2:
-				canon_shoot(1, 1000);
+			case 1:
+				canon_shoot(vitesse_snail, 1000);
 				break;
 		}
 		

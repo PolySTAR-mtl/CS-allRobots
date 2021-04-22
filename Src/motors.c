@@ -93,7 +93,7 @@ void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 void add_consigne_position(motor_t* motor, float value, float coeff){
 	
 	//S'assure que le moteur répond avant d'envoyer des consignes
-	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick < 100) return;
+	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick > 100) return;
 	
 	double sensitivity_deadzone;
 	if(receiver_RadioController.keyboard_mode){

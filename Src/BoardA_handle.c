@@ -199,7 +199,8 @@ void error_board_A(uint8_t errorCode){
 			BOARD_LED_G_ON();
 	}    if (errorCode & 0x80){
 			BOARD_LED_H_ON();
-	}    while(true){
+	}    
+	while(true){
 			HAL_Delay(20);
 			BOARD_LED_RED_TOGGLE();
 	}

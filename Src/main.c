@@ -98,6 +98,7 @@ int main(void)
   MX_CAN1_Init();
   MX_UART8_Init();
   MX_TIM1_Init();
+	MX_TIM12_Init();
   MX_UART7_Init();
   /* USER CODE BEGIN 2 */
 	PWM_init();
@@ -120,12 +121,22 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	
+	bool buzz_on = false;
+	
 	while(1){
-		if(signOfLife_Receiver_RadioController_tick !=0 ){
+		
+		signOfLife_Receiver_RadioController();
+		if(signOfLife_Receiver_RadioController_tick != 0){
 			if(isControllerNeutral()){
-				break;
+				stop_buzz();
+				buzz_on = false;
+				break;     // get out of the infinite loop when the controller is in neutral position
+			} else if (!buzz_on) {
+				start_buzz();    // otherwise, buzz until controller OK
+				buzz_on = true;
 			}
 		}
+		HAL_Delay(100); // Important for the buzzer to wait for a delay!
 	}
 	
   while (1)

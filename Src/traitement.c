@@ -33,6 +33,7 @@ void traitement_pids_compute(){
 /*Returns true if controller is in neutral state*/
 bool isControllerNeutral(){
 	
+	// Joysticks in central position
 	if(receiver_RadioController.data.ch1_float != 0){
 		return false;
 	}
@@ -45,15 +46,22 @@ bool isControllerNeutral(){
 	if(receiver_RadioController.data.ch4_float != 0){
 		return false;
 	}
-	//if(receiver_RadioController.data.sw1 != 1){
-		//return false;
-	//}
+	
+	// Switch 1 in any position
+	/*if(receiver_RadioController.data.sw1 != 1){
+		return false;
+	}*/
+	
+	// Switch 2 (SNAILS) in lower position
 	if(receiver_RadioController.data.sw2 != 2){
 		return false;
 	}
+	
+	// Wheel not touched
 	/*if(receiver_RadioController.data.wheel != 0){
 		return false;
 	}*/
+	
 	return true;
 }
 

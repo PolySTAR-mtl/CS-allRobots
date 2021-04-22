@@ -37,6 +37,7 @@ extern "C" {
 #include "robot_configuration.h"
 #include "pilotes.h"
 #include "canon.h"
+#include "buzzer.h"
 
 /* USER CODE END Includes */
 

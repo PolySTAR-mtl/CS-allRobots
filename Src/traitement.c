@@ -1,21 +1,26 @@
 /****************
-   Description : Fait la laison entre la télécommande et les consignes moteurs
-   Auteur : Sébastien FAGUET
+   Description : Fait la laison entre la tï¿½lï¿½commande et les consignes moteurs
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 
 #include "traitement.h"
 #include "pilotes.h"
 #include "canon.h"
+#include "robot_configuration.h"
+
 
 #define MAX_BASE_SPEED_COEFF  10
 #define PI 3.14159265358979323846
 
-/* On récupère les variables exterieurs */
+/* On rï¿½cupï¿½re les variables exterieurs */
 extern receiver_RadioController_t receiver_RadioController;	
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
 extern jetson_t jetson;
+
+
+extern float vitesse_snail; 
 
 /*mode de controle actuel*/
 enum mode_assistance_ai_t mode_assistance_ai = automatique;
@@ -66,7 +71,7 @@ bool isControllerNeutral(){
 }
 
 
-/* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
+/* Fonctions qui fait les liens entre les entrï¿½es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut crï¿½er plusieurs traitements */
 void traitement_1(){
 	
 	if(receiver_RadioController.keyboard_mode){
@@ -95,9 +100,9 @@ void traitement_1(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(0.15, 1000);
+			canon_shoot(vitesse_snail/2, 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(0.20, 1000);
+			canon_shoot(vitesse_snail, 1000);
 		}else{
 			canon_shoot_end();
 		}
@@ -122,10 +127,10 @@ void traitement_1(){
 				canon_shoot(0, 0);
 				break;
 			case 3:
-				canon_shoot(0.40, 1000);
+				canon_shoot(vitesse_snail/2, 1000);
 				break;
 			case 1:
-				canon_shoot(1, 1000);
+				canon_shoot(vitesse_snail, 1000);
 				break;
 		}
 		
@@ -135,7 +140,7 @@ void traitement_1(){
 
 void chassis_consigne(double Vx, double Vy, double W){ 
 	/*
-		Vx: Avant / Arrière
+		Vx: Avant / Arriï¿½re
 		Vy:	Translation gauche / Droite
 		W: Rotation
 	*/
@@ -247,7 +252,7 @@ void auto_follow_target(void){
 			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;	
 		}
 		
-		//Peut être utiliser add_consigne_position() a la place des lignes 246 à 272
+		//Peut ï¿½tre utiliser add_consigne_position() a la place des lignes 246 ï¿½ 272
 		
 		//consigne_pitch = motors[TOURELLE_PITCH].consigne;
 		//S'assure que la consigne ne est entre 0 et 360 

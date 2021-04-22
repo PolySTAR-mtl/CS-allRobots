@@ -106,6 +106,52 @@ typedef __packed struct
 
 typedef __packed struct
 {
+ uint8_t robot_id;
+ uint8_t robot_level;
+ uint16_t remain_HP;
+ uint16_t max_HP;
+ uint16_t shooter_id1_17mm_cooling_rate;
+ uint16_t shooter_id1_17mm_cooling_limit;
+uint16_t shooter_id1_17mm_speed_limit;
+ uint16_t shooter_id2_17mm_cooling_rate;
+ uint16_t shooter_id2_17mm_cooling_limit;
+uint16_t shooter_id2_17mm_speed_limit;
+ uint16_t shooter_id1_42mm_cooling_rate;
+ uint16_t shooter_id1_42mm_cooling_limit;
+uint16_t shooter_id1_42mm_speed_limit;
+uint16_t chassis_power_limit;
+ uint8_t mains_power_gimbal_output : 1;
+ uint8_t mains_power_chassis_output : 1;
+ uint8_t mains_power_shooter_output : 1;
+} ext_game_robot_status_t;
+
+typedef __packed struct
+{
+ uint16_t chassis_volt;
+ uint16_t chassis_current;
+ float chassis_power;
+ uint16_t chassis_power_buffer;
+ uint16_t shooter_id1_17mm_cooling_heat;
+uint16_t shooter_id2_17mm_cooling_heat;
+uint16_t shooter_id1_42mm_cooling_heat;
+} ext_power_heat_data_t;
+
+typedef __packed struct
+{
+ uint8_t armor_id : 4;
+ uint8_t hurt_type : 4;
+} ext_robot_hurt_t;
+
+typedef __packed struct
+{
+ uint8_t bullet_type;
+uint8_t shooter_id;
+ uint8_t bullet_freq;
+ float bullet_speed;
+} ext_shoot_data_t;
+
+typedef __packed struct
+{
 	ext_game_status_t game_status;
 	ext_game_result_t game_result;
 	ext_game_robot_HP_t game_robot_HP;
@@ -113,6 +159,10 @@ typedef __packed struct
 	ext_ICRA_buff_debuff_zone_status_t ICRA_buff_debuff_zone_status;
 	ext_event_data_t event_data;
 	ext_supply_projectile_action_t supply_projectile_action;
+	ext_game_robot_status_t game_robot_status;
+	ext_power_heat_data_t power_heat_data;
+	ext_robot_hurt_t robot_hurt;
+	ext_shoot_data_t shoot_data;
 } refereeSystem_t;
 
 

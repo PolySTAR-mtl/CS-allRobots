@@ -71,10 +71,14 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 
 void init_tourelle_data(motor_t* motor){
 	motor->consigne = motor->info.angle_360;
-	if(motor->MAX_POSITION < motor->info.angle_360 || motor->MIN_POSITION > motor->info.angle_360){
-			while(true){
+	if(motor->MAX_POSITION > motor->MIN_POSITION){ 
+		if(motor->MAX_POSITION < motor->info.angle_360 || motor->MIN_POSITION > motor->info.angle_360){
 				error_board_A(1);
-			}
+		}
+	} else { // Si l'angle 0 est entre le min et le max (donc min > max)
+		if(motor->MAX_POSITION < motor->info.angle_360 && motor->MIN_POSITION > motor->info.angle_360){
+				error_board_A(1);
+		}
 	}
 }
 
@@ -106,8 +110,22 @@ void add_consigne_position(motor_t* motor, float value, float coeff){
 	float consigne_position = motor->consigne + (motor->direction * value * coeff);
 	if(consigne_position > 360) consigne_position -= (float) 360.0;
 	if(consigne_position < 0) 	consigne_position += (float) 360.0;
-	if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
-	if(motor->MIN_POSITION > 0 && consigne_position < motor->MIN_POSITION) consigne_position = motor->MIN_POSITION;
+	
+	if(motor->MAX_POSITION > motor->MIN_POSITION){
+		if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) consigne_position = motor->MAX_POSITION;
+		if(motor->MIN_POSITION > 0 && consigne_position < motor->MIN_POSITION) consigne_position = motor->MIN_POSITION;
+	}else{
+		if(motor->MAX_POSITION > 0 && consigne_position > motor->MAX_POSITION) {
+			if(motor->MIN_POSITION > 0 && consigne_position < motor->MIN_POSITION) {
+				if((consigne_position - motor->MAX_POSITION) < (motor->MIN_POSITION - consigne_position)){
+					consigne_position = motor->MAX_POSITION;
+				}else{
+					consigne_position = motor->MIN_POSITION;
+				}
+			}
+		}
+	}
+		
 	motor->consigne = consigne_position;
 }
 

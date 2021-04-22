@@ -60,6 +60,22 @@ void refereeSystem_callback_handler(int8_t lenght){
 			/* Projectile Supplier Zone action identification: 0x0102. Transmission frequency: send after the action is triggered. Transmission scope: own side robots. */
 			memcpy(&refereeSystem.supply_projectile_action, &uart6_rx_buff[7], data_length);
 			break;
+		case 0x0201:
+			/*Robot status in competition: 0x0201. Transmission frequency: 10Hz*/
+		memcpy(&refereeSystem.game_robot_status, &uart6_rx_buff[7], data_length);
+			break;
+		case 0x0202:
+			/*Real-time power and heat data: 0x0202. Transmission frequency: 50 Hz*/
+		memcpy(&refereeSystem.power_heat_data, &uart6_rx_buff[7], data_length);
+			break;
+		case 0x0206 :
+			/* Damage status data : 0x206. Transmission frequency: Transmitted after the damage occurs*/
+			memcpy(&refereeSystem.robot_hurt, &uart6_rx_buff[7], data_length);
+		break;
+		case 0x0207 :
+			/* 6 Real-time launching information: 0x0207. Transmission frequency: Transmitted after launching*/
+			memcpy(&refereeSystem.shoot_data, &uart6_rx_buff[7], data_length);
+		break;
 		default: return;
 	}
 	

@@ -1,6 +1,6 @@
 /****************
-   Description : Fait la laison entre la télécommande et les consignes moteurs
-   Auteur : Sébastien FAGUET
+   Description : Fait la laison entre la tï¿½lï¿½commande et les consignes moteurs
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 
@@ -13,7 +13,7 @@
 #define MAX_BASE_SPEED_COEFF  10
 #define PI 3.14159265358979323846
 
-/* On récupère les variables exterieurs */
+/* On rï¿½cupï¿½re les variables exterieurs */
 extern receiver_RadioController_t receiver_RadioController;	
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
@@ -50,10 +50,10 @@ bool isControllerNeutral(){
 	if(receiver_RadioController.data.ch4_float != 0){
 		return false;
 	}
-	if(receiver_RadioController.data.sw1 != 1){
-		return false;
-	}
-	if(receiver_RadioController.data.sw2 != 1){
+	//if(receiver_RadioController.data.sw1 != 1){
+		//return false;
+	//}
+	if(receiver_RadioController.data.sw2 != 2){
 		return false;
 	}
 	/*if(receiver_RadioController.data.wheel != 0){
@@ -63,7 +63,7 @@ bool isControllerNeutral(){
 }
 
 
-/* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
+/* Fonctions qui fait les liens entre les entrï¿½es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut crï¿½er plusieurs traitements */
 void traitement_1(){
 	
 	if(receiver_RadioController.keyboard_mode){
@@ -80,6 +80,8 @@ void traitement_1(){
 		/*gere l'assistance automatique*/
 		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
 		//if(mode_assistance_ai==automatique) auto_follow_target();
+		
+		
 		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
 		add_consigne_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
@@ -130,7 +132,7 @@ void traitement_1(){
 
 void chassis_consigne(double Vx, double Vy, double W){ 
 	/*
-		Vx: Avant / Arrière
+		Vx: Avant / Arriï¿½re
 		Vy:	Translation gauche / Droite
 		W: Rotation
 	*/
@@ -138,11 +140,18 @@ void chassis_consigne(double Vx, double Vy, double W){
 	double sensitivity_Vy;
 	double sensitivity_W;
 	double sensitivity_deadzone;
+	
+	double coefficientShiftChassis;
+	double coefficientEChassis;
+	
 	if(receiver_RadioController.keyboard_mode){
 		sensitivity_Vx = pilote.sensitivity_chassis_keyboard_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_keyboard_Vy;
 		sensitivity_W = pilote.sensitivity_chassis_mouse_W;
 		sensitivity_deadzone = 0;
+		
+		coefficientShiftChassis = pilote.coefficientShiftChassis;
+		coefficientEChassis = pilote.coefficientEChassis;
 	}else{
 		sensitivity_Vx = pilote.sensitivity_chassis_RC_Vx;
 		sensitivity_Vy = pilote.sensitivity_chassis_RC_Vy;
@@ -152,10 +161,23 @@ void chassis_consigne(double Vx, double Vy, double W){
 	if(Vx > -sensitivity_deadzone && Vx < sensitivity_deadzone) Vx = 0;
 	if(Vy > -sensitivity_deadzone && Vy < sensitivity_deadzone) Vy = 0;
 	
-	motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
-	motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
-	motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
-	motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
+	if(receiver_RadioController.data.kb.bit.SHIFT){ //applique les coefficients sur la vitesse du chassis en focntion de la touche appuyee
+		motors[FRONT_LEFT].consigne 	= coefficientShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_LEFT].consigne 		= coefficientShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+	} else if(receiver_RadioController.data.kb.bit.E){ 
+		motors[FRONT_LEFT].consigne 	= coefficientEChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
+		motors[BACK_LEFT].consigne 		= coefficientEChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+	}else{
+		motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
+		motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
+		motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
+		motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
+	}
+	
 }	
 
 /*change le mode de visee
@@ -182,7 +204,7 @@ void auto_follow_target(void){
 	int16_t phi;
 	uint8_t target_located;
 	
-	jetson.switch_informations.switch_target_mode = 0x72;
+	jetson.switch_informations.switch_target_mode = 0x72; //Le target mode doit etre stocke autre part (car la trame switch_information on l'envoie on ne la recoit pas)
 	switch(jetson.switch_informations.switch_target_mode){
 		case 0x72 : 	/*Si la cible est une robot*/
 			teta = jetson.robot_target_coordinates.teta_target_location;
@@ -199,14 +221,17 @@ void auto_follow_target(void){
 	}
 	uart_debug();
 	
+	// to delete soon (keep lines 181-194) :
 			teta = jetson.robot_target_coordinates.teta_target_location;
 			phi = jetson.robot_target_coordinates.phi_target_location;
 			d = jetson.robot_target_coordinates.d_target_location;
 			target_located = jetson.robot_target_coordinates.target_located;
+	//
 	
 	if(target_located=='Y'){/*change les consignes juste si une cible est localisee*/
 		float consigne_yaw = motors[TOURELLE_YAW].consigne + phi*0.0001; 
-		float consigne_pitch = motors[TOURELLE_PITCH].consigne + teta*0.0001 - (PI/2)*1000; //1 millirad = (180/PI)/1000 degres
+		float consigne_pitch = motors[TOURELLE_PITCH].consigne + (teta - (PI/2)*1000)*0.0001; //1 millirad = (180/PI)/1000 degres
+		
 		if(phi > 0){
 			consigne_yaw = motors[TOURELLE_YAW].consigne + 0.0005; 
 		}else{
@@ -216,9 +241,11 @@ void auto_follow_target(void){
 		if(teta > (PI/2)*1000){
 			consigne_pitch = motors[TOURELLE_PITCH].consigne + 0.0005; 
 		}else{
-			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;
-			
+			consigne_pitch = motors[TOURELLE_PITCH].consigne - 0.0005;	
 		}
+		
+		//Peut ï¿½tre utiliser add_consigne_position() a la place des lignes 246 ï¿½ 272
+		
 		//consigne_pitch = motors[TOURELLE_PITCH].consigne;
 		//S'assure que la consigne ne est entre 0 et 360 
 		if(consigne_yaw > 360) consigne_yaw -= (float) 360.0;
@@ -250,4 +277,6 @@ void auto_follow_target(void){
 		motors[TOURELLE_PITCH].consigne = consigne_pitch;
 	}
 }
+
+
 

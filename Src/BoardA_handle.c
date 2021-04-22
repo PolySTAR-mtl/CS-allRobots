@@ -180,3 +180,28 @@ int uart_receive_dma_no_it(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t S
 		return HAL_BUSY;
 	}
 }
+
+void error_board_A(uint8_t errorCode){    
+	BOARD_LED_ALL_OFF();    
+	if (errorCode & 0x1){
+        BOARD_LED_A_ON();
+	}    if (errorCode & 0x2){
+			BOARD_LED_B_ON();
+	}    if (errorCode & 0x4){
+			BOARD_LED_C_ON();
+	}    if (errorCode & 0x8){
+			BOARD_LED_D_ON();
+	}    if (errorCode & 0x10){
+			BOARD_LED_E_ON();
+	}    if (errorCode & 0x20){
+			BOARD_LED_F_ON();
+	}    if (errorCode & 0x40){
+			BOARD_LED_G_ON();
+	}    if (errorCode & 0x80){
+			BOARD_LED_H_ON();
+	}    
+	while(true){
+			HAL_Delay(20);
+			BOARD_LED_RED_TOGGLE();
+	}
+}

@@ -22,7 +22,7 @@
 typedef __packed struct
 {
 	uint8_t switch_target; //Change la cible: 0x00; rien, 0x4C; change pour cible à gauche; change pour cible à droite
-	uint8_t switch_target_mode; //Change le type de cible: 0x72; robot, 0x52: rune
+	uint8_t switch_target_mode; //Change le type de cible: 0x72; robot, 0x52: rune 
 } switch_informations_t;
 
 typedef __packed struct
@@ -50,6 +50,8 @@ typedef __packed struct
 	robot_target_coordinates_t robot_target_coordinates;
 	rune_target_coordinates_t rune_target_coordinates;
 } jetson_t;
+
+void jetson_uart_send_command(uint8_t command);
 
 void jetson_callback_handler(int8_t lenght);
 

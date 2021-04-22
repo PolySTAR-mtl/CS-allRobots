@@ -31,6 +31,10 @@ void piloteInit(uint8_t pilote_id){
 	pilote.sensitivity_chassis_keyboard_Vy = 4300;
 	pilote.sensitivity_chassis_mouse_W = 160;
 	
+	/*Coefficient puissance chassis*/
+	pilote.coefficientShiftChassis = 0.5;
+	pilote.coefficientEChassis = 1.2;
+	
 	switch(pilote_id){ //Configuration personnalisée
 		/* Antonin */
 		case PILOTE_ANTONIN:

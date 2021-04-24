@@ -17,6 +17,8 @@
 #include "PID.h"
 #define TICK_SECOND 1000
 
+bool pid_enabled = true;
+
 pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float ki, float kd)
 {
 	pid->input = in;
@@ -43,11 +45,13 @@ bool pid_need_compute(pid_t pid)
 {
 	// Check if the PID period has elapsed
 	if(pid->Kp == 0) return false;
+	if(!pid_enabled) return false;
 	return(HAL_GetTick() - pid->lasttime >= pid->sampletime) ? true : false;
 }
 
 void pid_compute(pid_t pid)
 {
+	if(!pid_enabled) return;
 	// Check if control is enabled
 	if (!pid->automode)
 		return;
@@ -84,6 +88,10 @@ void pid_compute(pid_t pid)
 	// Keep track of some variables for next execution
 	pid->lastin = in;
 	pid->lasttime = HAL_GetTick();
+}
+
+void pid_enable(bool isEnabled){
+	pid_enabled = isEnabled;
 }
 
 void pid_tune(pid_t pid, float kp, float ki, float kd)

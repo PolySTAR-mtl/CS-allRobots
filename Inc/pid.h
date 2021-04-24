@@ -108,8 +108,16 @@ typedef struct pid_controller * pid_t;
 	 * current system input.
 	 *
 	 * @param pid The PID controller instance which will be used for computation
-	 */
+	 */	
 	void pid_compute(pid_t pid);
+	
+		/**
+	 * @brief Enables or disables PID calculations
+	 *
+	 * @param The bool of whether or not we should compute the PID
+	 */
+	 
+	void pid_enable(bool isEnabled);
 
 	/**
 	 * @brief Sets new PID tuning parameters

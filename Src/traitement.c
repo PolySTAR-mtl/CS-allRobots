@@ -21,6 +21,7 @@ extern jetson_t jetson;
 
 
 extern float vitesse_snail; 
+extern float cadence_coeff;
 
 /*mode de controle actuel*/
 enum mode_assistance_ai_t mode_assistance_ai = automatique;
@@ -92,9 +93,9 @@ void traitement_1(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(vitesse_snail/2, 1000);
+			canon_shoot(vitesse_snail/2, cadence_coeff * 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(vitesse_snail, 1000);
+			canon_shoot(vitesse_snail, cadence_coeff * 1000);
 		}else{
 			canon_shoot_end();
 		}

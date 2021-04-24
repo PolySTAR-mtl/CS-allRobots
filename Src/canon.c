@@ -26,7 +26,7 @@ void canon_shoot(float speed, float rate){
 			begin_canon_shoot = HAL_GetTick();
 			
 			PWM_SetAllDuty(&htim1, speed, speed); //Démarage des snails
-			shoot_rate = rate; //Sauvegarde de la cadance de tir
+			shoot_rate = motors[FEEDER].direction * rate; //Sauvegarde de la cadance de tir
 			
 	motors[FEEDER].consigne = shoot_rate; //Démarage du feeder
 		}
@@ -34,8 +34,8 @@ void canon_shoot(float speed, float rate){
 		//Prise en compte des nouvelles valeurs que si nous sommes entrain de tirer
 		if(begin_canon_shoot == 0 && end_canon_shoot == 0 && shooting != 0){ 
 			PWM_SetAllDuty(&htim1, speed, speed); //Changement de la vitesse 
-			motors[FEEDER].consigne = rate; //Changement de la cadance de tir
-			shoot_rate = rate; //Changement de la cadance de tir
+			motors[FEEDER].consigne = motors[FEEDER].direction * rate; //Changement de la cadance de tir
+			shoot_rate = motors[FEEDER].direction * rate; //Changement de la cadance de tir
 		}
 	}
 }

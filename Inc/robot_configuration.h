@@ -19,6 +19,7 @@
 #define TOURELLE_YAW 4
 #define TOURELLE_PITCH 5
 #define FEEDER 6
+#define FEEDER2 7
 
 
 

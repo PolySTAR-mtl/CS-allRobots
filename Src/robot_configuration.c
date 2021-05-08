@@ -68,7 +68,7 @@ void robotInit(uint8_t robot_id){
 		/* Standard */
 		case 3:
 		case 4: //Robot Meca STD
-			vitesse_snail = 0.65;
+			vitesse_snail = 0.33;
 			cadence_coeff = 1;
 		  inversion_gauchedroite = true;
 		  inversion_avantarriere = false;

@@ -323,7 +323,7 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
-			motors[TOURELLE_PITCH].MIN_POSITION = 1; //en deg
+			motors[TOURELLE_PITCH].MIN_POSITION = 0; //en deg
 			motors[TOURELLE_PITCH].MAX_POSITION = 359; //en deg
 			motors[TOURELLE_PITCH].consigne = 250; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = 1; //permet de choisir la direction de controle (-1 ou 1)
@@ -340,8 +340,8 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TOURELLE_YAW].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_YAW].can_tx_id = 2;
-			motors[TOURELLE_YAW].MIN_POSITION = 1; //en deg
-			motors[TOURELLE_YAW].MAX_POSITION = 360; //en deg
+			motors[TOURELLE_YAW].MIN_POSITION = 0; //en deg
+			motors[TOURELLE_YAW].MAX_POSITION = 359; //en deg
 			motors[TOURELLE_YAW].consigne = 208; //en deg //Valeur initiale
 			motors[TOURELLE_YAW].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_YAW].pid, 
@@ -364,6 +364,20 @@ void robotInit(uint8_t robot_id){
 							&motors[FEEDER].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
 							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[FEEDER_HERO].debug_name, "FEEDER_HERO");
+			motors[FEEDER_HERO].type = M2006;
+			motors[FEEDER_HERO].can_rx_id = 0x200+8; // ID = 8
+			motors[FEEDER_HERO].can_tx_frame = 0x1FF; 
+			motors[FEEDER_HERO].can_tx_id = 7-4; 
+			motors[FEEDER_HERO].direction = -1;
+			pid_create(&motors[FEEDER_HERO].pid, 
+							&motors[FEEDER_HERO].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FEEDER_HERO].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FEEDER_HERO].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FEEDER_HERO].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
+
 
 			break;
 			

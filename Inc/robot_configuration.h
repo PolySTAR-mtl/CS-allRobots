@@ -1,6 +1,6 @@
 /****************
    Description : Configuration du robot
-   Auteur : Sébastien FAGUET
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 #ifndef ROBOT_CONFIGURATION
@@ -19,7 +19,7 @@
 #define TOURELLE_YAW 4
 #define TOURELLE_PITCH 5
 #define FEEDER 6
-#define FEEDER_HERO 7
+#define FEEDER_2 7
 
 
 

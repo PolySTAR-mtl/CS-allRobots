@@ -42,10 +42,29 @@ void signOfLife(){
 
 /* Gère le signe de vie, LED A: Si on recoit des données de la télécommande */
 void signOfLife_Receiver_RadioController(){
-  if ((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 500){
+  if ((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50){
 		BOARD_LED_A_ON();
+		pid_enable(true);
 	}else{
 		BOARD_LED_A_OFF();
+		receiver_RadioController.data.ch1_float = 0;
+		receiver_RadioController.data.ch2_float = 0;
+		receiver_RadioController.data.ch3_float = 0;
+		receiver_RadioController.data.ch4_float = 0;
+		receiver_RadioController.data.sw2 = 2;
+		receiver_RadioController.data.wheel = 0;
+		pid_enable(false);
+		
+		for(int i = 0; i < MAX_MOTORS; i++){
+			if(motors[i].type != GM6020){
+				motors[i].consigne = 0;
+				motors[i].command = 0;
+			} else {
+				motors[i].consigne = motors[i].info.angle_360;
+				motors[i].command = motors[i].info.angle_360;
+			}
+		}
+		canon_shoot_end();
 	}
 }
 

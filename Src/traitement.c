@@ -21,6 +21,9 @@ extern jetson_t jetson;
 
 
 extern float vitesse_snail; 
+extern float cadence_coeff;
+extern bool  inversion_gauchedroite;
+extern bool  inversion_avantarriere;
 
 /*mode de controle actuel*/
 enum mode_assistance_ai_t mode_assistance_ai = automatique;
@@ -100,9 +103,9 @@ void traitement_1(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(vitesse_snail/2, 1000);
+			canon_shoot(vitesse_snail/2, cadence_coeff * 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(vitesse_snail, 1000);
+			canon_shoot(vitesse_snail, cadence_coeff * 1000);
 		}else{
 			canon_shoot_end();
 		}
@@ -151,6 +154,18 @@ void chassis_consigne(double Vx, double Vy, double W){
 	
 	double coefficientShiftChassis;
 	double coefficientEChassis;
+	
+	if (inversion_gauchedroite) {
+		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
+		// mais la ligne 132 de ce fichier étant erronée, on inverse le gauche-droite en inversant le Y et non le X
+		Vy = -Vy;
+	}
+	
+	if (inversion_avantarriere) {
+		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
+		// mais la ligne 132 de ce fichier étant erronée, on inverse le avant-arrière en inversant le X et non le Y
+		Vx = -Vx;
+	}
 	
 	if(receiver_RadioController.keyboard_mode){
 		sensitivity_Vx = pilote.sensitivity_chassis_keyboard_Vx;

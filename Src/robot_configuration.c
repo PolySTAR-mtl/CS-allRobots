@@ -35,6 +35,11 @@ int robot_type;
 */
 
 float vitesse_snail = 0.0f;
+float cadence_coeff = 0.0f;
+bool inversion_gauchedroite = false;
+bool inversion_avantarriere = false;
+
+
 /* Fonction qui premet de configurer le robot */
 void robotInit(uint8_t robot_id){
 	/*
@@ -63,7 +68,10 @@ void robotInit(uint8_t robot_id){
 		/* Standard */
 		case 3:
 		case 4: //Robot Meca STD
-			vitesse_snail = 0.30;
+			vitesse_snail = 0.33;
+			cadence_coeff = 1;
+		  inversion_gauchedroite = true;
+		  inversion_avantarriere = false;
 		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
 			motors[FRONT_LEFT].type = M3508;
@@ -120,7 +128,7 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
 			motors[TOURELLE_PITCH].MIN_POSITION = 1; //en deg
-			motors[TOURELLE_PITCH].MAX_POSITION = 67; //en deg    //213 120
+			motors[TOURELLE_PITCH].MAX_POSITION = 359; //en deg
 			motors[TOURELLE_PITCH].consigne = 54; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_PITCH].pid, 
@@ -136,7 +144,7 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TOURELLE_YAW].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_YAW].can_tx_id = 2;
-			motors[TOURELLE_YAW].MIN_POSITION = 245; //en deg
+			motors[TOURELLE_YAW].MIN_POSITION = 1; //en deg
 			motors[TOURELLE_YAW].MAX_POSITION = 359; //en deg
 			motors[TOURELLE_YAW].consigne = 325; //en deg //Valeur initiale
 			motors[TOURELLE_YAW].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
@@ -153,6 +161,7 @@ void robotInit(uint8_t robot_id){
 			motors[FEEDER].can_rx_id = 0x200+7; // ID = 7
 			motors[FEEDER].can_tx_frame = 0x1FF; 
 			motors[FEEDER].can_tx_id = 7-4; 
+			motors[FEEDER].direction = 1;	
 			pid_create(&motors[FEEDER].pid, 
 							&motors[FEEDER].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
 							&motors[FEEDER].command, 		//output: la commande que l'on envoie au moteur
@@ -163,6 +172,9 @@ void robotInit(uint8_t robot_id){
 			break;
 		case 5: //ROBOT DJI
 			vitesse_snail = 0.30;
+			cadence_coeff = 1;
+		  inversion_gauchedroite = false;
+		  inversion_avantarriere = false;
 		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
 			motors[FRONT_LEFT].type = M3508;
@@ -251,7 +263,8 @@ void robotInit(uint8_t robot_id){
 			motors[FEEDER].type = M2006;
 			motors[FEEDER].can_rx_id = 0x200+7; // ID = 7
 			motors[FEEDER].can_tx_frame = 0x1FF; 
-			motors[FEEDER].can_tx_id = 7-4; 
+			motors[FEEDER].can_tx_id = 7-4;
+			motors[FEEDER].direction = 1;			
 			pid_create(&motors[FEEDER].pid, 
 							&motors[FEEDER].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
 							&motors[FEEDER].command, 		//output: la commande que l'on envoie au moteur
@@ -260,5 +273,122 @@ void robotInit(uint8_t robot_id){
 			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
 
 			break;
+		case 6: //HÉRO
+			vitesse_snail = 0.80;
+			cadence_coeff = 2;
+		  inversion_gauchedroite = false;
+		  inversion_avantarriere = false;
+		
+			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
+			motors[FRONT_LEFT].type = M3508;
+			motors[FRONT_LEFT].can_rx_id = 0x200+1; // ID = 1
+			motors[FRONT_LEFT].can_tx_frame = 0x200; 
+			motors[FRONT_LEFT].can_tx_id = 1;
+			pid_create(&motors[FRONT_LEFT].pid, 
+							&motors[FRONT_LEFT].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FRONT_LEFT].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FRONT_LEFT].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FRONT_LEFT].pid, -16384, 16384); //Minimum et maximum de la commande envoyable au moteur
+			
+		
+			strcpy(motors[FRONT_RIGHT].debug_name, "FRONT RIGHT");
+			motors[FRONT_RIGHT].type = M3508;
+			motors[FRONT_RIGHT].can_rx_id = 0x200+2; // ID = 2
+			motors[FRONT_RIGHT].can_tx_frame = 0x200; 
+			motors[FRONT_RIGHT].can_tx_id = 2;
+			pid_create(&motors[FRONT_RIGHT].pid, 
+							&motors[FRONT_RIGHT].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FRONT_RIGHT].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FRONT_RIGHT].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FRONT_RIGHT].pid, -16384, 16384); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[BACK_RIGHT].debug_name, "BACK RIGHT");
+			motors[BACK_RIGHT].type = M3508;
+			motors[BACK_RIGHT].can_rx_id = 0x200+3; // ID = 3
+			motors[BACK_RIGHT].can_tx_frame = 0x200; 
+			motors[BACK_RIGHT].can_tx_id = 3;
+			pid_create(&motors[BACK_RIGHT].pid, 
+							&motors[BACK_RIGHT].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[BACK_RIGHT].command, 		//output: la commande que l'on envoie au moteur
+							&motors[BACK_RIGHT].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[BACK_RIGHT].pid, -16384, 16384); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[BACK_LEFT].debug_name, "BACK LEFT");
+			motors[BACK_LEFT].type = M3508;
+			motors[BACK_LEFT].can_rx_id = 0x200+4; // ID = 4
+			motors[BACK_LEFT].can_tx_frame = 0x200; 
+			motors[BACK_LEFT].can_tx_id = 4;
+			pid_create(&motors[BACK_LEFT].pid, 
+							&motors[BACK_LEFT].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[BACK_LEFT].command, 		//output: la commande que l'on envoie au moteur
+							&motors[BACK_LEFT].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[BACK_LEFT].pid, -16384, 16384); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[TOURELLE_PITCH].debug_name, "TOURELLE PITCH");
+			motors[TOURELLE_PITCH].type = GM6020;
+			motors[TOURELLE_PITCH].can_rx_id = 0x204+1; // ID = 1
+			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
+			motors[TOURELLE_PITCH].can_tx_id = 1;
+			motors[TOURELLE_PITCH].MIN_POSITION = 0; //en deg
+			motors[TOURELLE_PITCH].MAX_POSITION = 359; //en deg
+			motors[TOURELLE_PITCH].consigne = 250; //en deg //Valeur initiale
+			motors[TOURELLE_PITCH].direction = 1; //permet de choisir la direction de controle (-1 ou 1)
+			pid_create(&motors[TOURELLE_PITCH].pid, 
+							&motors[TOURELLE_PITCH].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[TOURELLE_PITCH].command, 						//output: la commande que l'on envoie au moteur
+							&motors[TOURELLE_PITCH].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							400, 100, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_circulaire(&motors[TOURELLE_PITCH].pid, 360); //Asservissement circulaire, permet, comme on fait une r�gulation en position, quand on est a position = 350 degr�e, que la consigne est � 10deg, de ne pas faire tout le tour
+			pid_limits(&motors[TOURELLE_PITCH].pid, -30000, 30000); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[TOURELLE_YAW].debug_name, "TOURELLE YAW");
+			motors[TOURELLE_YAW].type = GM6020;
+			motors[TOURELLE_YAW].can_rx_id = 0x204+2; // ID = 2
+			motors[TOURELLE_YAW].can_tx_frame = 0x1FF; 
+			motors[TOURELLE_YAW].can_tx_id = 2;
+			motors[TOURELLE_YAW].MIN_POSITION = 0; //en deg
+			motors[TOURELLE_YAW].MAX_POSITION = 359; //en deg
+			motors[TOURELLE_YAW].consigne = 208; //en deg //Valeur initiale
+			motors[TOURELLE_YAW].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
+			pid_create(&motors[TOURELLE_YAW].pid, 
+							&motors[TOURELLE_YAW].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[TOURELLE_YAW].command, 						//output: la commande que l'on envoie au moteur
+							&motors[TOURELLE_YAW].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							200, 100, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_circulaire(&motors[TOURELLE_YAW].pid, 360); //Asservissement circulaire, permet, comme on fait une r�gulation en position, quand on est a position = 350 degr�e, que la consigne est � 10deg, de ne pas faire tout le tour
+			pid_limits(&motors[TOURELLE_YAW].pid, -30000, 30000); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[FEEDER].debug_name, "FEEDER");
+			motors[FEEDER].type = M2006;
+			motors[FEEDER].can_rx_id = 0x200+7; // ID = 7
+			motors[FEEDER].can_tx_frame = 0x1FF; 
+			motors[FEEDER].can_tx_id = 7-4; 
+			motors[FEEDER].direction = -1;
+			pid_create(&motors[FEEDER].pid, 
+							&motors[FEEDER].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FEEDER].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FEEDER].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
+			
+			strcpy(motors[FEEDER2].debug_name, "FEEDER_2");
+			motors[FEEDER2].type = M2006;
+			motors[FEEDER2].can_rx_id = 0x200+8; // ID = 8
+			motors[FEEDER2].can_tx_frame = 0x1FF; 
+			motors[FEEDER2].can_tx_id = 7-3; 
+			motors[FEEDER2].direction = -1;
+			pid_create(&motors[FEEDER2].pid, 
+							&motors[FEEDER2].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FEEDER2].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FEEDER2].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FEEDER2].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
+
+			break;
+			
 	}
 }

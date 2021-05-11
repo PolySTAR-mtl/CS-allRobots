@@ -29,12 +29,18 @@ void canon_shoot(float speed, float rate){
 			shoot_rate = motors[FEEDER].direction * rate; //Sauvegarde de la cadance de tir
 			
 	motors[FEEDER].consigne = shoot_rate; //Démarage du feeder
+			if(motors[FEEDER_HERO].consigne != motors[FEEDER].consigne){
+				motors[FEEDER_HERO].consigne = motors[FEEDER].consigne;
+			}
 		}
 		
 		//Prise en compte des nouvelles valeurs que si nous sommes entrain de tirer
 		if(begin_canon_shoot == 0 && end_canon_shoot == 0 && shooting != 0){ 
 			PWM_SetAllDuty(&htim1, speed, speed); //Changement de la vitesse 
 			motors[FEEDER].consigne = motors[FEEDER].direction * rate; //Changement de la cadance de tir
+			if(motors[FEEDER_HERO].consigne != motors[FEEDER].consigne){
+				motors[FEEDER_HERO].consigne = motors[FEEDER].consigne;
+			}
 			shoot_rate = motors[FEEDER].direction * rate; //Changement de la cadance de tir
 		}
 	}
@@ -51,6 +57,9 @@ void traitement_shoot(){
 		shooting = HAL_GetTick();
 		
 		motors[FEEDER].consigne = shoot_rate; //Démarage du feeder
+		if(motors[FEEDER_HERO].consigne != motors[FEEDER].consigne){
+				motors[FEEDER_HERO].consigne = motors[FEEDER].consigne;
+			}
 	}
 	
 	//Si on a demandé d'arreter de tirer il y a plus de x ms, on arrete tout
@@ -61,6 +70,9 @@ void traitement_shoot(){
 		
 		PWM_SetAllDuty(&htim1, 0, 0); //Arret des snails
 		motors[FEEDER].consigne = 0; //Arret du feeder
+		if(motors[FEEDER_HERO].consigne != motors[FEEDER].consigne){
+				motors[FEEDER_HERO].consigne = motors[FEEDER].consigne;
+			}
 	}
 }
 
@@ -71,6 +83,9 @@ void canon_shoot_end(){
 	if(shooting != 0){
 		// Si nous étions entrain de tirer
 		motors[FEEDER].consigne = -7000; //On enlève les balles
+		if(motors[FEEDER_HERO].consigne != motors[FEEDER].consigne){
+				motors[FEEDER_HERO].consigne = motors[FEEDER].consigne;
+			}
 		shooting = 0;
 	}
 	if(end_canon_shoot == 0){ 

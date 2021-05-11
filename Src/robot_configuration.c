@@ -266,7 +266,7 @@ void robotInit(uint8_t robot_id){
 
 			break;
 		case 6: //HÉRO
-			vitesse_snail = 0.65;
+			vitesse_snail = 0.80;
 			cadence_coeff = 2;
 		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
@@ -369,7 +369,7 @@ void robotInit(uint8_t robot_id){
 			motors[FEEDER_HERO].type = M2006;
 			motors[FEEDER_HERO].can_rx_id = 0x200+8; // ID = 8
 			motors[FEEDER_HERO].can_tx_frame = 0x1FF; 
-			motors[FEEDER_HERO].can_tx_id = 7-4; 
+			motors[FEEDER_HERO].can_tx_id = 7-3; 
 			motors[FEEDER_HERO].direction = -1;
 			pid_create(&motors[FEEDER_HERO].pid, 
 							&motors[FEEDER_HERO].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
@@ -377,7 +377,7 @@ void robotInit(uint8_t robot_id){
 							&motors[FEEDER_HERO].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
 							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER_HERO].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
-
+	
 
 			break;
 			

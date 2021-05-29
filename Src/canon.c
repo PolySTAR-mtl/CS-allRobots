@@ -10,6 +10,7 @@
 #define TIME_BEFORE_STOP 100
 
 extern motor_t motors[MAX_MOTORS];
+extern refereeSystem_t refereeSystem;
 uint32_t begin_canon_shoot = 0; //0: Pas de s�quence de d�but de tir initialis� sinon temps du d�but de la s�quence
 uint32_t end_canon_shoot = 0; //0: Pas de s�quence de fin de tir initialis� sinon temps du d�but de la s�quence
 uint32_t shooting = 0; //0: Pas de s�quence de tir initialis� sinon temps du d�but de la s�quence
@@ -18,6 +19,25 @@ float shoot_rate2 = 0; //Cadance de tir pour le feeder #2 si il est present (ex.
 
 //Demande de tirer
 void canon_shoot(float speed, float rate){
+	
+	double coefficientVitesse = 1;
+	double coefficientCadence = 1;
+	
+	if(refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit > 0.90){
+		coefficientVitesse /= 1.2;
+	} else if (refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit < 0.70){
+		coefficientVitesse *= 1.2;
+	}
+	speed *= coefficientVitesse;
+	
+	if(refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit > 0.90){
+		coefficientCadence = 0.5;
+	} else if (refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit < 0.70){
+		coefficientCadence = 1;
+	}
+	
+	rate *= coefficientCadence;
+	
 	// Si une des valeurs est null, on demande l'arret des tirs
 	if(speed == 0 || rate == 0){ 
 		canon_shoot_end();
@@ -30,9 +50,9 @@ void canon_shoot(float speed, float rate){
 			shoot_rate = motors[FEEDER].direction * rate; //Sauvegarde de la cadance de tir
 			
 	        motors[FEEDER].consigne = shoot_rate; //Demarage du feeder
-			if (motors[FEEDER2].type == M2006) {
-				shoot_rate2 = motors[FEEDER2].direction * rate;
-			  motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+			if (motors[FEEDER_2].type == M2006) {
+				shoot_rate2 = motors[FEEDER_2].direction * rate;
+			  motors[FEEDER_2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
 		  }
 		}
 		
@@ -41,9 +61,9 @@ void canon_shoot(float speed, float rate){
 			PWM_SetAllDuty(&htim1, speed, speed); //Changement de la vitesse 
 			shoot_rate = motors[FEEDER].direction * rate; //Changement de la cadance de tir
 			motors[FEEDER].consigne = shoot_rate; //Changement de la cadance de tir
-			if (motors[FEEDER2].type == M2006) {
-				shoot_rate2 = motors[FEEDER2].direction * rate;
-			    motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+			if (motors[FEEDER_2].type == M2006) {
+				shoot_rate2 = motors[FEEDER_2].direction * rate;
+			    motors[FEEDER_2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
 		  }
 		}
 	}
@@ -60,8 +80,8 @@ void traitement_shoot(){
 		shooting = HAL_GetTick();
 		
 		motors[FEEDER].consigne = shoot_rate; //Demarage du feeder
-		if (motors[FEEDER2].type == M2006) {
-			  motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+		if (motors[FEEDER_2].type == M2006) {
+			  motors[FEEDER_2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
 		}
 	}
 	
@@ -73,8 +93,8 @@ void traitement_shoot(){
 		
 		PWM_SetAllDuty(&htim1, 0, 0); //Arret des snails
 		motors[FEEDER].consigne = 0; //Arret du feeder
-		if (motors[FEEDER2].type == M2006) {
-			motors[FEEDER2].consigne = 0; //Arret du feeder #2 si il est present
+		if (motors[FEEDER_2].type == M2006) {
+			motors[FEEDER_2].consigne = 0; //Arret du feeder #2 si il est present
 		}
 	}
 }
@@ -86,8 +106,8 @@ void canon_shoot_end(){
 	if(shooting != 0){
 		// Si nous �tions entrain de tirer
 		motors[FEEDER].consigne = -7000; //On enleve les balles
-		if (motors[FEEDER2].type == M2006) {
-		  motors[FEEDER2].consigne = -7000; //On enleve aussi les balles du 2e feeder si il est present
+		if (motors[FEEDER_2].type == M2006) {
+		  motors[FEEDER_2].consigne = -7000; //On enleve aussi les balles du 2e feeder si il est present
 		}
 		shooting = 0;
 	}

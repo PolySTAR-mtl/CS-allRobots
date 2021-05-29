@@ -18,7 +18,7 @@ extern receiver_RadioController_t receiver_RadioController;
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
 extern jetson_t jetson;
-
+extern refereeSystem_t refereeSystem;
 
 extern float vitesse_snail; 
 extern float cadence_coeff;
@@ -154,7 +154,18 @@ void chassis_consigne(double Vx, double Vy, double W){
 	
 	double coefficientShiftChassis;
 	double coefficientEChassis;
+	double coefficientPuissance = 1;
 	
+	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
+		if(coefficientPuissance == 1) {
+			coefficientPuissance = 0.8;
+		} else if (coefficientPuissance < 1) {
+			coefficientPuissance /= 2;
+		}
+	}
+	else {
+		coefficientPuissance = 1;
+	}
 	if (inversion_gauchedroite) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
 		// mais la ligne 132 de ce fichier étant erronée, on inverse le gauche-droite en inversant le Y et non le X
@@ -185,20 +196,20 @@ void chassis_consigne(double Vx, double Vy, double W){
 	if(Vy > -sensitivity_deadzone && Vy < sensitivity_deadzone) Vy = 0;
 	
 	if(receiver_RadioController.data.kb.bit.SHIFT){ //applique les coefficients sur la vitesse du chassis en focntion de la touche appuyee
-		motors[FRONT_LEFT].consigne 	= coefficientShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
-		motors[FRONT_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
-		motors[BACK_RIGHT].consigne 	= coefficientShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
-		motors[BACK_LEFT].consigne 		= coefficientShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_LEFT].consigne 	= (coefficientShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficientPuissance;
+		motors[FRONT_RIGHT].consigne 	= (coefficientShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficientPuissance;
+		motors[BACK_RIGHT].consigne 	= (coefficientShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficientPuissance;
+		motors[BACK_LEFT].consigne 		= (coefficientShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficientPuissance;
 	} else if(receiver_RadioController.data.kb.bit.E){ 
-		motors[FRONT_LEFT].consigne 	= coefficientEChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W);
-		motors[FRONT_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W));
-		motors[BACK_RIGHT].consigne 	= coefficientEChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W));
-		motors[BACK_LEFT].consigne 		= coefficientEChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W);
+		motors[FRONT_LEFT].consigne 	= (coefficientEChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficientPuissance;
+		motors[FRONT_RIGHT].consigne 	= (coefficientEChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficientPuissance;
+		motors[BACK_RIGHT].consigne 	= (coefficientEChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficientPuissance;
+		motors[BACK_LEFT].consigne 		= (coefficientEChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficientPuissance;
 	}else{
-		motors[FRONT_LEFT].consigne 	= sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W;
-		motors[FRONT_RIGHT].consigne 	= -(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W);
-		motors[BACK_RIGHT].consigne 	= -(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W);
-		motors[BACK_LEFT].consigne 		= sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W; 
+		motors[FRONT_LEFT].consigne 	= (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W) * coefficientPuissance;
+		motors[FRONT_RIGHT].consigne 	= (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W)) * coefficientPuissance;
+		motors[BACK_RIGHT].consigne 	= (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W)) * coefficientPuissance;
+		motors[BACK_LEFT].consigne 		= (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W) * coefficientPuissance; 
 	}
 	
 }	

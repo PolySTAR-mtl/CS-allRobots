@@ -7,7 +7,7 @@
 #define CANON
 
 #include "main.h"
-
+#include "referee_system.h"
 
 void canon_shoot(float speed, float rate);
 void traitement_shoot(void);

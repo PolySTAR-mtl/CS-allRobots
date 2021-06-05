@@ -123,7 +123,7 @@ int main(void)
 	
 	bool buzz_on = false;
 	
-	while(1){
+	/*while(1){
 		
 		signOfLife_Receiver_RadioController();
 		if(signOfLife_Receiver_RadioController_tick != 0){
@@ -137,7 +137,7 @@ int main(void)
 			}
 		}
 		HAL_Delay(100); // Important for the buzzer to wait for a delay!
-	}
+	}*/
 	
   while (1)
   {

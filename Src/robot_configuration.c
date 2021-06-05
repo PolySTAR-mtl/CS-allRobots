@@ -375,7 +375,7 @@ void robotInit(uint8_t robot_id){
 							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
 			
-			strcpy(motors[FEEDER2].debug_name, "FEEDER_2");
+			strcpy(motors[FEEDER2].debug_name, "FEEDER2");
 			motors[FEEDER2].type = M2006;
 			motors[FEEDER2].can_rx_id = 0x200+8; // ID = 8
 			motors[FEEDER2].can_tx_frame = 0x1FF; 

@@ -375,18 +375,18 @@ void robotInit(uint8_t robot_id){
 							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
 			
-			strcpy(motors[FEEDER2].debug_name, "FEEDER_2");
-			motors[FEEDER2].type = M2006;
-			motors[FEEDER2].can_rx_id = 0x200+8; // ID = 8
-			motors[FEEDER2].can_tx_frame = 0x1FF; 
-			motors[FEEDER2].can_tx_id = 7-3; 
-			motors[FEEDER2].direction = -1;
-			pid_create(&motors[FEEDER2].pid, 
-							&motors[FEEDER2].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
-							&motors[FEEDER2].command, 		//output: la commande que l'on envoie au moteur
-							&motors[FEEDER2].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+			strcpy(motors[FEEDER_2].debug_name, "FEEDER_2");
+			motors[FEEDER_2].type = M2006;
+			motors[FEEDER_2].can_rx_id = 0x200+8; // ID = 8
+			motors[FEEDER_2].can_tx_frame = 0x1FF; 
+			motors[FEEDER_2].can_tx_id = 7-3; 
+			motors[FEEDER_2].direction = -1;
+			pid_create(&motors[FEEDER_2].pid, 
+							&motors[FEEDER_2].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
+							&motors[FEEDER_2].command, 		//output: la commande que l'on envoie au moteur
+							&motors[FEEDER_2].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
 							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
-			pid_limits(&motors[FEEDER2].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
+			pid_limits(&motors[FEEDER_2].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
 
 			break;
 			

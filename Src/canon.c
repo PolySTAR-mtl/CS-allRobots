@@ -23,16 +23,16 @@ void canon_shoot(float speed, float rate){
 	double coefficientVitesse = 1;
 	double coefficientCadence = 1;
 	
-	if(refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit > 0.90){
+	if((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) > 0.90){
 		coefficientVitesse /= 1.2;
-	} else if (refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit < 0.70){
+	} else if ((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) < 0.70){
 		coefficientVitesse *= 1.2;
 	}
 	speed *= coefficientVitesse;
 	
-	if(refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit > 0.90){
+	if((refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit) > 0.90){
 		coefficientCadence = 0.5;
-	} else if (refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit < 0.70){
+	} else if ((refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit) < 0.70){
 		coefficientCadence = 1;
 	}
 	

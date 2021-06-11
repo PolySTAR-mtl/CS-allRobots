@@ -68,3 +68,4 @@ MDK-ARM/bin/*
 *.uvgui.*
 *.uvguix.*
 *.uvopt
+*.uvprojx

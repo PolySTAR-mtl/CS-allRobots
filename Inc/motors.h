@@ -12,10 +12,10 @@
 #include "leds.h"
 #include "tim.h"
 #include "robot_configuration.h"
+#include "referee_system.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 
 enum motors {
 	/* can motors */

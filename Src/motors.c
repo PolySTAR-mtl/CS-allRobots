@@ -9,6 +9,7 @@
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
 extern receiver_RadioController_t receiver_RadioController;
+extern refereeSystem_t refereeSystem;
 
 /* Envoie les commandes sur le bus CAN pour tous les moteurs CAN */
 void can_send_command(){

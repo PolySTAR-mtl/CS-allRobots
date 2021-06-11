@@ -62,11 +62,11 @@ void refereeSystem_callback_handler(int8_t lenght){
 			break;
 		case 0x0201:
 			/*Robot status in competition: 0x0201. Transmission frequency: 10Hz*/
-		memcpy(&refereeSystem.game_robot_status, &uart6_rx_buff[7], data_length);
+			memcpy(&refereeSystem.game_robot_status, &uart6_rx_buff[7], data_length);
 			break;
 		case 0x0202:
 			/*Real-time power and heat data: 0x0202. Transmission frequency: 50 Hz*/
-		memcpy(&refereeSystem.power_heat_data, &uart6_rx_buff[7], data_length);
+			memcpy(&refereeSystem.power_heat_data, &uart6_rx_buff[7], data_length);
 			break;
 		case 0x0206 :
 			/* Damage status data : 0x206. Transmission frequency: Transmitted after the damage occurs*/

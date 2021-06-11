@@ -10,6 +10,7 @@
 #define TIME_BEFORE_STOP 100
 
 extern motor_t motors[MAX_MOTORS];
+extern refereeSystem_t refereeSystem;
 uint32_t begin_canon_shoot = 0; //0: Pas de s�quence de d�but de tir initialis� sinon temps du d�but de la s�quence
 uint32_t end_canon_shoot = 0; //0: Pas de s�quence de fin de tir initialis� sinon temps du d�but de la s�quence
 uint32_t shooting = 0; //0: Pas de s�quence de tir initialis� sinon temps du d�but de la s�quence
@@ -18,6 +19,25 @@ float shoot_rate2 = 0; //Cadance de tir pour le feeder #2 si il est present (ex.
 
 //Demande de tirer
 void canon_shoot(float speed, float rate){
+	
+	double coefficientVitesse = 1;
+	double coefficientCadence = 1;
+	
+	if((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) > 0.90){
+		coefficientVitesse /= 1.2;
+	} else if ((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) < 0.70){
+		coefficientVitesse *= 1.2;
+	}
+	speed *= coefficientVitesse;
+	
+	if((refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit) > 0.90){
+		coefficientCadence = 0.5;
+	} else if ((refereeSystem.power_heat_data.shooter_id2_17mm_cooling_heat / refereeSystem.game_robot_status.shooter_id2_17mm_cooling_limit) < 0.70){
+		coefficientCadence = 1;
+	}
+	
+	rate *= coefficientCadence;
+	
 	// Si une des valeurs est null, on demande l'arret des tirs
 	if(speed == 0 || rate == 0){ 
 		canon_shoot_end();

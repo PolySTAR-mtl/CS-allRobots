@@ -73,11 +73,21 @@ void init_tourelle_data(motor_t* motor){
 	motor->consigne = motor->info.angle_360;
 	if(motor->MAX_POSITION > motor->MIN_POSITION){ 
 		if(motor->MAX_POSITION < motor->info.angle_360 || motor->MIN_POSITION > motor->info.angle_360){
-				error_board_A(1);
+			error_board_A(1);
+			if(motor->can_rx_id == 0x0205){
+				return;
+			} else {
+				while(true);
+			}
 		}
 	} else { // Si l'angle 0 est entre le min et le max (donc min > max)
 		if(motor->MAX_POSITION < motor->info.angle_360 && motor->MIN_POSITION > motor->info.angle_360){
-				error_board_A(1);
+			error_board_A(1);
+			if(motor->can_rx_id == 0x0205){
+				return;
+			} else {
+				while(true);
+			}
 		}
 	}
 }

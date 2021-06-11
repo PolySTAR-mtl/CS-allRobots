@@ -46,25 +46,9 @@ void signOfLife_Receiver_RadioController(){
 		BOARD_LED_A_ON();
 		pid_enable(true);
 	}else{
-		BOARD_LED_A_OFF();
-		receiver_RadioController.data.ch1_float = 0;
-		receiver_RadioController.data.ch2_float = 0;
-		receiver_RadioController.data.ch3_float = 0;
-		receiver_RadioController.data.ch4_float = 0;
-		receiver_RadioController.data.sw2 = 2;
-		receiver_RadioController.data.wheel = 0;
-		pid_enable(false);
-		
-		for(int i = 0; i < MAX_MOTORS; i++){
-			if(motors[i].type != GM6020){
-				motors[i].consigne = 0;
-				motors[i].command = 0;
-			} else {
-				motors[i].consigne = motors[i].info.angle_360;
-				motors[i].command = motors[i].info.angle_360;
-			}
-		}
-		canon_shoot_end();
+		error_board_A(3);
+		killMotors();
+		HAL_Delay(100);
 	}
 }
 
@@ -93,22 +77,48 @@ void signOfLife_can1(){
 		BOARD_LED_E_ON();
 	}else{
 		BOARD_LED_E_OFF();
+		killMotors();
 	}
 	if ((HAL_GetTick() - motors[FRONT_LEFT].signOfLife_tick) < 100){
 		BOARD_LED_F_ON();
 	}else{
 		BOARD_LED_F_OFF();
+		killMotors();
 	}
 	if ((HAL_GetTick() - motors[BACK_RIGHT].signOfLife_tick) < 100){
 		BOARD_LED_G_ON();
 	}else{
 		BOARD_LED_G_OFF();
+		killMotors();
 	}
 	if ((HAL_GetTick() - motors[BACK_LEFT].signOfLife_tick) < 100){
 		BOARD_LED_H_ON();
 	}else{
 		BOARD_LED_H_OFF();
+		killMotors();
 	}
+}
+
+// Arrête les moteurs en cas d'urgence
+void killMotors(){
+	receiver_RadioController.data.ch1_float = 0;
+		receiver_RadioController.data.ch2_float = 0;
+		receiver_RadioController.data.ch3_float = 0;
+		receiver_RadioController.data.ch4_float = 0;
+		receiver_RadioController.data.sw2 = 2;
+		receiver_RadioController.data.wheel = 0;
+		pid_enable(false);
+		
+		for(int i = 0; i < MAX_MOTORS; i++){
+			if(motors[i].type != GM6020){
+				motors[i].consigne = 0;
+				motors[i].command = 0;
+			} else {
+				motors[i].consigne = motors[i].info.angle_360;
+				motors[i].command = motors[i].info.angle_360;
+			}
+		}
+		canon_shoot_end();	
 }
 
 /* Permet d'afficher ce que l'on souhaite debuger sur l'uart
@@ -219,8 +229,5 @@ void error_board_A(uint8_t errorCode){
 	}    if (errorCode & 0x80){
 			BOARD_LED_H_ON();
 	}    
-	while(true){
-			HAL_Delay(20);
-			BOARD_LED_RED_TOGGLE();
-	}
+	BOARD_LED_RED_ON();
 }

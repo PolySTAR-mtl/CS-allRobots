@@ -60,9 +60,9 @@ void robotInit(uint8_t robot_id){
 		109: Blue Radar Station.
 	*/
 	if(robot_id > 100) robot_id -= 100; 
-	float pid_chassis_p = 2;
-	float pid_chassis_i = 0.5;
-	float pid_chassis_d = 0.01;
+	float pid_chassis_p = 5.0;
+	float pid_chassis_i = 5.0;
+	float pid_chassis_d = 0.0;
 	
 	switch(robot_id){
 		/* Standard */
@@ -70,7 +70,7 @@ void robotInit(uint8_t robot_id){
 		case 4: //Robot Meca STD
 			vitesse_snail = 0.33;
 			cadence_coeff = 1;
-		  inversion_gauchedroite = true;
+		  inversion_gauchedroite = false;
 		  inversion_avantarriere = false;
 		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
@@ -127,15 +127,15 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
-			motors[TOURELLE_PITCH].MIN_POSITION = 1; //en deg
-			motors[TOURELLE_PITCH].MAX_POSITION = 359; //en deg
+			motors[TOURELLE_PITCH].MIN_POSITION = 65; //en deg
+			motors[TOURELLE_PITCH].MAX_POSITION = 85; //en deg
 			motors[TOURELLE_PITCH].consigne = 54; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_PITCH].pid, 
 							&motors[TOURELLE_PITCH].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 
 							&motors[TOURELLE_PITCH].command, 						//output: la commande que l'on envoie au moteur
 							&motors[TOURELLE_PITCH].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
-							400, 100, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+							200, 100, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_circulaire(&motors[TOURELLE_PITCH].pid, 360); //Asservissement circulaire, permet, comme on fait une r�gulation en position, quand on est a position = 350 degr�e, que la consigne est � 10deg, de ne pas faire tout le tour
 			pid_limits(&motors[TOURELLE_PITCH].pid, -30000, 30000); //Minimum et maximum de la commande envoyable au moteur
 			
@@ -144,8 +144,8 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TOURELLE_YAW].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_YAW].can_tx_id = 2;
-			motors[TOURELLE_YAW].MIN_POSITION = 1; //en deg
-			motors[TOURELLE_YAW].MAX_POSITION = 359; //en deg
+			motors[TOURELLE_YAW].MIN_POSITION = 15; //en deg
+			motors[TOURELLE_YAW].MAX_POSITION = 160; //en deg
 			motors[TOURELLE_YAW].consigne = 325; //en deg //Valeur initiale
 			motors[TOURELLE_YAW].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_YAW].pid, 

@@ -12,6 +12,7 @@ void signOfLife(void);
 void signOfLife_Receiver_RadioController(void);
 void signOfLife_refereeSystem(void);
 void signOfLife_can1(void);
+void killMotors(void);
 void uart_debug(void);
 void uart_debug_printf(const char *fmt,...);
 void uart_debug_command(char* command);

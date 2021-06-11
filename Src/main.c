@@ -110,7 +110,7 @@ int main(void)
 	uart6_init();
 	uart7_init();
 	can1_init();
-	robotInit(6); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
+	robotInit(4); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
 	extern jetson_t jetson;
@@ -137,6 +137,7 @@ int main(void)
 			}
 		}
 		HAL_Delay(100); // Important for the buzzer to wait for a delay!
+		error_board_A(2);
 	}
 	
   while (1)

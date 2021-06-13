@@ -36,6 +36,9 @@ void chassis_consigne(double Vx, double Vy, double W);
 /*Effectue le suivi automatique des cibles */
 void auto_follow_target(void);
 
+/*Convertit un angle en millirad en degres*/
+float convert_to_deg(float angle_in_millirad);
+
 /*Retourne true si le controller est a une position neutre*/
 bool isControllerNeutral(void);
 

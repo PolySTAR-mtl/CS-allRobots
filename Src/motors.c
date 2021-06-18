@@ -1,11 +1,11 @@
 /****************
    Description : Gestion des moteurs
-   Auteur : Sébastien FAGUET
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 #include "motors.h"
 
-/* On récupère les variables exterieurs */
+/* On rï¿½cupï¿½re les variables exterieurs */
 extern motor_t motors[MAX_MOTORS];
 extern pilote_t pilote;
 extern receiver_RadioController_t receiver_RadioController;
@@ -55,7 +55,7 @@ void can_send_command(){
 	}
 }
 
-/* Fonction appelée lors de la réception d'une information provenant d'un moteur */
+/* Fonction appelï¿½e lors de la rï¿½ception d'une information provenant d'un moteur */
 void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 	for(int j = 0; j < MAX_MOTORS ; j++){
 		if(rx_id == motors[j].can_rx_id){
@@ -63,6 +63,7 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 			if(motors[j].type == GM6020 && motors[j].signOfLife_tick == 0) {
 						fill_motor_data(&motors[j], rx_buff);
 						init_tourelle_data(&motors[j]);
+						BOARD_LED_A_OFF();
 			}
 			fill_motor_data(&motors[j], rx_buff);
 			return;
@@ -93,21 +94,21 @@ void init_tourelle_data(motor_t* motor){
 	}
 }
 
-/*Rempli la structure motor.info avec les données provenant du moteur */
+/*Rempli la structure motor.info avec les donnï¿½es provenant du moteur */
 void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 	int16_t speed;
 	motor->signOfLife_tick = HAL_GetTick();
-	motor->info.angle = (int16_t)(rx_buff[0] << 8 | rx_buff[1]); 				//0 à 8191
-	motor->info.angle_360 = 360.0 * motor->info.angle / 8191.0; 			//0 à 360 deg
+	motor->info.angle = (int16_t)(rx_buff[0] << 8 | rx_buff[1]); 				//0 ï¿½ 8191
+	motor->info.angle_360 = 360.0 * motor->info.angle / 8191.0; 			//0 ï¿½ 360 deg
 	speed = (rx_buff[2] << 8 | rx_buff[3]);//rpm
 	motor->info.speed = (float)speed;//rpm
 	motor->info.torque = (int16_t)(rx_buff[4] << 8 | rx_buff[5]);
 }
 
-/* Modifie la consigne tout en vérifiant les limites de postion */
+/* Modifie la consigne tout en vï¿½rifiant les limites de postion */
 void add_consigne_position(motor_t* motor, float value, float coeff){
 	
-	//S'assure que le moteur répond avant d'envoyer des consignes
+	//S'assure que le moteur rï¿½pond avant d'envoyer des consignes
 	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick > 100) return;
 	
 	double sensitivity_deadzone;
@@ -185,12 +186,12 @@ void PWM_SetAllDuty(TIM_HandleTypeDef *tim, float duty_ch1, float duty_ch2){
 }
 
 /* scales all PWM duty cycles between 0 and 1 
-Cette fonction permet d'étalonner le snail pour que ca commande 0 = min, et 1 = max
+Cette fonction permet d'ï¿½talonner le snail pour que ca commande 0 = min, et 1 = max
 
 Pour utiliser cette fonction, il faut le faire moteur PWM par moteur PWM
-	1- Débrancher l'alimentation de tous les moteurs PWM
-	2- Brancher l'alimentation du moteur PWM a étalonner sur la sortie XT30 de la BOARD A - POWER 1
-  2- Envoyer sur la board A grâce au ST LINK un programe avec cette fonction appelé dans le main.c, avant la boucle infinie
+	1- Dï¿½brancher l'alimentation de tous les moteurs PWM
+	2- Brancher l'alimentation du moteur PWM a ï¿½talonner sur la sortie XT30 de la BOARD A - POWER 1
+  2- Envoyer sur la board A grï¿½ce au ST LINK un programe avec cette fonction appelï¿½ dans le main.c, avant la boucle infinie
 	3- Brancher l'alimentation 24V de la board A, le programme va se lancer : 
 		a) va couper l'alimentation 24V du snail
     b) Met l'impulsion PWM au max
@@ -198,7 +199,7 @@ Pour utiliser cette fonction, il faut le faire moteur PWM par moteur PWM
 		d) Coupe tous le signal PWM
 
 */
-void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection){ //il faudrait jouer sur l'allumage des ports d'alimentation des snails (voir Nathan pour plus de détails)
+void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection){ //il faudrait jouer sur l'allumage des ports d'alimentation des snails (voir Nathan pour plus de dï¿½tails)
 	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin, GPIO_PIN_RESET); // switch off 24v power
 	PWM_SetAllDuty(&htim1,1,1);
 	HAL_Delay(10);

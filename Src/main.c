@@ -139,6 +139,8 @@ int main(void)
 		HAL_Delay(100); // Important for the buzzer to wait for a delay!
 		error_board_A(2);
 	}
+
+  BOARD_LED_A_OFF();
 	
   while (1)
   {

@@ -300,13 +300,13 @@ void auto_follow_target(void){
 		// phi = 0 => bouge pas
 		// phi positif => va vers la gauche
 		// phi negatif => va vers la droite
-		consigne_yaw = motors[TOURELLE_YAW].consigne + convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
+		consigne_yaw = motors[TOURELLE_YAW].consigne - convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
 		
 		// angle_pitch = 0 => bouge pas
 		// angle_pitch positif => va vers le haut
 		// angle_pitch negatif => va vers le bas
 		float angle_pitch = (PI/2)*1000 - teta; // difference entre angle ou on est presentement et angle ou se trouve la cible (en millirad)
-		consigne_pitch = motors[TOURELLE_PITCH].consigne + convert_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
+		consigne_pitch = motors[TOURELLE_PITCH].consigne - convert_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
 		
 		
 		//Peut �tre utiliser add_consigne_position() a la place des lignes 246 � 272

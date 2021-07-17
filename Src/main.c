@@ -98,8 +98,8 @@ int main(void)
   MX_CAN1_Init();
   MX_UART8_Init();
   MX_TIM1_Init();
-	MX_TIM12_Init();
   MX_UART7_Init();
+  MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 	PWM_init();
 	//PWM_ScaleAll(&htim1, true); //etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
@@ -139,8 +139,6 @@ int main(void)
 		HAL_Delay(100); // Important for the buzzer to wait for a delay!
 		error_board_A(2);
 	}
-
-  BOARD_LED_A_OFF();
 	
   while (1)
   {

@@ -78,40 +78,42 @@ bool isControllerNeutral(){
 /* Fonctions qui fait les liens entre les entr�es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut cr�er plusieurs traitements */
 void traitement_1(){
 	
-	if(receiver_RadioController.keyboard_mode){
-		double chassis_w;
-		double tourelle_yaw;
-		if(!receiver_RadioController.data.kb.bit.CTRL){
-			chassis_w = -receiver_RadioController.data.mouse.x;
-			tourelle_yaw = 0;
-		}else{
-			chassis_w = 0;
-			tourelle_yaw = receiver_RadioController.data.mouse.x;
-		}
+//	//uncomment start
+//	if(receiver_RadioController.keyboard_mode){
+//		double chassis_w;
+//		double tourelle_yaw;
+//		if(!receiver_RadioController.data.kb.bit.CTRL){
+//			chassis_w = -receiver_RadioController.data.mouse.x;
+//			tourelle_yaw = 0;
+//		}else{
+//			chassis_w = 0;
+//			tourelle_yaw = receiver_RadioController.data.mouse.x;
+//		}
+//		
+//		/*gere l'assistance automatique*/
+//		if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
+//		if(mode_assistance_ai==automatique) auto_follow_target();
+//		
+//		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
+//		add_consigne_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
+//		
+//		chassis_consigne(receiver_RadioController.data.kb.bit.W - receiver_RadioController.data.kb.bit.S, 
+//											receiver_RadioController.data.kb.bit.D - receiver_RadioController.data.kb.bit.A, 
+//											chassis_w);
+//		
+//		
+//		if(receiver_RadioController.data.mouse.l){
+//			canon_shoot(vitesse_snail/2, cadence_coeff * 1000);
+//		}else if(receiver_RadioController.data.mouse.r){
+//			canon_shoot(vitesse_snail, cadence_coeff * 1000);
+//		}else{
+//			canon_shoot_end();
+//		}
+//	}else{	
+////uncommment stop
 		
-		/*gere l'assistance automatique*/
-		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
-		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
-		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
-		add_consigne_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
-		
-		chassis_consigne(receiver_RadioController.data.kb.bit.W - receiver_RadioController.data.kb.bit.S, 
-											receiver_RadioController.data.kb.bit.D - receiver_RadioController.data.kb.bit.A, 
-											chassis_w);
-		
-		
-		if(receiver_RadioController.data.mouse.l){
-			canon_shoot(vitesse_snail/2, cadence_coeff * 1000);
-		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot(vitesse_snail, cadence_coeff * 1000);
-		}else{
-			canon_shoot_end();
-		}
-	}else{	
-		
-		
-		//if(mode_assistance_ai==automatique) auto_follow_target();
+		if(mode_assistance_ai==automatique) auto_follow_target();
 		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
 		add_consigne_position(&motors[TOURELLE_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
@@ -125,19 +127,34 @@ void traitement_1(){
 				break;
 		}
 		switch(receiver_RadioController.data.sw2){
+			// low position
 			case 2:
 				canon_shoot(0, 0);
 				break;
+			// mid
+//			case 3:
+//			canon_shoot(vitesse_snail/2, 1000);  // jerry todo feeding rate 1000
+//				break;
+//			// top
+//			case 1:
+//				canon_shoot(vitesse_snail, 1000);  // jerry not use
+//				break;
+			
+			
 			case 3:
-				canon_shoot(vitesse_snail/2, 1000);
+				motors[FEEDER].direction = 1;
+			canon_shoot(vitesse_snail, 600);  // jerry todo feeding rate 1000
 				break;
+			// top
 			case 1:
-				canon_shoot(vitesse_snail, 1000);
+//				canon_shoot(vitesse_snail/2, 1000);  // jerry not use
+				motors[FEEDER].direction = -1;  // jerry todo reverse motor
+				canon_shoot(vitesse_snail, 500);
 				break;
 		}
 		
 		chassis_consigne(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
-	}
+//	}  // todo
 }
 
 void chassis_consigne(double Vx, double Vy, double W){ 
@@ -153,18 +170,18 @@ void chassis_consigne(double Vx, double Vy, double W){
 	
 	double coefficientShiftChassis;
 	double coefficientEChassis;
-	double coefficientPuissance = 1;
-	/*
-	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
-		if(coefficientPuissance == 1) {
-			coefficientPuissance = 0.8;
-		} else if (coefficientPuissance < 1) {
-			coefficientPuissance /= 2;
-		}
-	}
-	else {
-		coefficientPuissance = 1;
-	}*/
+	double coefficientPuissance = 0.5;  // Jerry todo moving speed 1
+	
+//	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
+//		if(coefficientPuissance == 1) {
+//			coefficientPuissance = 0.8;
+//		} else if (coefficientPuissance < 1) {
+//			coefficientPuissance /= 2;
+//		}
+//	}
+//	else {
+//		coefficientPuissance = 1;
+//	}
 	if (inversion_gauchedroite) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
 		// mais la ligne 132 de ce fichier étant erronée, on inverse le gauche-droite en inversant le Y et non le X
@@ -300,13 +317,13 @@ void auto_follow_target(void){
 		// phi = 0 => bouge pas
 		// phi positif => va vers la gauche
 		// phi negatif => va vers la droite
-		consigne_yaw = motors[TOURELLE_YAW].consigne - convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
+		consigne_yaw = motors[TOURELLE_YAW].consigne + convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
 		
 		// angle_pitch = 0 => bouge pas
 		// angle_pitch positif => va vers le haut
 		// angle_pitch negatif => va vers le bas
 		float angle_pitch = (PI/2)*1000 - teta; // difference entre angle ou on est presentement et angle ou se trouve la cible (en millirad)
-		consigne_pitch = motors[TOURELLE_PITCH].consigne - convert_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
+		consigne_pitch = motors[TOURELLE_PITCH].consigne + convert_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
 		
 		
 		//Peut �tre utiliser add_consigne_position() a la place des lignes 246 � 272

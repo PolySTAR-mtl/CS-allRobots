@@ -59,8 +59,9 @@ void robotInit(uint8_t robot_id){
 		108: Blue Dart Robot;
 		109: Blue Radar Station.
 	*/
-	if(robot_id > 100) robot_id -= 100; 
-	float pid_chassis_p = 5.0;
+	if(robot_id > 100) robot_id -= 100;
+	// jerry pid chassis
+	float pid_chassis_p = 2.5;
 	float pid_chassis_i = 5.0;
 	float pid_chassis_d = 0.0;
 	
@@ -128,7 +129,7 @@ void robotInit(uint8_t robot_id){
 			motors[TOURELLE_PITCH].can_tx_frame = 0x1FF; 
 			motors[TOURELLE_PITCH].can_tx_id = 1;
 			motors[TOURELLE_PITCH].MIN_POSITION = 65; //en deg
-			motors[TOURELLE_PITCH].MAX_POSITION = 85; //en deg
+			motors[TOURELLE_PITCH].MAX_POSITION = 100; //en deg
 			motors[TOURELLE_PITCH].consigne = 54; //en deg //Valeur initiale
 			motors[TOURELLE_PITCH].direction = -1; //permet de choisir la direction de controle (-1 ou 1)
 			pid_create(&motors[TOURELLE_PITCH].pid, 
@@ -166,7 +167,8 @@ void robotInit(uint8_t robot_id){
 							&motors[FEEDER].info.speed, //input : le retour sur la quelle ont veut atteintre la consigne 
 							&motors[FEEDER].command, 		//output: la commande que l'on envoie au moteur
 							&motors[FEEDER].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
-							0.5, 0.5, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+							// jerry todo 0.5, 0.5, 0
+							2.5, 4.0, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER].pid, -10000, 10000); //Minimum et maximum de la commande envoyable au moteur
 
 			break;
@@ -358,6 +360,7 @@ void robotInit(uint8_t robot_id){
 							&motors[TOURELLE_YAW].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la consigne 
 							&motors[TOURELLE_YAW].command, 						//output: la commande que l'on envoie au moteur
 							&motors[TOURELLE_YAW].consigne, 	//consigne: On veut que le moteur soit � cette position ou tourne a cette vitesse
+							// jerry pid turret
 							200, 100, 0); //k, i, d : les coefficient de r�gulation : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_circulaire(&motors[TOURELLE_YAW].pid, 360); //Asservissement circulaire, permet, comme on fait une r�gulation en position, quand on est a position = 350 degr�e, que la consigne est � 10deg, de ne pas faire tout le tour
 			pid_limits(&motors[TOURELLE_YAW].pid, -30000, 30000); //Minimum et maximum de la commande envoyable au moteur

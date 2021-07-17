@@ -1,6 +1,6 @@
 /****************
-   Description : Gestion des fonctionnalitï¿½s sur la BoardA (LEDS, signes de vie, ...)
-   Auteur : Sï¿½bastien FAGUET
+   Description : Gestion des fonctionnalités sur la BoardA (LEDS, signes de vie, ...)
+   Auteur : Sébastien FAGUET
 *****************/
 
 
@@ -14,18 +14,18 @@
 #include <stdarg.h>
 #include <string.h> 
 
-/* On crï¿½e les signes de vie, les variables vaudra le temps oï¿½ elles ont ï¿½tï¿½ utilisï¿½s la derniï¿½re fois */
+/* On crée les signes de vie, les variables vaudra le temps où elles ont été utilisés la dernière fois */
 uint32_t signOfLife_Receiver_RadioController_tick = 0;
 uint32_t signOfLife_refereeSystem_tick = 0;
 uint32_t signOfLife_jetson_tick = 0;
 uint32_t signOfLife_CAN1_tick = 0;
 
-/* On rï¿½cupï¿½re les variables exterieurs pour affichage de debug */
+/* On récupère les variables exterieurs pour affichage de debug */
 extern motor_t motors[MAX_MOTORS];
 extern receiver_RadioController_t receiver_RadioController;
 extern jetson_t jetson;
 
-/* Gï¿½re les signes de vie, LED RED: Si le programme tourne */
+/* Gère les signes de vie, LED RED: Si le programme tourne */
 void signOfLife(){
 	static uint32_t tickstart = 0;
 	if(tickstart == 0){
@@ -40,10 +40,10 @@ void signOfLife(){
 	signOfLife_can1();
 }
 
-/* Gï¿½re le signe de vie, LED A: Si on recoit des donnï¿½es de la tï¿½lï¿½commande */
+/* Gère le signe de vie, LED A: Si on recoit des données de la télécommande */
 void signOfLife_Receiver_RadioController(){
   if ((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50){
-		BOARD_LED_A_OFF();
+		BOARD_LED_A_ON();
 		pid_enable(true);
 	}else{
 		error_board_A(3);
@@ -52,7 +52,7 @@ void signOfLife_Receiver_RadioController(){
 	}
 }
 
-/* Gï¿½re le signe de vie, LED B: Si on recoit des donnï¿½es du Referee System */
+/* Gère le signe de vie, LED B: Si on recoit des données du Referee System */
 void signOfLife_refereeSystem(){
   if ((HAL_GetTick() - signOfLife_refereeSystem_tick) < 2000){
 		BOARD_LED_B_ON();
@@ -61,7 +61,7 @@ void signOfLife_refereeSystem(){
 	}
 }
 
-/* Gï¿½re le signe de vie, LED C: Si on recoit des donnï¿½es sur le bus CAN1 */
+/* Gère le signe de vie, LED C: Si on recoit des données sur le bus CAN1 */
 void signOfLife_can1(){
   if ((HAL_GetTick() - motors[TOURELLE_YAW].signOfLife_tick) < 100){
 		BOARD_LED_C_ON();
@@ -99,7 +99,7 @@ void signOfLife_can1(){
 	}
 }
 
-// Arrï¿½te les moteurs en cas d'urgence
+// Arrête les moteurs en cas d'urgence
 void killMotors(){
 	receiver_RadioController.data.ch1_float = 0;
 		receiver_RadioController.data.ch2_float = 0;
@@ -161,7 +161,7 @@ void uart_debug_printf(const char *fmt,...){
 	HAL_UART_Transmit(&huart8, BUF, 128, 10);
 }
 
-/* Fonction d'envoie de commandes spï¿½ciales ï¿½ l'uart de debug */
+/* Fonction d'envoie de commandes spéciales à l'uart de debug */
 void uart_debug_command(char* command){
 	//http://www.climagic.org/mirrors/VT100_Escape_Codes.html
 	char BUF[10] = {27,0};

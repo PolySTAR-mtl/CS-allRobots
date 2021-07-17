@@ -26,7 +26,7 @@ pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float k
 	pid->setpoint = set;
 	pid->automode = false;
 
-	pid_limits(pid, 0, 255);
+	pid_limits(pid, 0, 255); //widget motor speed max????  set to 150  // before 255
 
 	// Set default sample time to 10 ms
 	pid->sampletime = 10 * (TICK_SECOND / 1000);

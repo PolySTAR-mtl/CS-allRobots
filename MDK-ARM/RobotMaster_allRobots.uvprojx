@@ -10,7 +10,7 @@
       <TargetName>RobotMaster_allRobots</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -52,7 +52,7 @@
           <OutputName>RobotMaster_allRobots</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>..\..\</ListingPath>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx,USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                         ../Drivers/STM32F4xx_HAL_Driver/Inc;                         ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                         ../Drivers/CMSIS/Include;        ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</IncludePath>
+              <IncludePath>../Inc;                          ../Drivers/STM32F4xx_HAL_Driver/Inc;                          ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                          ../Drivers/CMSIS/Include;         ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -653,14 +653,6 @@
   </Targets>
 
   <RTE>
-    <boards>
-      <board Bname="STM32F429I-Discovery" Bvendor="STMicroelectronics" Bversion="Rev.B">
-        <package name="STM32F4xx_DFP" schemaVersion="1.6.3" url="http://www.keil.com/pack/" vendor="Keil" version="2.15.0"/>
-        <targetInfos>
-          <targetInfo name="RobotMaster_allRobots"/>
-        </targetInfos>
-      </board>
-    </boards>
     <apis/>
     <components>
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
@@ -679,5 +671,20 @@
       </file>
     </files>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>&lt;Project Info&gt;</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
+        <LayTarg>0</LayTarg>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

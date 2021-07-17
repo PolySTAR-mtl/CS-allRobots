@@ -22,7 +22,7 @@ void canon_shoot(float speed, float rate){
 	
 	double coefficientVitesse = 1;
 	double coefficientCadence = 1;
-	/*
+	
 	if((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) > 0.90){
 		coefficientVitesse /= 1.2;
 	} else if ((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) < 0.70){
@@ -37,7 +37,6 @@ void canon_shoot(float speed, float rate){
 	}
 	
 	rate *= coefficientCadence;
-	*/
 	
 	// Si une des valeurs est null, on demande l'arret des tirs
 	if(speed == 0 || rate == 0){ 

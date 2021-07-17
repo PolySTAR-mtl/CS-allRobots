@@ -18,9 +18,9 @@ void piloteInit(uint8_t pilote_id){
 	pilote.sensitivity_ch_1 = 0.00003;
 	pilote.sensitivity_ch_2 = 0.00001;
 
-	pilote.sensitivity_chassis_RC_Vx = 20;
-	pilote.sensitivity_chassis_RC_Vy = 20;
-	pilote.sensitivity_chassis_RC_W = 6;
+	pilote.sensitivity_chassis_RC_Vx = 7;  // jerry todo front back 20
+	pilote.sensitivity_chassis_RC_Vy = 7;  // jerry todo left right 20
+	pilote.sensitivity_chassis_RC_W = 3;  // jerry todo wheel spin 6
 	
 	/* Mouse Keyboard */
 	pilote.sensitivity_mouse_deadzone = 50; //Between 0 and 6600

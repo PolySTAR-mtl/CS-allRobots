@@ -65,7 +65,3 @@ MDK-ARM/bin/*
 *.l2p
 *.iex
 .#*
-*.uvgui.*
-*.uvguix.*
-*.uvopt
-*.uvprojx

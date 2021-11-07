@@ -78,6 +78,33 @@ bool isControllerNeutral(){
 /* Fonctions qui fait les liens entre les entr�es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut cr�er plusieurs traitements */
 void traitement_1(){
 	
+		//if(mode_assistance_ai==automatique) auto_follow_target();
+		
+		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
+		add_consigne_position(&motors[TOURELLE_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
+	
+		switch(receiver_RadioController.data.sw1){
+			case 1:
+				break;
+			case 3:
+				break;
+			case 2:
+				break;
+		}
+		switch(receiver_RadioController.data.sw2){
+			case 2:
+				canon_shoot(0, 0);
+				break;
+			case 3:
+				canon_shoot(vitesse_snail/2, 1000);
+				break;
+			case 1:
+				canon_shoot(vitesse_snail, 1000);
+				break;
+		}
+		
+		chassis_consigne(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
+		
 	if(receiver_RadioController.keyboard_mode){
 		double chassis_w;
 		double tourelle_yaw;
@@ -108,35 +135,6 @@ void traitement_1(){
 		}else{
 			canon_shoot_end();
 		}
-	}else{	
-		
-		
-		//if(mode_assistance_ai==automatique) auto_follow_target();
-		
-		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
-		add_consigne_position(&motors[TOURELLE_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
-	
-		switch(receiver_RadioController.data.sw1){
-			case 1:
-				break;
-			case 3:
-				break;
-			case 2:
-				break;
-		}
-		switch(receiver_RadioController.data.sw2){
-			case 2:
-				canon_shoot(0, 0);
-				break;
-			case 3:
-				canon_shoot(vitesse_snail/2, 1000);
-				break;
-			case 1:
-				canon_shoot(vitesse_snail, 1000);
-				break;
-		}
-		
-		chassis_consigne(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 	}
 }
 
@@ -255,6 +253,7 @@ void switch_assistance_ai(void){
 /*
 Fonction qui controle la position des moteurs GM6020 de la tourelle pour que celle-ci point une cible
 */
+//TO DO : Tester la vitesse de suivi des cibles de la tourelle et changer le coefficient de ralentissement si besoin
 void auto_follow_target(void){
   
 	static uint32_t tickstart = 0;
@@ -300,7 +299,7 @@ void auto_follow_target(void){
 		// phi = 0 => bouge pas
 		// phi positif => va vers la gauche
 		// phi negatif => va vers la droite
-		consigne_yaw = motors[TOURELLE_YAW].consigne - convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
+		consigne_yaw = motors[TOURELLE_YAW].consigne - convert_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw; 
 		
 		// angle_pitch = 0 => bouge pas
 		// angle_pitch positif => va vers le haut

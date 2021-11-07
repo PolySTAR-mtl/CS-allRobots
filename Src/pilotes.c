@@ -11,14 +11,15 @@ pilote_t pilote;
 void piloteInit(uint8_t pilote_id){
 	/*
 	Robot ID:
-		0: Antonin;
+		0: Defaut
+		1: Antonin;
 	*/
 	/* Receiver */
 	pilote.sensitivity_RC_deadzone = 10; //Between 0 and 6600
-	pilote.sensitivity_ch_1 = 0.00003;
-	pilote.sensitivity_ch_2 = 0.00001;
+	pilote.sensitivity_ch_1 = 0.00003; //Tourelle YAW
+	pilote.sensitivity_ch_2 = 0.00001; //Tourelle PITCH
 
-	pilote.sensitivity_chassis_RC_Vx = 20;
+	pilote.sensitivity_chassis_RC_Vx = 20;//TO DO : TESTER AVEC DES VALEURS PLUS PETITES SUR LE ROBOT
 	pilote.sensitivity_chassis_RC_Vy = 20;
 	pilote.sensitivity_chassis_RC_W = 6;
 	
@@ -35,11 +36,16 @@ void piloteInit(uint8_t pilote_id){
 	pilote.coefficientShiftChassis = 0.5;
 	pilote.coefficientEChassis = 1.2;
 	
+	// TO DO : Changer les valeurs par défaut pour chaque pilote dans les case
 	switch(pilote_id){ //Configuration personnalisée
 		/* Antonin */
-		case PILOTE_ANTONIN:
+		case PILOTE_DEFAUT :
+			break;
+		case PILOTE_ANTONIN :
 			break;
 		default:
 			while(1);
 	}
+	
+	
 }

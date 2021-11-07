@@ -8,7 +8,8 @@
 
 #include "main.h"
 
-#define PILOTE_ANTONIN 0
+#define PILOTE_DEFAUT 0
+#define PILOTE_ANTONIN 1
 
 typedef struct
 {

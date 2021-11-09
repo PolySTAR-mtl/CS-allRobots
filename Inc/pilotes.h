@@ -1,6 +1,6 @@
 /****************
    Description : Configuration du robot
-   Auteur : Sébastien FAGUET
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 #ifndef PILOTE

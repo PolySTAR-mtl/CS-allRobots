@@ -185,16 +185,16 @@ typedef struct pid_controller * pid_t;
 	 */
 	void pid_direction(pid_t pid, enum pid_control_directions dir);
 	
-	/* Rajouté par Séb: 
-	-	Permet de faire une régulation circulaire.
-		Exemple: Lors d'un asservissement de position, on veut que quand on est à 350deg et qu'on a comme consigne 10deg,
+	/* Rajoutï¿½ par Sï¿½b: 
+	-	Permet de faire une rï¿½gulation circulaire.
+		Exemple: Lors d'un asservissement de position, on veut que quand on est ï¿½ 350deg et qu'on a comme setpoint 10deg,
 			On aimerait ne pas faire le tour par 180 deg mais passer part 0 deg
 			arguement limite est la valeur de rebouclage, dans notre exemple limite = 360deg car on souhaite que 360deg = 0 deg
 	*/
 	void pid_circulaire(pid_t pid, float limit);
 	
-	/* Rajouté par Séb
-	- Permet d'envoyer les données de régulation pour affichage dans KST par l'uart de debug 
+	/* Rajoutï¿½ par Sï¿½b
+	- Permet d'envoyer les donnï¿½es de rï¿½gulation pour affichage dans KST par l'uart de debug 
 	*/
 	void pid_debug_uart(pid_t pid);
 #endif

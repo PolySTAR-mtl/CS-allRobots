@@ -102,15 +102,16 @@ int main(void)
   MX_UART7_Init();
   /* USER CODE BEGIN 2 */
 	PWM_init();
-	//PWM_ScaleAll(&htim1, true); //etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
-	HAL_GPIO_WritePin(GPIOH, BOARD_POWER1_CTRL_Pin|BOARD_POWER2_CTRL_Pin|BOARD_POWER3_CTRL_Pin|BOARD_POWER4_CTRL_Pin, GPIO_PIN_SET); // switch on 24v power
+	//PWM_ScaleAll(&htim1, true); // Etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
+	uint16_t power_pins_24v = BOARD_POWER1_CTRL_Pin|BOARD_POWER2_CTRL_Pin|BOARD_POWER3_CTRL_Pin|BOARD_POWER4_CTRL_Pin
+  HAL_GPIO_WritePin(GPIOH, power_pins, GPIO_PIN_SET); // Switch on 24v power
 	BOARD_LED_ALL_OFF();
 	oled_init();
 	uart1_init();
 	uart6_init();
 	uart7_init();
 	can1_init();
-	robotInit(4); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
+	robotInit(4); // Initializes robot as STD. The aim is to have initialization handled by referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
 	extern jetson_t jetson;
@@ -128,29 +129,29 @@ int main(void)
 		signOfLife_Receiver_RadioController();
 		if(signOfLife_Receiver_RadioController_tick != 0){
 			if(isControllerNeutral()){
-				stop_buzz();
+				buzzer_stop();
 				buzz_on = false;
-				break;     // get out of the infinite loop when the controller is in neutral position
+				break;     // Get out of infinite loop when controller is in neutral position
 			} else if (!buzz_on) {
-				start_buzz();    // otherwise, buzz until controller OK
+				buzzer_start();    // Otherwise, buzz until controller OK
 				buzz_on = true;
 			}
 		}
-		HAL_Delay(100); // Important for the buzzer to wait for a delay!
-		error_board_A(2);
+		HAL_Delay(100); // Important for buzzer to wait for a delay!
+		error_boardA(2);
 	}
 
   BOARD_LED_A_OFF();
 	
   while (1)
   {
-		signOfLife(); //LEDs BLINK
-		//oled_debug(); //Display debug menu on OLED
-		//uart_debug(); //Display debug menu on UART
-		traitement_1();							//Calcul les consignes des moteurs
-		traitement_shoot();					//Traitement du canon
-		traitement_pids_compute(); 	//Calcul les commandes des moteurs
-		can_send_command(); 				//Envoie des commandes des moteurs
+		signOfLife(); // LEDs BLINK
+		//oled_debug(); // Display debug menu on OLED
+		//uart_debug(); // Display debug menu on UART
+		processGeneralInputs();		// Input processing for all motors except firing system
+		canon_process_inputs();		// Input processing for firing system
+		pid_compute_command(); 	    // Calculates motor commands
+		can_send_command(); 			// Sends command to motors
 		
     /* USER CODE END WHILE */
 

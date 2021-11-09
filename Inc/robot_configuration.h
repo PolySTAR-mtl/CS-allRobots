@@ -23,7 +23,7 @@
 
 
 
-/* Fonction qui premet de configurer le robot */
+/* Function that allows robot configuration */
 void robotInit(uint8_t robot_id);
 
 #endif

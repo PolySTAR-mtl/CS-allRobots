@@ -14,18 +14,19 @@
 #include <stdarg.h>
 #include <string.h> 
 
-/* On cr�e les signes de vie, les variables vaudra le temps o� elles ont �t� utilis�s la derni�re fois */
+/* Create sign of life variables. Value indicates last time it was updated */
 uint32_t signOfLife_Receiver_RadioController_tick = 0;
 uint32_t signOfLife_refereeSystem_tick = 0;
 uint32_t signOfLife_jetson_tick = 0;
 uint32_t signOfLife_CAN1_tick = 0;
 
-/* On r�cup�re les variables exterieurs pour affichage de debug */
+/* Retrieve external variables for debug display */
 extern motor_t motors[MAX_MOTORS];
 extern receiver_RadioController_t receiver_RadioController;
 extern jetson_t jetson;
 
-/* G�re les signes de vie, LED RED: Si le programme tourne */
+// TODO : Indicates what?
+/* Manages signs of life. LED RED : Program is running */
 void signOfLife(){
 	static uint32_t tickstart = 0;
 	if(tickstart == 0){
@@ -40,19 +41,19 @@ void signOfLife(){
 	signOfLife_can1();
 }
 
-/* G�re le signe de vie, LED A: Si on recoit des donn�es de la t�l�commande */
+/* Manages reciever sign of life. LED A : Receiving data from Radio Controller*/
 void signOfLife_Receiver_RadioController(){
   if ((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50){
 		BOARD_LED_A_OFF();
 		pid_enable(true);
 	}else{
-		error_board_A(3);
+		error_boardA(3);
 		killMotors();
 		HAL_Delay(100);
 	}
 }
 
-/* G�re le signe de vie, LED B: Si on recoit des donn�es du Referee System */
+/* Manages referee system sign of life. LED B : Receiving data from Referee System*/
 void signOfLife_refereeSystem(){
   if ((HAL_GetTick() - signOfLife_refereeSystem_tick) < 2000){
 		BOARD_LED_B_ON();
@@ -61,7 +62,7 @@ void signOfLife_refereeSystem(){
 	}
 }
 
-/* G�re le signe de vie, LED C: Si on recoit des donn�es sur le bus CAN1 */
+/* Manages CAN sign of life. LED C : Receiving data on bus CAN1*/
 void signOfLife_can1(){
   if ((HAL_GetTick() - motors[TOURELLE_YAW].signOfLife_tick) < 100){
 		BOARD_LED_C_ON();
@@ -99,7 +100,7 @@ void signOfLife_can1(){
 	}
 }
 
-// Arr�te les moteurs en cas d'urgence
+/* Emergency stop for motors */
 void killMotors(){
 	receiver_RadioController.data.ch1_float = 0;
 		receiver_RadioController.data.ch2_float = 0;
@@ -111,18 +112,18 @@ void killMotors(){
 		
 		for(int i = 0; i < MAX_MOTORS; i++){
 			if(motors[i].type != GM6020){
-				motors[i].consigne = 0;
+				motors[i].setpoint = 0;
 				motors[i].command = 0;
 			} else {
-				motors[i].consigne = motors[i].info.angle_360;
+				motors[i].setpoint = motors[i].info.angle_360;
 				motors[i].command = motors[i].info.angle_360;
 			}
 		}
 		canon_shoot_end();	
 }
 
-/* Permet d'afficher ce que l'on souhaite debuger sur l'uart
-Exemple : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
+/* Allows display of debug information on UART
+Example : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
 */
 void uart_debug(){
 	static uint32_t tickstart = 0;
@@ -135,11 +136,11 @@ void uart_debug(){
 		return;
 	}
 	tickstart = HAL_GetTick();
-	//snprintf(buff2, 1000, "%c,teta=%d,phi=%d,d=%d                  \r", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
+	//snprintf(buff2, 1000, "%c,teta=%d,phi=%d,d=%d                  \r", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.theta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
 	//HAL_UART_Transmit_DMA(&huart8, (uint8_t*)buff2, strlen(buff2));
 	
 	//uart_debug_command("[2J"); //Clear entire screen
-	uart_debug_printf("%c,teta=%d,phi=%d,d=%d \r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.teta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
+	uart_debug_printf("%c,teta=%d,phi=%d,d=%d \r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.theta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
 	//uart_debug_printf("\r\nTOURELLE YAW\r\n");
 	//uart_debug_printf("\tAngle: %f \r\n", motors[TOURELLE_PITCH].info.angle_360);
 	//uart_debug_
@@ -149,7 +150,7 @@ void uart_debug(){
 	uart_debug_printf("\tCommand: %f\r\n", motors[TOURELLE_YAW].command);*/
 }
 
-/* Fonction d'affichage sur l'uart de debug */
+/* Print function for debug UART*/
 void uart_debug_printf(const char *fmt,...){
 	uint8_t BUF[128] = {0};
 	va_list ap;
@@ -161,13 +162,14 @@ void uart_debug_printf(const char *fmt,...){
 	HAL_UART_Transmit(&huart8, BUF, 128, 10);
 }
 
-/* Fonction d'envoie de commandes sp�ciales � l'uart de debug */
+/* Special command function for debug UART */
 void uart_debug_command(char* command){
 	//http://www.climagic.org/mirrors/VT100_Escape_Codes.html
 	char BUF[10] = {27,0};
 	strcpy(BUF+1, command);
 	HAL_UART_Transmit(&huart8, (uint8_t*) BUF, 4, 10);
 }
+
 /**
 
   * @brief      enable global uart it and do not use DMA transfer done it
@@ -210,7 +212,7 @@ int uart_receive_dma_no_it(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t S
 	}
 }
 
-void error_board_A(uint8_t errorCode){    
+void error_boardA(uint8_t errorCode){    
 	BOARD_LED_ALL_OFF();    
 	if (errorCode & 0x1){
         BOARD_LED_A_ON();

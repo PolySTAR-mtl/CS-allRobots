@@ -62,7 +62,7 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 			//Si c'est le premier paquet, aller le lire et initialiser la tourelle
 			if(motors[j].type == GM6020 && motors[j].signOfLife_tick == 0) {
 						fill_motor_data(&motors[j], rx_buff);
-						init_tourelle_data(&motors[j]);
+						init_turret_data(&motors[j]);
 						BOARD_LED_A_OFF();
 			}
 			fill_motor_data(&motors[j], rx_buff);
@@ -71,11 +71,11 @@ void can_motors_callback_handler(int16_t rx_id, uint8_t* rx_buff){
 	}
 }
 
-void init_tourelle_data(motor_t* motor){
-	motor->consigne = motor->info.angle_360;
+void init_turret_data(motor_t* motor){
+	motor->setpoint = motor->info.angle_360;
 	if(motor->MAX_POSITION > motor->MIN_POSITION){ 
 		if(motor->MAX_POSITION < motor->info.angle_360 || motor->MIN_POSITION > motor->info.angle_360){
-			error_board_A(1);
+			error_boardA(1);
 			if(motor->can_rx_id == 0x0205){
 				return;
 			} else {
@@ -84,7 +84,7 @@ void init_tourelle_data(motor_t* motor){
 		}
 	} else { // Si l'angle 0 est entre le min et le max (donc min > max)
 		if(motor->MAX_POSITION < motor->info.angle_360 && motor->MIN_POSITION > motor->info.angle_360){
-			error_board_A(1);
+			error_boardA(1);
 			if(motor->can_rx_id == 0x0205){
 				return;
 			} else {
@@ -105,8 +105,8 @@ void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 	motor->info.torque = (int16_t)(rx_buff[4] << 8 | rx_buff[5]);
 }
 
-/* Modifie la consigne tout en v�rifiant les limites de postion */
-void add_consigne_position(motor_t* motor, float value, float coeff){
+/* Modifie la setpoint tout en v�rifiant les limites de postion */
+void add_setpoint_position(motor_t* motor, float value, float coeff){
 	
 	//S'assure que le moteur r�pond avant d'envoyer des consignes
 	if (motor->signOfLife_tick != 0 && HAL_GetTick() - motor->signOfLife_tick > 100) return;
@@ -119,7 +119,7 @@ void add_consigne_position(motor_t* motor, float value, float coeff){
 	}
 	if(value > -sensitivity_deadzone && value < sensitivity_deadzone) value = 0;
 	
-	float consigne_position = motor->consigne + (motor->direction * value * coeff);
+	float consigne_position = motor->setpoint + (motor->direction * value * coeff);
 	if(consigne_position > 360) consigne_position -= (float) 360.0;
 	if(consigne_position < 0) 	consigne_position += (float) 360.0;
 	
@@ -138,7 +138,7 @@ void add_consigne_position(motor_t* motor, float value, float coeff){
 		}
 	}
 		
-	motor->consigne = consigne_position;
+	motor->setpoint = consigne_position;
 }
 
 /* Initialise le CAN 1 */

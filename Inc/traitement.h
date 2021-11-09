@@ -1,6 +1,6 @@
 /****************
-   Description : Fait la laison entre la télécommande et les consignes moteurs
-   Auteur : Sébastien FAGUET
+   Description : Fait la laison entre la tï¿½lï¿½commande et les consignes moteurs
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 #ifndef TRAITEMENT
@@ -26,18 +26,18 @@ enum mode_assistance_ai_t{
 void switch_assistance_ai(void);
 
 /* Calcul les pids de tous les moteurs (calcul des commandes en fonction des consignes */
-void traitement_pids_compute(void);
+void pid_compute_command(void);
 
-/* Fonctions qui fait les liens entre les entrées (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut créer plusieurs traitements */
-void traitement_1(void);
+/* Fonctions qui fait les liens entre les entrï¿½es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut crï¿½er plusieurs traitements */
+void processGeneralInputs(void);
 
-void chassis_consigne(double Vx, double Vy, double W);
+void chassis_setpoint(double Vx, double Vy, double W);
 
 /*Effectue le suivi automatique des cibles */
 void auto_follow_target(void);
 
 /*Convertit un angle en millirad en degres*/
-float convert_to_deg(float angle_in_millirad);
+float mrad_to_deg(float angle_in_millirad);
 
 /*Retourne true si le controller est a une position neutre*/
 bool isControllerNeutral(void);

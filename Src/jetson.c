@@ -1,7 +1,7 @@
 /****************
    Description : Gestion des informations du Jetson
    Auteurs : Arthur VAN BETSBRUGGE, Ariane BOYCZUM-AUGER, Katherine ZAMUDIO-TURCOTTE, Marc-Antoine HIEN
-	 Periphériques : UART 7
+	 Periphï¿½riques : UART 7
 *****************/
 
 
@@ -9,13 +9,13 @@
 
 jetson_t jetson;
 
-/* On crée le buffer de récupération de données du referee System */
+/* On crï¿½e le buffer de rï¿½cupï¿½ration de donnï¿½es du referee System */
 uint8_t uart7_rx_buff[UART7_RX_BUFFLEN];
 
-/* On récupère les variables exterieurs */
+/* On rï¿½cupï¿½re les variables exterieurs */
 extern uint32_t signOfLife_jetson_tick;
 
-/* fonction appelée lorsqu'on recoit une unformation du récepteur */
+/* fonction appelï¿½e lorsqu'on recoit une unformation du rï¿½cepteur */
 void jetson_callback_handler(int8_t lenght){
 	
 	/* frame_header (5-byte) */
@@ -38,10 +38,10 @@ void jetson_callback_handler(int8_t lenght){
 	}
 }
 
-/* Fonction d'envoie des commandes à la jetson */
+/* Fonction d'envoie des commandes ï¿½ la jetson */
 void jetson_uart_send_command(uint8_t command){
 
-	jetson.switch_informations.switch_target = command;
+	jetson.switch_information.switch_target = command;
 	
 	uint8_t buffer[5];
 	
@@ -53,12 +53,12 @@ void jetson_uart_send_command(uint8_t command){
 	buffer[1] = cmd_id;
 	buffer[2] = cmd_id >> 2;
 	buffer[3] = data_length;
-	buffer[4] = jetson.switch_informations.switch_target;
+	buffer[4] = jetson.switch_information.switch_target;
 	
 	//envoie les 5 octets de la commande au uart7 vers la jetson
 	HAL_UART_Transmit(&huart7, (uint8_t*) buffer, 5, 10);
 	
-	jetson.switch_informations.switch_target = 0x00;
+	jetson.switch_information.switch_target = 0x00;
 }
 
 /**

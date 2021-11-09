@@ -1,7 +1,7 @@
 /****************
-   Description : Gestion des fonctionnalités du receiver Radio Controller
-   Auteur : Sébastien FAGUET
-	 Periphériques : UART 1 RX (PB7) - DBUS
+   Description : Gestion des fonctionnalitï¿½s du receiver Radio Controller
+   Auteur : Sï¿½bastien FAGUET
+	 Periphï¿½riques : UART 1 RX (PB7) - DBUS
 *****************/
 
 #ifndef RECEIVER_RADIOCONTROLLER
@@ -22,11 +22,11 @@ typedef struct receiver_RadioController_data receiver_RadioController_data_t;
 struct receiver_RadioController_data
 {
     /* rocker channel information */
-    int16_t ch1; //Entre -660 et 660
+    int16_t ch1; // Between -660 and 660
     int16_t ch2;
     int16_t ch3;
     int16_t ch4;
-		float ch1_float; //Entre -100.0 et 100.0
+		float ch1_float; // Between -100.0 and 100.0
 		float ch2_float;
 		float ch3_float;
 		float ch4_float;
@@ -81,7 +81,7 @@ struct receiver_RadioController
 
 void uart1_init(void);
 
-/* fonction appelée lorsqu'on recoit une unformation du récepteur */
+/* Function called when data is recieved from controller */
 void receiver_RadioController_callback_handler(void);
 #endif
 

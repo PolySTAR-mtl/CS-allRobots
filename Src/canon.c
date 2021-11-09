@@ -18,7 +18,7 @@ float shoot_rate = 0; //Cadance de tir
 float shoot_rate2 = 0; //Cadance de tir pour le feeder #2 si il est present (ex. HEROS)
 
 //Demande de tirer
-void canon_shoot(float speed, float rate){
+void canon_shoot_start(float speed, float rate){
 	
 	double coefficientVitesse = 1;
 	double coefficientCadence = 1;
@@ -50,10 +50,10 @@ void canon_shoot(float speed, float rate){
 			PWM_SetAllDuty(&htim1, speed, speed); //Demarage des snails
 			shoot_rate = motors[FEEDER].direction * rate; //Sauvegarde de la cadance de tir
 			
-	        motors[FEEDER].consigne = shoot_rate; //Demarage du feeder
+	        motors[FEEDER].setpoint = shoot_rate; //Demarage du feeder
 			if (motors[FEEDER2].type == M2006) {
 				shoot_rate2 = motors[FEEDER2].direction * rate;
-			  motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+			  motors[FEEDER2].setpoint = shoot_rate2; //Demarage du feeder #2 si il est present
 		  }
 		}
 		
@@ -61,10 +61,10 @@ void canon_shoot(float speed, float rate){
 		if(begin_canon_shoot == 0 && end_canon_shoot == 0 && shooting != 0){ 
 			PWM_SetAllDuty(&htim1, speed, speed); //Changement de la vitesse 
 			shoot_rate = motors[FEEDER].direction * rate; //Changement de la cadance de tir
-			motors[FEEDER].consigne = shoot_rate; //Changement de la cadance de tir
+			motors[FEEDER].setpoint = shoot_rate; //Changement de la cadance de tir
 			if (motors[FEEDER2].type == M2006) {
 				shoot_rate2 = motors[FEEDER2].direction * rate;
-			    motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+			    motors[FEEDER2].setpoint = shoot_rate2; //Demarage du feeder #2 si il est present
 		  }
 		}
 	}
@@ -73,16 +73,16 @@ void canon_shoot(float speed, float rate){
 
 
 //Fonction de traitement des tirs, a appeler � chaque boucle
-void traitement_shoot(){
+void canon_process_inputs(){
 	//Si on a demand� de commencer de tirer il y a plus de x ms, on d�mare maintenant le feeder
 	if(begin_canon_shoot != 0 && HAL_GetTick() - begin_canon_shoot > TIME_BEFORE_START_FEEDER){
 		begin_canon_shoot = 0;
 		end_canon_shoot = 0;
 		shooting = HAL_GetTick();
 		
-		motors[FEEDER].consigne = shoot_rate; //Demarage du feeder
+		motors[FEEDER].setpoint = shoot_rate; //Demarage du feeder
 		if (motors[FEEDER2].type == M2006) {
-			  motors[FEEDER2].consigne = shoot_rate2; //Demarage du feeder #2 si il est present
+			  motors[FEEDER2].setpoint = shoot_rate2; //Demarage du feeder #2 si il est present
 		}
 	}
 	
@@ -93,9 +93,9 @@ void traitement_shoot(){
 		shooting = 0;
 		
 		PWM_SetAllDuty(&htim1, 0, 0); //Arret des snails
-		motors[FEEDER].consigne = 0; //Arret du feeder
+		motors[FEEDER].setpoint = 0; //Arret du feeder
 		if (motors[FEEDER2].type == M2006) {
-			motors[FEEDER2].consigne = 0; //Arret du feeder #2 si il est present
+			motors[FEEDER2].setpoint = 0; //Arret du feeder #2 si il est present
 		}
 	}
 }
@@ -106,9 +106,9 @@ void canon_shoot_end(){
 	begin_canon_shoot = 0;
 	if(shooting != 0){
 		// Si nous �tions entrain de tirer
-		motors[FEEDER].consigne = -7000; //On enleve les balles
+		motors[FEEDER].setpoint = -7000; //On enleve les balles
 		if (motors[FEEDER2].type == M2006) {
-		  motors[FEEDER2].consigne = -7000; //On enleve aussi les balles du 2e feeder si il est present
+		  motors[FEEDER2].setpoint = -7000; //On enleve aussi les balles du 2e feeder si il est present
 		}
 		shooting = 0;
 	}

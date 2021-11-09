@@ -1,7 +1,7 @@
 /****************
-   Description : Gestion des fonctionnalités du referee System
-   Auteur : Sébastien FAGUET
-	 Periphériques : UART 6
+   Description : Gestion des fonctionnalitï¿½s du referee System
+   Auteur : Sï¿½bastien FAGUET
+	 Periphï¿½riques : UART 6
 *****************/
 
 #ifndef REFEREE_SYSTEM_H
@@ -20,9 +20,9 @@
 
 typedef __packed struct
 {
-	uint8_t game_type : 4; //Competition Type 1: RoboMaster Robotics Competition; 2: RoboMaster Technical Challenge; 3: RoboMaster ICRA
-	uint8_t game_progress : 4; //Current Competition Stage 0: Pre-match; 1: Setup Period; 2: Referee System Initialization Period; 3: 5-second Countdown; 4: Round Period; 5: Calculation Period
-	uint16_t stage_remain_time; //Remaining time of the current period (unit: s)
+	uint8_t game_type : 4; 		// Competition Type 1: RoboMaster Robotics Competition; 2: RoboMaster Technical Challenge; 3: RoboMaster ICRA
+	uint8_t game_progress : 4; 	// Current Competition Stage 0: Pre-match; 1: Setup Period; 2: Referee System Initialization Period; 3: 5-second Countdown; 4: Round Period; 5: Calculation Period
+	uint16_t stage_remain_time; // Remaining time of the current period (unit: s)
 } ext_game_status_t;
 
 typedef __packed struct
@@ -75,7 +75,7 @@ typedef __packed struct
 typedef __packed struct
 {
 	/*
-	The occupation status of Landing Pad of one’s own side
+	The occupation status of Landing Pad of oneï¿½s own side
 		0 indicates no robot occupies;
 		1 indicates that Aerial has occupied the Landing Pad but does not stop the propeller;
 		2 indicates that Aerial has occupied the Landing Pad and stopped the propeller
@@ -166,7 +166,7 @@ typedef __packed struct
 } refereeSystem_t;
 
 
-/* fonction appelée lorsqu'on recoit une unformation du récepteur */
+/* Function called when data is recieved from referee system */
 void refereeSystem_callback_handler(int8_t lenght);
 
 void uart6_init(void);

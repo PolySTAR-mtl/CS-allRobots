@@ -1,6 +1,6 @@
 /****************
-   Description : Gestion du debug grâce au OLED
-   Auteur : Sébastien FAGUET
+   Description : Gestion du debug grï¿½ce au OLED
+   Auteur : Sï¿½bastien FAGUET
 *****************/
 
 
@@ -16,4 +16,5 @@ void oled_debug(void);
 void oled_debug_display(void);
 void oled_debug_display_ReceiverRadioController(int16_t button);
 void oled_debug_display_RefereeSystem(int16_t button);
+
 #endif

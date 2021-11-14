@@ -110,7 +110,7 @@ int main(void)
 	uart6_init();
 	uart7_init();
 	can1_init();
-	robotInit(4); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
+	robotInit(6); //Initialise le robot comme un standard, l'objectif c'est que l'initialisation de fasse par le referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
 	extern jetson_t jetson;
@@ -123,7 +123,7 @@ int main(void)
 	
 	bool buzz_on = false;
 	
-	while(1){
+	/*while(1){
 		
 		signOfLife_Receiver_RadioController();
 		if(signOfLife_Receiver_RadioController_tick != 0){
@@ -140,11 +140,11 @@ int main(void)
 		error_board_A(2);
 	}
 
-  BOARD_LED_A_OFF();
+  BOARD_LED_A_OFF();*/
 	
   while (1)
   {
-		signOfLife(); //LEDs BLINK
+		//signOfLife(); //LEDs BLINK
 		//oled_debug(); //Display debug menu on OLED
 		//uart_debug(); //Display debug menu on UART
 		traitement_1();							//Calcul les consignes des moteurs

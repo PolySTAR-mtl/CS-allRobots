@@ -1,22 +1,22 @@
 /****************
-   Description : Gestion des fonctionnalités du referee System
-   Auteur : Sébastien FAGUET
-	 Periphériques : UART 6
+   Description : Gestion des fonctionnalitï¿½s du referee System
+   Auteur : Sï¿½bastien FAGUET
+	 Periphï¿½riques : UART 6
 *****************/
 
 
 #include "referee_system.h"
 
-/* On crée la variable du referee System */
+// Create Referee System variable
 refereeSystem_t refereeSystem;
 
-/* On crée le buffer de récupération de données du referee System */
+// Create data retrieval buffer for Referee System
 uint8_t uart6_rx_buff[UART6_RX_BUFFLEN];
 
-/* On récupère les variables exterieurs */
+// Retrieve external variables
 extern uint32_t signOfLife_refereeSystem_tick;
 
-/* fonction appelée lorsqu'on recoit une unformation du récepteur */
+// Function called went data is received from receiver
 void refereeSystem_callback_handler(int8_t lenght){
 	/* frame_header (5-byte) */
 	uint8_t 	SOF 					= uart6_rx_buff[0];
@@ -105,7 +105,7 @@ void uart6_init(void)
 
 
 
-/*  A GARDER POUR FAIRE LA VERIFICATION DES CRC8 ET DES CRC16   */
+/*  TODO : A GARDER POUR FAIRE LA VERIFICATION DES CRC8 ET DES CRC16   */
 /*
 static uint8_t  ref_get_crc8(uint8_t *p_msg, uint32_t len, uint8_t crc8) ;
 static uint32_t ref_verify_crc8(uint8_t *p_msg, uint32_t len);

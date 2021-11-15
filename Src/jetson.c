@@ -9,13 +9,13 @@
 
 jetson_t jetson;
 
-/* On cr�e le buffer de r�cup�ration de donn�es du referee System */
+// Create data retrieval buffer for Referee System
 uint8_t uart7_rx_buff[UART7_RX_BUFFLEN];
 
-/* On r�cup�re les variables exterieurs */
+// Retrieve external variables
 extern uint32_t signOfLife_jetson_tick;
 
-/* fonction appel�e lorsqu'on recoit une unformation du r�cepteur */
+// Function called went data is received from receiver
 void jetson_callback_handler(int8_t lenght){
 	
 	/* frame_header (5-byte) */
@@ -38,15 +38,15 @@ void jetson_callback_handler(int8_t lenght){
 	}
 }
 
-/* Fonction d'envoie des commandes � la jetson */
+// Send commands to jetson via UART
 void jetson_uart_send_command(uint8_t command){
 
 	jetson.switch_information.switch_target = command;
 	
 	uint8_t buffer[5];
 	
-	uint8_t 	SOF 					= 0xFC;
-	uint16_t 	cmd_id 				= 0x0001; 	//switch target
+	uint8_t 	SOF 			= 0xFC;
+	uint16_t 	cmd_id 			= 0x0001; 	// switch target
 	uint8_t 	data_length 	= 0x01;
 	
 	buffer[0] = SOF;
@@ -55,9 +55,9 @@ void jetson_uart_send_command(uint8_t command){
 	buffer[3] = data_length;
 	buffer[4] = jetson.switch_information.switch_target;
 	
-	//envoie les 5 octets de la commande au uart7 vers la jetson
-	HAL_UART_Transmit(&huart7, (uint8_t*) buffer, 5, 10);
-	
+	// Sends 5-byte command to uart7 towards jetson
+	HAL_UART_Transmit(&huart7, (uit8_t*) buffer, 5, 10);
+	n
 	jetson.switch_information.switch_target = 0x00;
 }
 

@@ -25,7 +25,6 @@ extern motor_t motors[MAX_MOTORS];
 extern receiver_RadioController_t receiver_RadioController;
 extern jetson_t jetson;
 
-// TODO : Indicates what?
 /* Manages signs of life. LED RED : Program is running */
 void signOfLife(){
 	static uint32_t tickstart = 0;

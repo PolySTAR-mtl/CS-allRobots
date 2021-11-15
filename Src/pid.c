@@ -36,7 +36,7 @@ pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float k
 
 	pid->lasttime = HAL_GetTick() - pid->sampletime;
 	pid_auto(pid);
-	pid->circulaire = 0;
+	pid->circular = 0;
 	
 	return pid;
 }
@@ -60,10 +60,10 @@ void pid_compute(pid_t pid)
 	// Compute error
 	float error = (*(pid->setpoint)) - in;
 	
-	if(pid->circulaire > 0){
-		float half = pid->circulaire / 2;
-		if(error > half) 		error -= pid->circulaire;
-		if(error < -half) 	error += pid->circulaire;
+	if(pid->circular > 0){
+		float half = pid->circular / 2;
+		if(error > half) 		error -= pid->circular;
+		if(error < -half) 	error += pid->circular;
 	}
 	
 	// Compute integral
@@ -100,7 +100,7 @@ void pid_tune(pid_t pid, float kp, float ki, float kd)
 	if (kp < 0 || ki < 0 || kd < 0)
 		return;
 	
-	//Compute sample time in seconds
+	// Compute sample time in seconds
 	float ssec = ((float) pid->sampletime) / ((float) TICK_SECOND);
 
 	pid->Kp = kp;
@@ -129,7 +129,7 @@ void pid_limits(pid_t pid, float min, float max)
 	if (min >= max) return;
 	pid->omin = min;
 	pid->omax = max;
-	//Adjust output to new limits
+	// Adjust output to new limits
 	if (pid->automode) {
 		if (*(pid->output) > pid->omax)
 			*(pid->output) = pid->omax;
@@ -174,7 +174,7 @@ void pid_direction(pid_t pid, enum pid_control_directions dir)
 
 void pid_circular(pid_t pid, float limit)
 {
-	pid->circulaire = limit;
+	pid->circular = limit;
 }
 
 void pid_debug_uart(pid_t pid){

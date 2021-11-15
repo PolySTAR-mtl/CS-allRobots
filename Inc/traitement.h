@@ -17,29 +17,29 @@
 #include "robot_configuration.h"
 #include "pid.h"
 
-/*decrit si on est en mode visee automatique ou manuelle*/
+/* Describes current aiming mode */
 enum mode_assistance_ai_t{
-	automatique, manuel
+	automatic, manual
 };
 
-/*change le mode d'assisatance AI pour la visee*/
+/* Switches ai aim assist mode */
 void switch_assistance_ai(void);
 
-/* Calcul les pids de tous les moteurs (calcul des commandes en fonction des consignes */
+// Calculates PID control for all motors (calculate commands as functions of setpoints)
 void pid_compute_command(void);
 
-/* Fonctions qui fait les liens entre les entr�es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut cr�er plusieurs traitements */
+// Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
 void processGeneralInputs(void);
 
 void chassis_setpoint(double Vx, double Vy, double W);
 
-/*Effectue le suivi automatique des cibles */
+/* Automatically follows target */
 void auto_follow_target(void);
 
-/*Convertit un angle en millirad en degres*/
+/* Convert milirad to degrees */
 float mrad_to_deg(float angle_in_millirad);
 
-/*Retourne true si le controller est a une position neutre*/
+/* Returns true if controller is in neutral state */
 bool isControllerNeutral(void);
 
 

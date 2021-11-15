@@ -1,6 +1,6 @@
 /****************
    Description : Gestion des pilotes, sauvegarde de leur configuration
-   Auteur : Sébastien FAGUET
+   Auteur : Sï¿½bastien FAGUET
 *****************/
                   
 #include "pilotes.h"
@@ -32,10 +32,10 @@ void piloteInit(uint8_t pilote_id){
 	pilote.sensitivity_chassis_mouse_W = 160;
 	
 	/*Coefficient puissance chassis*/
-	pilote.coefficientShiftChassis = 0.5;
-	pilote.coefficientEChassis = 1.2;
+	pilote.coefficient_ShiftChassis = 0.5;
+	pilote.coefficient_EChassis = 1.2;
 	
-	switch(pilote_id){ //Configuration personnalisée
+	switch(pilote_id){ //Configuration personnalisï¿½e
 		/* Antonin */
 		case PILOTE_ANTONIN:
 			break;

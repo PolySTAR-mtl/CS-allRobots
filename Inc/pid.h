@@ -62,7 +62,7 @@ struct pid_controller {
 	uint32_t sampletime; //!< Defines the PID sample time
 	// Operation mode
 	uint8_t automode; //!< Defines if the PID controller is enabled or disabled
-	float circulaire; //Valeur de la limit de circulaire
+	float circular; //Value of circular limit
 	enum pid_control_directions direction;
 };
 
@@ -185,15 +185,15 @@ typedef struct pid_controller * pid_t;
 	 */
 	void pid_direction(pid_t pid, enum pid_control_directions dir);
 	
-	/* Rajout� par S�b: 
-	-	Permet de faire une r�gulation circulaire.
-		Exemple: Lors d'un asservissement de position, on veut que quand on est � 350deg et qu'on a comme setpoint 10deg,
+	/* Added by Seb: TODO : Translate
+	-	Permet de faire une regulation circulaire.
+		Exemple: Lors d'un asservissement de position, on veut que quand on est a 350deg et qu'on a comme setpoint 10deg,
 			On aimerait ne pas faire le tour par 180 deg mais passer part 0 deg
 			arguement limite est la valeur de rebouclage, dans notre exemple limite = 360deg car on souhaite que 360deg = 0 deg
 	*/
 	void pid_circular(pid_t pid, float limit);
 	
-	/* Rajout� par S�b
+	/* Added by Seb:
 	- Permet d'envoyer les donn�es de r�gulation pour affichage dans KST par l'uart de debug 
 	*/
 	void pid_debug_uart(pid_t pid);

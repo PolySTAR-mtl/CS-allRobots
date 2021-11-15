@@ -191,7 +191,7 @@ typedef struct pid_controller * pid_t;
 			On aimerait ne pas faire le tour par 180 deg mais passer part 0 deg
 			arguement limite est la valeur de rebouclage, dans notre exemple limite = 360deg car on souhaite que 360deg = 0 deg
 	*/
-	void pid_circulaire(pid_t pid, float limit);
+	void pid_circular(pid_t pid, float limit);
 	
 	/* Rajout� par S�b
 	- Permet d'envoyer les donn�es de r�gulation pour affichage dans KST par l'uart de debug 

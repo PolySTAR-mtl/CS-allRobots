@@ -64,12 +64,12 @@ void signOfLife_refereeSystem(){
 
 /* Manages CAN sign of life. LED C : Receiving data on bus CAN1*/
 void signOfLife_can1(){
-  if ((HAL_GetTick() - motors[TOURELLE_YAW].signOfLife_tick) < 100){
+  if ((HAL_GetTick() - motors[TURRET_YAW].signOfLife_tick) < 100){
 		BOARD_LED_C_ON();
 	}else{
 		BOARD_LED_C_OFF();
 	}
-	if ((HAL_GetTick() - motors[TOURELLE_PITCH].signOfLife_tick) < 100){
+	if ((HAL_GetTick() - motors[TURRET_PITCH].signOfLife_tick) < 100){
 		BOARD_LED_D_ON();
 	}else{
 		BOARD_LED_D_OFF();
@@ -123,7 +123,7 @@ void killMotors(){
 }
 
 /* Allows display of debug information on UART
-Example : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TOURELLE_YAW].info.angle, motors[TOURELLE_YAW].info.angle);
+Example : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TURRET_YAW].info.angle, motors[TURRET_YAW].info.angle);
 */
 void uart_debug(){
 	static uint32_t tickstart = 0;
@@ -142,12 +142,12 @@ void uart_debug(){
 	//uart_debug_command("[2J"); //Clear entire screen
 	uart_debug_printf("%c,teta=%d,phi=%d,d=%d \r\n", jetson.robot_target_coordinates.target_located, jetson.robot_target_coordinates.theta_target_location, jetson.robot_target_coordinates.phi_target_location, jetson.robot_target_coordinates.d_target_location);
 	//uart_debug_printf("\r\nTOURELLE YAW\r\n");
-	//uart_debug_printf("\tAngle: %f \r\n", motors[TOURELLE_PITCH].info.angle_360);
+	//uart_debug_printf("\tAngle: %f \r\n", motors[TURRET_PITCH].info.angle_360);
 	//uart_debug_
-	/*printf("\tSpeed: %f\r\n", motors[TOURELLE_YAW].info.speed);
-	uart_debug_printf("\tTorque: %d\r\n", motors[TOURELLE_YAW].info.torque);
-	uart_debug_printf("\tTemperature: %d\r\n", motors[TOURELLE_YAW].info.temp);
-	uart_debug_printf("\tCommand: %f\r\n", motors[TOURELLE_YAW].command);*/
+	/*printf("\tSpeed: %f\r\n", motors[TURRET_YAW].info.speed);
+	uart_debug_printf("\tTorque: %d\r\n", motors[TURRET_YAW].info.torque);
+	uart_debug_printf("\tTemperature: %d\r\n", motors[TURRET_YAW].info.temp);
+	uart_debug_printf("\tCommand: %f\r\n", motors[TURRET_YAW].command);*/
 }
 
 /* Print function for debug UART*/

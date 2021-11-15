@@ -20,10 +20,10 @@ extern pilote_t pilote;
 extern jetson_t jetson;
 extern refereeSystem_t refereeSystem;
 
-extern float vitesse_snail; 
-extern float cadence_coeff;
-extern bool  inversion_gauchedroite;
-extern bool  inversion_avantarriere;
+extern float snail_vel; 
+extern float cadence_mult;
+extern bool  invert_leftright;
+extern bool  invert_frontback;
 
 /*mode de controle actuel*/
 enum mode_assistance_ai_t mode_assistance_ai = manuel;
@@ -93,8 +93,8 @@ void processGeneralInputs(){
 		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
 		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
-		add_setpoint_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
-		add_setpoint_position(&motors[TOURELLE_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
+		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
+		add_setpoint_position(&motors[TURRET_YAW], tourelle_yaw, pilote.sensitivity_mouse_x);
 		
 		chassis_setpoint(receiver_RadioController.data.kb.bit.W - receiver_RadioController.data.kb.bit.S, 
 											receiver_RadioController.data.kb.bit.D - receiver_RadioController.data.kb.bit.A, 
@@ -102,9 +102,9 @@ void processGeneralInputs(){
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot_start(vitesse_snail/2, cadence_coeff * 1000);
+			canon_shoot_start(snail_vel/2, cadence_mult * 1000);
 		}else if(receiver_RadioController.data.mouse.r){
-			canon_shoot_start(vitesse_snail, cadence_coeff * 1000);
+			canon_shoot_start(snail_vel, cadence_mult * 1000);
 		}else{
 			canon_shoot_end();
 		}
@@ -113,8 +113,8 @@ void processGeneralInputs(){
 		
 		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
-		add_setpoint_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
-		add_setpoint_position(&motors[TOURELLE_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
+		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
+		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
 	
 		switch(receiver_RadioController.data.sw1){
 			case 1:
@@ -129,10 +129,10 @@ void processGeneralInputs(){
 				canon_shoot_start(0, 0);
 				break;
 			case 3:
-				canon_shoot_start(vitesse_snail/2, 1000);
+				canon_shoot_start(snail_vel/2, 1000);
 				break;
 			case 1:
-				canon_shoot_start(vitesse_snail, 1000);
+				canon_shoot_start(snail_vel, 1000);
 				break;
 		}
 		
@@ -165,13 +165,13 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	else {
 		coefficientPuissance = 1;
 	}*/
-	if (inversion_gauchedroite) {
+	if (invert_leftright) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
 		// mais la ligne 132 de ce fichier étant erronée, on inverse le gauche-droite en inversant le Y et non le X
 		Vy = -Vy;
 	}
 	
-	if (inversion_avantarriere) {
+	if (invert_frontback) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
 		// mais la ligne 132 de ce fichier étant erronée, on inverse le avant-arrière en inversant le X et non le Y
 		Vx = -Vx;
@@ -222,29 +222,29 @@ void switch_assistance_ai(void){
 			switch(mode_assistance_ai){
 				case automatique : 
 					mode_assistance_ai = manuel; 
-					pid_create(&motors[TOURELLE_YAW].pid, 
-								&motors[TOURELLE_YAW].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la setpoint 
-								&motors[TOURELLE_YAW].command, 						//output: la commande que l'on envoie au moteur
-								&motors[TOURELLE_YAW].setpoint, 					//setpoint: On veut que le moteur soit ï¿½ cette position ou tourne a cette vitesse
+					pid_create(&motors[TURRET_YAW].pid, 
+								&motors[TURRET_YAW].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la setpoint 
+								&motors[TURRET_YAW].command, 						//output: la commande que l'on envoie au moteur
+								&motors[TURRET_YAW].setpoint, 					//setpoint: On veut que le moteur soit ï¿½ cette position ou tourne a cette vitesse
 								200, 100, 0);                             //constantes p, i et d
-					pid_create(&motors[TOURELLE_PITCH].pid, 
-								&motors[TOURELLE_PITCH].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la setpoint 
-								&motors[TOURELLE_PITCH].command, 						//output: la commande que l'on envoie au moteur
-								&motors[TOURELLE_PITCH].setpoint, 					//setpoint: On veut que le moteur soit ï¿½ cette position ou tourne a cette vitesse
+					pid_create(&motors[TURRET_PITCH].pid, 
+								&motors[TURRET_PITCH].info.angle_360, 		//input : le retour sur la quelle ont veut atteintre la setpoint 
+								&motors[TURRET_PITCH].command, 						//output: la commande que l'on envoie au moteur
+								&motors[TURRET_PITCH].setpoint, 					//setpoint: On veut que le moteur soit ï¿½ cette position ou tourne a cette vitesse
 								200, 100, 0);                               //constantes p, i et d
 					previous_mode_ai = automatique;
 					break;
 				case manuel : 
 					mode_assistance_ai = automatique; 
-					pid_create(&motors[TOURELLE_YAW].pid, 
-								&motors[TOURELLE_YAW].info.angle_360, 		
-								&motors[TOURELLE_YAW].command, 						
-								&motors[TOURELLE_YAW].setpoint, 					
+					pid_create(&motors[TURRET_YAW].pid, 
+								&motors[TURRET_YAW].info.angle_360, 		
+								&motors[TURRET_YAW].command, 						
+								&motors[TURRET_YAW].setpoint, 					
 								200, 400, 0);
-					pid_create(&motors[TOURELLE_PITCH].pid, 
-								&motors[TOURELLE_PITCH].info.angle_360, 		
-								&motors[TOURELLE_PITCH].command, 						
-								&motors[TOURELLE_PITCH].setpoint, 					
+					pid_create(&motors[TURRET_PITCH].pid, 
+								&motors[TURRET_PITCH].info.angle_360, 		
+								&motors[TURRET_PITCH].command, 						
+								&motors[TURRET_PITCH].setpoint, 					
 								400, 400, 0);
 					previous_mode_ai = manuel;
 					break;
@@ -300,13 +300,13 @@ void auto_follow_target(void){
 		// phi = 0 => bouge pas
 		// phi positif => va vers la gauche
 		// phi negatif => va vers la droite
-		consigne_yaw = motors[TOURELLE_YAW].setpoint - mrad_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
+		consigne_yaw = motors[TURRET_YAW].setpoint - mrad_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
 		
 		// angle_pitch = 0 => bouge pas
 		// angle_pitch positif => va vers le haut
 		// angle_pitch negatif => va vers le bas
 		float angle_pitch = (PI/2)*1000 - teta; // difference entre angle ou on est presentement et angle ou se trouve la cible (en millirad)
-		consigne_pitch = motors[TOURELLE_PITCH].setpoint - mrad_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
+		consigne_pitch = motors[TURRET_PITCH].setpoint - mrad_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
 		
 		
 		//Peut �tre utiliser add_setpoint_position() a la place des lignes 246 � 272
@@ -319,33 +319,33 @@ void auto_follow_target(void){
 		if(consigne_pitch < 0) 	consigne_pitch += (float) 360.0;
 	
 		//S'assure que la setpoint respecte les limites min et max
-		if(motors[TOURELLE_YAW].MAX_POSITION > 0 && consigne_yaw > motors[TOURELLE_YAW].MAX_POSITION) {
-			consigne_yaw = motors[TOURELLE_YAW].MAX_POSITION;
+		if(motors[TURRET_YAW].MAX_POSITION > 0 && consigne_yaw > motors[TURRET_YAW].MAX_POSITION) {
+			consigne_yaw = motors[TURRET_YAW].MAX_POSITION;
 		}
-		if(motors[TOURELLE_YAW].MIN_POSITION > 0 && consigne_yaw < motors[TOURELLE_YAW].MIN_POSITION){
-			consigne_yaw = motors[TOURELLE_YAW].MIN_POSITION;
+		if(motors[TURRET_YAW].MIN_POSITION > 0 && consigne_yaw < motors[TURRET_YAW].MIN_POSITION){
+			consigne_yaw = motors[TURRET_YAW].MIN_POSITION;
 		}
-		if(motors[TOURELLE_PITCH].MAX_POSITION > 0 && consigne_pitch > motors[TOURELLE_PITCH].MAX_POSITION){
-			consigne_pitch = motors[TOURELLE_PITCH].MAX_POSITION;
+		if(motors[TURRET_PITCH].MAX_POSITION > 0 && consigne_pitch > motors[TURRET_PITCH].MAX_POSITION){
+			consigne_pitch = motors[TURRET_PITCH].MAX_POSITION;
 		}
-		if(motors[TOURELLE_PITCH].MIN_POSITION > 0 && consigne_pitch < motors[TOURELLE_PITCH].MIN_POSITION){
-			consigne_pitch = motors[TOURELLE_PITCH].MIN_POSITION;
+		if(motors[TURRET_PITCH].MIN_POSITION > 0 && consigne_pitch < motors[TURRET_PITCH].MIN_POSITION){
+			consigne_pitch = motors[TURRET_PITCH].MIN_POSITION;
 		}
 		
 		/*
 		TODO : ajustement du "consigne_pitch" en fonction de la distance "d" de la cible
 		*/
 		
-		motors[TOURELLE_YAW].setpoint = consigne_yaw;
+		motors[TURRET_YAW].setpoint = consigne_yaw;
 		
-		motors[TOURELLE_PITCH].setpoint = consigne_pitch;
+		motors[TURRET_PITCH].setpoint = consigne_pitch;
 	 
 	}
 	else {
-		motors[TOURELLE_YAW].setpoint = motors[TOURELLE_YAW].info.angle_360;
-		motors[TOURELLE_YAW].command = motors[TOURELLE_YAW].info.angle_360;
-		motors[TOURELLE_PITCH].setpoint = motors[TOURELLE_PITCH].info.angle_360;
-		motors[TOURELLE_PITCH].command = motors[TOURELLE_PITCH].info.angle_360;
+		motors[TURRET_YAW].setpoint = motors[TURRET_YAW].info.angle_360;
+		motors[TURRET_YAW].command = motors[TURRET_YAW].info.angle_360;
+		motors[TURRET_PITCH].setpoint = motors[TURRET_PITCH].info.angle_360;
+		motors[TURRET_PITCH].command = motors[TURRET_PITCH].info.angle_360;
 	}
 }
 

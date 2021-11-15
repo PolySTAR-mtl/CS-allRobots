@@ -172,7 +172,7 @@ void pid_direction(pid_t pid, enum pid_control_directions dir)
 	pid->direction = dir;
 }
 
-void pid_circulaire(pid_t pid, float limit)
+void pid_circular(pid_t pid, float limit)
 {
 	pid->circulaire = limit;
 }

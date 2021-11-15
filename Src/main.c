@@ -150,7 +150,7 @@ int main(void)
 		//uart_debug(); // Display debug menu on UART
 		processGeneralInputs();		// Input processing for all motors except firing system
 		canon_process_inputs();		// Input processing for firing system
-		pid_compute_command(); 	    // Calculates motor commands
+		pid_compute_command(); 	  // Calculates motor commands
 		can_send_command(); 			// Sends command to motors
 		
     /* USER CODE END WHILE */

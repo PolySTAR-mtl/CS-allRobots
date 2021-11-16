@@ -103,8 +103,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	PWM_init();
 	//PWM_ScaleAll(&htim1, true); // Etalonnage du PWM entre 0 et 1 (a faire uniquement lors de l'installation des moteurs la 1ere fois) info: motors.c
-	uint16_t power_pins_24v = BOARD_POWER1_CTRL_Pin|BOARD_POWER2_CTRL_Pin|BOARD_POWER3_CTRL_Pin|BOARD_POWER4_CTRL_Pin
-  HAL_GPIO_WritePin(GPIOH, power_pins, GPIO_PIN_SET); // Switch on 24v power
+	uint16_t power_pins_24v = BOARD_POWER1_CTRL_Pin|BOARD_POWER2_CTRL_Pin|BOARD_POWER3_CTRL_Pin|BOARD_POWER4_CTRL_Pin;
+  HAL_GPIO_WritePin(GPIOH, power_pins_24v, GPIO_PIN_SET); // Switch on 24v power
 	BOARD_LED_ALL_OFF();
 	oled_init();
 	uart1_init();

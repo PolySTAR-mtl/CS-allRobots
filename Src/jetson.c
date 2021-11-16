@@ -56,8 +56,7 @@ void jetson_uart_send_command(uint8_t command){
 	buffer[4] = jetson.switch_information.switch_target;
 	
 	// Sends 5-byte command to uart7 towards jetson
-	HAL_UART_Transmit(&huart7, (uit8_t*) buffer, 5, 10);
-	n
+	HAL_UART_Transmit(&huart7, (uint8_t*) buffer, 5, 10);
 	jetson.switch_information.switch_target = 0x00;
 }
 

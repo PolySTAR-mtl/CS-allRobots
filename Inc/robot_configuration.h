@@ -16,8 +16,8 @@
 #define FRONT_RIGHT 1
 #define BACK_RIGHT 2
 #define BACK_LEFT 3
-#define TOURELLE_YAW 4
-#define TOURELLE_PITCH 5
+#define TURRET_YAW 4
+#define TURRET_PITCH 5
 #define FEEDER 6
 #define FEEDER2 7
 

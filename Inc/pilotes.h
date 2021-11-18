@@ -33,6 +33,6 @@ typedef struct
 
 
 /* Fonction qui premet de configurer le pilote */
-void piloteInit(uint8_t pilote_id);
+void pilote_init(uint8_t pilote_id);
 
 #endif

@@ -24,6 +24,6 @@
 
 
 /* Function that allows robot configuration */
-void robotInit(uint8_t robot_id);
+void robot_init(uint8_t robot_id);
 
 #endif

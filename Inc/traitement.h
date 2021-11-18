@@ -29,7 +29,7 @@ void switch_assistance_ai(void);
 void pid_compute_command(void);
 
 // Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
-void processGeneralInputs(void);
+void process_general_inputs(void);
 
 void chassis_setpoint(double Vx, double Vy, double W);
 
@@ -40,7 +40,7 @@ void auto_follow_target(void);
 float mrad_to_deg(float angle_in_millirad);
 
 /* Returns true if controller is in neutral state */
-bool isControllerNeutral(void);
+bool is_controller_neutral(void);
 
 
 

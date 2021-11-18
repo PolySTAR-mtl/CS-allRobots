@@ -111,12 +111,12 @@ int main(void)
 	uart6_init();
 	uart7_init();
 	can1_init();
-	robotInit(4); // Initializes robot as STD. The aim is to have initialization handled by referee system
+	robot_init(4); // Initializes robot as STD. The aim is to have initialization handled by referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilote_t pilote;
 	extern jetson_t jetson;
 	extern uint32_t signOfLife_Receiver_RadioController_tick;
-	piloteInit(PILOTE_ANTONIN);
+	pilote_init(PILOTE_ANTONIN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,7 +128,7 @@ int main(void)
 		
 		signOfLife_Receiver_RadioController();
 		if(signOfLife_Receiver_RadioController_tick != 0){
-			if(isControllerNeutral()){
+			if(is_controller_neutral()){
 				buzzer_stop();
 				buzz_on = false;
 				break;     // Get out of infinite loop when controller is in neutral position
@@ -148,7 +148,7 @@ int main(void)
 		signOfLife(); // LEDs BLINK
 		//oled_debug(); // Display debug menu on OLED
 		//uart_debug(); // Display debug menu on UART
-		processGeneralInputs();		// Input processing for all motors except firing system
+		process_general_inputs();		// Input processing for all motors except firing system
 		canon_process_inputs();		// Input processing for firing system
 		pid_compute_command(); 	  // Calculates motor commands
 		can_send_command(); 			// Sends command to motors

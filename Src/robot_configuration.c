@@ -40,7 +40,7 @@ bool invert_frontback = false;
 
 
 // Function that configures robot
-void robotInit(uint8_t robot_id){
+void robot_init(uint8_t robot_id){
 	/*
 	Robot ID:
 		1: Red Hero;

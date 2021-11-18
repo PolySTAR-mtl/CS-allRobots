@@ -8,7 +8,7 @@
 pilote_t pilote;
 
 /* Fonction qui premet de configurer le robot */
-void piloteInit(uint8_t pilote_id){
+void pilote_init(uint8_t pilote_id){
 	/*
 	Robot ID:
 		0: Antonin;

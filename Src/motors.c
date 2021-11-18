@@ -7,7 +7,7 @@
 
 /* On r�cup�re les variables exterieurs */
 extern motor_t motors[MAX_MOTORS];
-extern pilote_t pilote;
+extern pilot_t pilot;
 extern receiver_RadioController_t receiver_RadioController;
 extern refereeSystem_t refereeSystem;
 
@@ -113,9 +113,9 @@ void add_setpoint_position(motor_t* motor, float value, float coeff){
 	
 	double sensitivity_deadzone;
 	if(receiver_RadioController.keyboard_mode){
-		sensitivity_deadzone = pilote.sensitivity_mouse_deadzone;
+		sensitivity_deadzone = pilot.sensitivity_mouse_deadzone;
 	}else{
-		sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
+		sensitivity_deadzone = pilot.sensitivity_RC_deadzone;
 	}
 	if(value > -sensitivity_deadzone && value < sensitivity_deadzone) value = 0;
 	

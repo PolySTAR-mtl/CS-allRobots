@@ -29,10 +29,10 @@ typedef struct
 	float coefficient_ShiftChassis;
 	float coefficient_EChassis;
 
-} pilote_t;
+} pilot_t;
 
 
-/* Fonction qui premet de configurer le pilote */
-void pilote_init(uint8_t pilote_id);
+/* Fonction qui premet de configurer le pilot */
+void pilot_init(uint8_t pilote_id);
 
 #endif

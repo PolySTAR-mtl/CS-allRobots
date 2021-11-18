@@ -33,9 +33,9 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BoardA_handle.h"
-#include "traitement.h"
+#include "processing.h"
 #include "robot_configuration.h"
-#include "pilotes.h"
+#include "pilots.h"
 #include "canon.h"
 #include "buzzer.h"
 

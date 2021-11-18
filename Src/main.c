@@ -113,10 +113,10 @@ int main(void)
 	can1_init();
 	robot_init(4); // Initializes robot as STD. The aim is to have initialization handled by referee system
 	extern motor_t motors[MAX_MOTORS];
-	extern pilote_t pilote;
+	extern pilot_t pilot;
 	extern jetson_t jetson;
 	extern uint32_t signOfLife_Receiver_RadioController_tick;
-	pilote_init(PILOTE_ANTONIN);
+	pilot_init(PILOTE_ANTONIN);
   /* USER CODE END 2 */
 
   /* Infinite loop */

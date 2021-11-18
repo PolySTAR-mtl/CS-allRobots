@@ -619,9 +619,9 @@
               <FilePath>..\Src\jetson.c</FilePath>
             </File>
             <File>
-              <FileName>pilotes.c</FileName>
+              <FileName>pilots.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\pilotes.c</FilePath>
+              <FilePath>..\Src\pilots.c</FilePath>
             </File>
             <File>
               <FileName>buzzer.c</FileName>
@@ -631,12 +631,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Traitement</GroupName>
+          <GroupName>Processing</GroupName>
           <Files>
             <File>
-              <FileName>traitement.c</FileName>
+              <FileName>processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\traitement.c</FilePath>
+              <FilePath>..\Src\processing.c</FilePath>
             </File>
             <File>
               <FileName>canon.c</FileName>

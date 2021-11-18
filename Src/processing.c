@@ -4,8 +4,8 @@
 *****************/
 
 
-#include "traitement.h"
-#include "pilotes.h"
+#include "processing.h"
+#include "pilots.h"
 #include "canon.h"
 #include "robot_configuration.h"
 
@@ -16,7 +16,7 @@
 // Recover external variables
 extern receiver_RadioController_t receiver_RadioController;	
 extern motor_t motors[MAX_MOTORS];
-extern pilote_t pilote;
+extern pilot_t pilot;
 extern jetson_t jetson;
 extern refereeSystem_t refereeSystem;
 
@@ -40,7 +40,7 @@ void pid_compute_command(){
 }
 
 /* Returns true if controller is in neutral state */
-bool isControllerNeutral(){
+bool is_controller_neutral(){
 	
 	// Joysticks in central position
 	if(receiver_RadioController.data.ch1_float != 0){
@@ -76,7 +76,7 @@ bool isControllerNeutral(){
 
 
 // Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
-void processGeneralInputs(){
+void process_general_inputs(){
 	
 	if(receiver_RadioController.keyboard_mode){
 		double chassis_w;
@@ -93,8 +93,8 @@ void processGeneralInputs(){
 		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
 		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
-		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.mouse.y, pilote.sensitivity_mouse_y);
-		add_setpoint_position(&motors[TURRET_YAW], turret_yaw, pilote.sensitivity_mouse_x);
+		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.mouse.y, pilot.sensitivity_mouse_y);
+		add_setpoint_position(&motors[TURRET_YAW], turret_yaw, pilot.sensitivity_mouse_x);
 		
 		chassis_setpoint(receiver_RadioController.data.kb.bit.W - receiver_RadioController.data.kb.bit.S, 
 											receiver_RadioController.data.kb.bit.D - receiver_RadioController.data.kb.bit.A, 
@@ -113,8 +113,8 @@ void processGeneralInputs(){
 		
 		//if(mode_assistance_ai==automatic) auto_follow_target();
 		
-		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
-		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilote.sensitivity_ch_1);
+		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
 	
 		switch(receiver_RadioController.data.sw1){
 			case 1:
@@ -178,18 +178,18 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	}
 	
 	if(receiver_RadioController.keyboard_mode){
-		sensitivity_Vx = pilote.sensitivity_chassis_keyboard_Vx;
-		sensitivity_Vy = pilote.sensitivity_chassis_keyboard_Vy;
-		sensitivity_W = pilote.sensitivity_chassis_mouse_W;
+		sensitivity_Vx = pilot.sensitivity_chassis_keyboard_Vx;
+		sensitivity_Vy = pilot.sensitivity_chassis_keyboard_Vy;
+		sensitivity_W = pilot.sensitivity_chassis_mouse_W;
 		sensitivity_deadzone = 0;
 		
-		coefficient_ShiftChassis = pilote.coefficient_ShiftChassis;
-		coefficient_EChassis = pilote.coefficient_EChassis;
+		coefficient_ShiftChassis = pilot.coefficient_ShiftChassis;
+		coefficient_EChassis = pilot.coefficient_EChassis;
 	}else{
-		sensitivity_Vx = pilote.sensitivity_chassis_RC_Vx;
-		sensitivity_Vy = pilote.sensitivity_chassis_RC_Vy;
-		sensitivity_W = pilote.sensitivity_chassis_RC_W;
-		sensitivity_deadzone = pilote.sensitivity_RC_deadzone;
+		sensitivity_Vx = pilot.sensitivity_chassis_RC_Vx;
+		sensitivity_Vy = pilot.sensitivity_chassis_RC_Vy;
+		sensitivity_W = pilot.sensitivity_chassis_RC_W;
+		sensitivity_deadzone = pilot.sensitivity_RC_deadzone;
 	}
 	if(Vx > -sensitivity_deadzone && Vx < sensitivity_deadzone) Vx = 0;
 	if(Vy > -sensitivity_deadzone && Vy < sensitivity_deadzone) Vy = 0;
@@ -216,7 +216,7 @@ void chassis_setpoint(double Vx, double Vy, double W){
 
 // Change targeting mode
 /* TODO : On pourrait ajouter un coefficient qui est 1 en manuel et <1 en automatique qui s'applique
-   sur les setpoint donnees par le pilote pour la tourelle */
+   sur les setpoint donnees par le pilot pour la tourelle */
 void switch_assistance_ai(void){
 		if (mode_assistance_ai != previous_mode_ai) {
 			switch(mode_assistance_ai){

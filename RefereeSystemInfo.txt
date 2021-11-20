@@ -1,0 +1,5 @@
+SSID - ASUS
+Password - 12345678
+
+Login - admin
+Password - admin

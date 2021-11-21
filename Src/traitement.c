@@ -77,7 +77,7 @@ bool isControllerNeutral(){
 
 /* Fonctions qui fait les liens entre les entr�es (capteurs, radio controller, CV, ...) et les sorties (consignes moteurs), on peut cr�er plusieurs traitements */
 void traitement_1(){
-	
+	if(!receiver_RadioController.keyboard_mode){
 		//if(mode_assistance_ai==automatique) auto_follow_target();
 		
 		add_consigne_position(&motors[TOURELLE_PITCH], receiver_RadioController.data.ch2_float, pilote.sensitivity_ch_2);
@@ -105,7 +105,7 @@ void traitement_1(){
 		
 		chassis_consigne(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 		
-	if(receiver_RadioController.keyboard_mode){
+	}else{
 		double chassis_w;
 		double tourelle_yaw;
 		if(!receiver_RadioController.data.kb.bit.CTRL){

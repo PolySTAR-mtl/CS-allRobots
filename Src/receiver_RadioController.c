@@ -6,7 +6,7 @@
                   
 #include "receiver_RadioController.h"
 #include "jetson.h"
-
+#include "buzzer.h"
 
 uint8_t uart1_rx_buff[UART1_RX_BUFFLEN];
 receiver_RadioController_t receiver_RadioController = {false};
@@ -14,6 +14,7 @@ receiver_RadioController_t receiver_RadioController = {false};
 
 /* On récupère les variables exterieurs */
 extern uint32_t signOfLife_Receiver_RadioController_tick;
+bool is_g_pressed = false;
 
 /* fonction appelée lorsqu'on recoit une unformation du récepteur */
 void receiver_RadioController_callback_handler()
@@ -55,12 +56,11 @@ void receiver_RadioController_callback_handler()
 	receiver_RadioController.data.wheel = (uart1_rx_buff[16] | uart1_rx_buff[17] << 8);
 	receiver_RadioController.data.wheel -= 1024;
 	
-	if(receiver_RadioController.data.mouse.x != 0 ||
-					receiver_RadioController.data.mouse.y != 0 ||
-					receiver_RadioController.data.mouse.z != 0 ||
-					receiver_RadioController.data.mouse.l != 0 ||
-					receiver_RadioController.data.kb.key_code != 0){
-		receiver_RadioController.keyboard_mode = true;
+	if(receiver_RadioController.data.kb.bit.G != 0 && !is_g_pressed){
+		is_g_pressed = true;
+		receiver_RadioController.keyboard_mode = !receiver_RadioController.keyboard_mode;
+	}else if (receiver_RadioController.data.kb.bit.G == 0){
+		is_g_pressed = false;
 	}
 					
 	//Envoie a la jetson l'info de changer de cible dès que le bouton X ou Z est presse

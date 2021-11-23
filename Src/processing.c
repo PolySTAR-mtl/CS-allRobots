@@ -78,34 +78,35 @@ bool is_controller_neutral(){
 // Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
 void process_general_inputs(){
 	
-	//if(mode_assistance_ai==automatic) auto_follow_target();
+	if (!receiver_RadioController.keyboard_mode) {
+		//if(mode_assistance_ai==automatic) auto_follow_target();
 	
-	add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
-	add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
 
-	switch(receiver_RadioController.data.sw1){
-		case 1:
-			break;
-		case 3:
-			break;
-		case 2:
-			break;
-	}
-	switch(receiver_RadioController.data.sw2){
-		case 2:
-			canon_shoot_start(0, 0);
-			break;
-		case 3:
-			canon_shoot_start(snail_vel/2, 1000);
-			break;
-		case 1:
-			canon_shoot_start(snail_vel, 1000);
-			break;
-	}
-	
-	chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
+		switch(receiver_RadioController.data.sw1){
+			case 1:
+				break;
+			case 3:
+				break;
+			case 2:
+				break;
+		}
+		switch(receiver_RadioController.data.sw2){
+			case 2:
+				canon_shoot_start(0, 0);
+				break;
+			case 3:
+				canon_shoot_start(snail_vel/2, 1000);
+				break;
+			case 1:
+				canon_shoot_start(snail_vel, 1000);
+				break;
+		}
+		
+		chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 
-	if(receiver_RadioController.keyboard_mode){
+	} else {
 		double chassis_w;
 		double turret_yaw;
 		if(!receiver_RadioController.data.kb.bit.CTRL){

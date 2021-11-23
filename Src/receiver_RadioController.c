@@ -1,21 +1,22 @@
 /****************
-   Description : Gestion des fonctionnalitï¿½s du receiver Radio Controller
-   Auteur : Sï¿½bastien FAGUET
-	 Periphï¿½riques : UART 1 RX (PB7) - DBUS
+   Description : Gestion des fonctionnalités du receiver Radio Controller
+   Auteur : Sébastien FAGUET
+	 Periphériques : UART 1 RX (PB7) - DBUS
 *****************/
                   
 #include "receiver_RadioController.h"
 #include "jetson.h"
-
+#include "buzzer.h"
 
 uint8_t uart1_rx_buff[UART1_RX_BUFFLEN];
 receiver_RadioController_t receiver_RadioController = {false};
 
 
-/* On rï¿½cupï¿½re les variables exterieurs */
+/* On récupère les variables exterieurs */
 extern uint32_t signOfLife_Receiver_RadioController_tick;
+bool is_g_pressed = false;
 
-/* fonction appelï¿½e lorsqu'on recoit une unformation du rï¿½cepteur */
+/* fonction appelée lorsqu'on recoit une unformation du récepteur */
 void receiver_RadioController_callback_handler()
 {
 	signOfLife_Receiver_RadioController_tick = HAL_GetTick();
@@ -55,15 +56,14 @@ void receiver_RadioController_callback_handler()
 	receiver_RadioController.data.wheel = (uart1_rx_buff[16] | uart1_rx_buff[17] << 8);
 	receiver_RadioController.data.wheel -= 1024;
 	
-	if(receiver_RadioController.data.mouse.x != 0 ||
-					receiver_RadioController.data.mouse.y != 0 ||
-					receiver_RadioController.data.mouse.z != 0 ||
-					receiver_RadioController.data.mouse.l != 0 ||
-					receiver_RadioController.data.kb.key_code != 0){
-		receiver_RadioController.keyboard_mode = true;
+	if(receiver_RadioController.data.kb.bit.G != 0 && !is_g_pressed){
+		is_g_pressed = true;
+		receiver_RadioController.keyboard_mode = !receiver_RadioController.keyboard_mode;
+	}else if (receiver_RadioController.data.kb.bit.G == 0){
+		is_g_pressed = false;
 	}
 					
-	//Envoie a la jetson l'info de changer de cible dï¿½s que le bouton X ou Z est presse
+	//Envoie a la jetson l'info de changer de cible dès que le bouton X ou Z est presse
 	if(receiver_RadioController.data.kb.bit.X && !receiver_RadioController.last_data.kb.bit.X){
 		jetson_uart_send_command('R');
 	}else if(receiver_RadioController.data.kb.bit.Z && !receiver_RadioController.last_data.kb.bit.Z){

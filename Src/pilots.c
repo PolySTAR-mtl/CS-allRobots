@@ -7,18 +7,19 @@
 
 pilot_t pilot;
 
-/* Fonction qui premet de configurer le robot */
+/* Function that configures robot controls */
 void pilot_init(uint8_t pilot_id){
 	/*
-	Robot ID:
-		0: Antonin;
+	Pilot ID:
+		0: Default;
+		1: Antonin;
 	*/
 	/* Receiver */
 	pilot.sensitivity_RC_deadzone = 10; //Between 0 and 6600
-	pilot.sensitivity_ch_1 = 0.00003;
-	pilot.sensitivity_ch_2 = 0.00001;
+	pilot.sensitivity_ch_1 = 0.00003;  // Turret YAW
+	pilot.sensitivity_ch_2 = 0.00001;  // Turret PITCH
 
-	pilot.sensitivity_chassis_RC_Vx = 20;
+	pilot.sensitivity_chassis_RC_Vx = 20; // TO DO : TESTER AVEC DES VALEURS PLUS PETITES SUR LE ROBOT
 	pilot.sensitivity_chassis_RC_Vy = 20;
 	pilot.sensitivity_chassis_RC_W = 6;
 	
@@ -31,15 +32,19 @@ void pilot_init(uint8_t pilot_id){
 	pilot.sensitivity_chassis_keyboard_Vy = 4300;
 	pilot.sensitivity_chassis_mouse_W = 160;
 	
-	/*Coefficient puissance chassis*/
+	/* Chassis speed multipliers */
 	pilot.coefficient_ShiftChassis = 0.5;
 	pilot.coefficient_EChassis = 1.2;
 	
-	switch(pilot_id){ //Configuration personnalis�e
-		/* Antonin */
-		case PILOTE_ANTONIN:
+	// TO DO : Changer les valeurs par défaut pour chaque pilote dans les case
+	switch(pilot_id){ // Personalised configuration
+		case PILOT_DEFAULT:
+			break;
+		case PILOT_ANTONIN:
 			break;
 		default:
 			while(1);
 	}
+
+
 }

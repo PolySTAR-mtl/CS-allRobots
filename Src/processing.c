@@ -78,6 +78,33 @@ bool is_controller_neutral(){
 // Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
 void process_general_inputs(){
 	
+	//if(mode_assistance_ai==automatic) auto_follow_target();
+	
+	add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+	add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+
+	switch(receiver_RadioController.data.sw1){
+		case 1:
+			break;
+		case 3:
+			break;
+		case 2:
+			break;
+	}
+	switch(receiver_RadioController.data.sw2){
+		case 2:
+			canon_shoot_start(0, 0);
+			break;
+		case 3:
+			canon_shoot_start(snail_vel/2, 1000);
+			break;
+		case 1:
+			canon_shoot_start(snail_vel, 1000);
+			break;
+	}
+	
+	chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
+
 	if(receiver_RadioController.keyboard_mode){
 		double chassis_w;
 		double turret_yaw;
@@ -108,35 +135,6 @@ void process_general_inputs(){
 		}else{
 			canon_shoot_end();
 		}
-	}else{	
-		
-		
-		//if(mode_assistance_ai==automatic) auto_follow_target();
-		
-		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
-		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
-	
-		switch(receiver_RadioController.data.sw1){
-			case 1:
-				break;
-			case 3:
-				break;
-			case 2:
-				break;
-		}
-		switch(receiver_RadioController.data.sw2){
-			case 2:
-				canon_shoot_start(0, 0);
-				break;
-			case 3:
-				canon_shoot_start(snail_vel/2, 1000);
-				break;
-			case 1:
-				canon_shoot_start(snail_vel, 1000);
-				break;
-		}
-		
-		chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 	}
 }
 
@@ -151,7 +149,7 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	double sensitivity_W;
 	double sensitivity_deadzone;
 	
-	double coefficient_ShiftChassis; // TODO : What do Shift and E mean? 
+	double coefficient_ShiftChassis;
 	double coefficient_EChassis;
 	double coefficient_Power = 1;
 	/*
@@ -253,6 +251,7 @@ void switch_assistance_ai(void){
 }
 
 // Function that automatically controls turret's GM6020 motors to aim at a target
+// TODO : Tester la vitesse de suivi des cibles de la tourelle et changer le coefficient de ralentissement si besoin
 void auto_follow_target(void){
   
 	static uint32_t tickstart = 0;

@@ -46,9 +46,8 @@ void signOfLife_Receiver_RadioController(){
 		BOARD_LED_A_OFF();
 		pid_enable(true);
 	}else{
-		error_boardA(3);
 		killMotors();
-		HAL_Delay(100);
+		error_boardA(3);
 	}
 }
 
@@ -215,20 +214,29 @@ void error_boardA(uint8_t errorCode){
 	BOARD_LED_ALL_OFF();    
 	if (errorCode & 0x1){
         BOARD_LED_A_ON();
-	}    if (errorCode & 0x2){
-			BOARD_LED_B_ON();
-	}    if (errorCode & 0x4){
-			BOARD_LED_C_ON();
-	}    if (errorCode & 0x8){
-			BOARD_LED_D_ON();
-	}    if (errorCode & 0x10){
-			BOARD_LED_E_ON();
-	}    if (errorCode & 0x20){
-			BOARD_LED_F_ON();
-	}    if (errorCode & 0x40){
-			BOARD_LED_G_ON();
-	}    if (errorCode & 0x80){
-			BOARD_LED_H_ON();
+	}    
+	if (errorCode & 0x2){
+		BOARD_LED_B_ON();
+	}    
+	if (errorCode & 0x4){
+		BOARD_LED_C_ON();
+		while((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50);
+	}    
+	if (errorCode & 0x8){
+		BOARD_LED_D_ON();
+	}    
+	if (errorCode & 0x10){
+		BOARD_LED_E_ON();
+	}    
+	if (errorCode & 0x20){
+		BOARD_LED_F_ON();
+	}    
+	if (errorCode & 0x40){
+		BOARD_LED_G_ON();
+	}    
+	if (errorCode & 0x80){
+		BOARD_LED_H_ON();
 	}    
 	BOARD_LED_RED_ON();
+	
 }

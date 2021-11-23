@@ -116,7 +116,7 @@ int main(void)
 	extern pilot_t pilot;
 	extern jetson_t jetson;
 	extern uint32_t signOfLife_Receiver_RadioController_tick;
-	pilot_init(PILOTE_ANTONIN);
+	pilot_init(PILOT_DEFAULT);
   /* USER CODE END 2 */
 
   /* Infinite loop */

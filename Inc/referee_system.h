@@ -112,14 +112,14 @@ typedef __packed struct
  uint16_t max_HP;
  uint16_t shooter_id1_17mm_cooling_rate;
  uint16_t shooter_id1_17mm_cooling_limit;
-uint16_t shooter_id1_17mm_speed_limit;
+ uint16_t shooter_id1_17mm_speed_limit;
  uint16_t shooter_id2_17mm_cooling_rate;
  uint16_t shooter_id2_17mm_cooling_limit;
-uint16_t shooter_id2_17mm_speed_limit;
+ uint16_t shooter_id2_17mm_speed_limit;
  uint16_t shooter_id1_42mm_cooling_rate;
  uint16_t shooter_id1_42mm_cooling_limit;
-uint16_t shooter_id1_42mm_speed_limit;
-uint16_t chassis_power_limit;
+ uint16_t shooter_id1_42mm_speed_limit;
+ uint16_t chassis_power_limit;
  uint8_t mains_power_gimbal_output : 1;
  uint8_t mains_power_chassis_output : 1;
  uint8_t mains_power_shooter_output : 1;
@@ -132,8 +132,8 @@ typedef __packed struct
  float chassis_power;
  uint16_t chassis_power_buffer;
  uint16_t shooter_id1_17mm_cooling_heat;
-uint16_t shooter_id2_17mm_cooling_heat;
-uint16_t shooter_id1_42mm_cooling_heat;
+ uint16_t shooter_id2_17mm_cooling_heat;
+ uint16_t shooter_id1_42mm_cooling_heat;
 } ext_power_heat_data_t;
 
 typedef __packed struct
@@ -145,7 +145,7 @@ typedef __packed struct
 typedef __packed struct
 {
  uint8_t bullet_type;
-uint8_t shooter_id;
+ uint8_t shooter_id;
  uint8_t bullet_freq;
  float bullet_speed;
 } ext_shoot_data_t;
@@ -167,7 +167,7 @@ typedef __packed struct
 
 
 /* Function called when data is recieved from referee system */
-void refereeSystem_callback_handler(int8_t lenght);
+void refereeSystem_callback_handler(int8_t length);
 
 void uart6_init(void);
 

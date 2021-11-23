@@ -17,17 +17,18 @@ uint8_t uart6_rx_buff[UART6_RX_BUFFLEN];
 extern uint32_t signOfLife_refereeSystem_tick;
 
 // Function called went data is received from receiver
-void refereeSystem_callback_handler(int8_t lenght){
+void refereeSystem_callback_handler(int8_t length) {
 	/* frame_header (5-byte) */
-	uint8_t 	SOF 					= uart6_rx_buff[0];
+	uint8_t 	SOF 			= uart6_rx_buff[0];
 	uint16_t 	data_length 	= (uart6_rx_buff[1] << 8 | uart6_rx_buff[2]);
-	//uint8_t 	seq 					= uart6_rx_buff[3];
-	//uint8_t 	cr8 					= uart6_rx_buff[4];
-	if(SOF != 0xA5) return;
+	//uint8_t 	seq 	    	= uart6_rx_buff[3];
+	//uint8_t 	cr8 	    	= uart6_rx_buff[4];
+	
+    if(SOF != 0xA5) return;
 	signOfLife_refereeSystem_tick = HAL_GetTick();
 	
 	/* cmd_id (2-byte) */
-	uint16_t 	cmd_id 				= (uart6_rx_buff[5] << 8 | uart6_rx_buff[6]);
+	uint16_t 	cmd_id 	        = (uart6_rx_buff[5] << 8 | uart6_rx_buff[6]);
 	
 	
 	/* data (n-byte) */

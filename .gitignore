@@ -65,3 +65,7 @@ MDK-ARM/bin/*
 *.l2p
 *.iex
 .#*
+
+# VS Code #
+###########
+*.code-workspace

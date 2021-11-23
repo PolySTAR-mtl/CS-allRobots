@@ -8,7 +8,8 @@
 
 #include "main.h"
 
-#define PILOTE_ANTONIN 0
+#define PILOT_DEFAULT 0
+#define PILOT_ANTONIN 1
 
 typedef struct
 {
@@ -32,7 +33,7 @@ typedef struct
 } pilot_t;
 
 
-/* Fonction qui premet de configurer le pilot */
+/* Function that configures robot controls */
 void pilot_init(uint8_t pilote_id);
 
 #endif

@@ -65,6 +65,7 @@ MDK-ARM/bin/*
 *.l2p
 *.iex
 .#*
+*.uvguix.*
 
 # VS Code #
 ###########

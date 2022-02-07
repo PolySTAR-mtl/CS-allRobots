@@ -107,31 +107,29 @@ void process_general_inputs(){
 		chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 
 	} else {
-		double chassis_w;
-		double turret_yaw;
-		if(!receiver_RadioController.data.kb.bit.CTRL){
-			chassis_w = -receiver_RadioController.data.mouse.x;
-			turret_yaw = 0;
-		}else{
-			chassis_w = 0;
-			turret_yaw = receiver_RadioController.data.mouse.x;
+		double chassis_rotation = 0;
+		
+		if(receiver_RadioController.data.kb.bit.Q){
+			chassis_rotation = -1;
+		}else if (receiver_RadioController.data.kb.bit.E){
+			chassis_rotation = 1;
+		} else {
+			chassis_rotation = 0;
 		}
 		
 		// Manages aim assist
-		//if(receiver_RadioController.data.kb.bit.Q) switch_assistance_ai();
-		//if(mode_assistance_ai==automatique) auto_follow_target();
+		if(receiver_RadioController.data.kb.bit.T) switch_assistance_ai();
+		if(mode_assistance_ai==automatic) auto_follow_target();
 		
 		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.mouse.y, pilot.sensitivity_mouse_y);
-		add_setpoint_position(&motors[TURRET_YAW], turret_yaw, pilot.sensitivity_mouse_x);
+		add_setpoint_position(&motors[TURRET_YAW], receiver_RadioController.data.mouse.x, pilot.sensitivity_mouse_x);
 		
 		chassis_setpoint(receiver_RadioController.data.kb.bit.W - receiver_RadioController.data.kb.bit.S, 
 											receiver_RadioController.data.kb.bit.D - receiver_RadioController.data.kb.bit.A, 
-											chassis_w);
+											chassis_rotation);
 		
 		
 		if(receiver_RadioController.data.mouse.l){
-			canon_shoot_start(snail_vel/2, cadence_mult * 1000);
-		}else if(receiver_RadioController.data.mouse.r){
 			canon_shoot_start(snail_vel, cadence_mult * 1000);
 		}else{
 			canon_shoot_end();
@@ -151,7 +149,7 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	double sensitivity_deadzone;
 	
 	double coefficient_ShiftChassis;
-	double coefficient_EChassis;
+	double coefficient_CTRLChassis;
 	double coefficient_Power = 1;
 	/*
 	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
@@ -183,7 +181,7 @@ void chassis_setpoint(double Vx, double Vy, double W){
 		sensitivity_deadzone = 0;
 		
 		coefficient_ShiftChassis = pilot.coefficient_ShiftChassis;
-		coefficient_EChassis = pilot.coefficient_EChassis;
+		coefficient_CTRLChassis = pilot.coefficient_CTRLChassis;
 	}else{
 		sensitivity_Vx = pilot.sensitivity_chassis_RC_Vx;
 		sensitivity_Vy = pilot.sensitivity_chassis_RC_Vy;
@@ -199,12 +197,17 @@ void chassis_setpoint(double Vx, double Vy, double W){
 		motors[FRONT_RIGHT].setpoint 	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
 		motors[BACK_RIGHT].setpoint 	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
 		motors[BACK_LEFT].setpoint 		= (coefficient_ShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-	} else if(receiver_RadioController.data.kb.bit.E){ 
-		motors[FRONT_LEFT].setpoint 	= (coefficient_EChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-		motors[FRONT_RIGHT].setpoint 	= (coefficient_EChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_RIGHT].setpoint 	= (coefficient_EChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_LEFT].setpoint 		= (coefficient_EChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-	}else{
+	} else if(receiver_RadioController.data.kb.bit.CTRL){ 
+		motors[FRONT_LEFT].setpoint 	= (coefficient_CTRLChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		motors[FRONT_RIGHT].setpoint 	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		motors[BACK_RIGHT].setpoint 	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		motors[BACK_LEFT].setpoint 		= (coefficient_CTRLChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+	} else if (receiver_RadioController.keyboard_mode){
+		motors[FRONT_LEFT].setpoint 	= (0.5 * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		motors[FRONT_RIGHT].setpoint 	= (0.5 * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		motors[BACK_RIGHT].setpoint 	= (0.5 * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		motors[BACK_LEFT].setpoint 		= (0.5 * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+	} else {
 		motors[FRONT_LEFT].setpoint 	= (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power;
 		motors[FRONT_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
 		motors[BACK_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;

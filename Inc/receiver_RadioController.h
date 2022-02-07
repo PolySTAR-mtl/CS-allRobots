@@ -55,9 +55,11 @@ struct receiver_RadioController_data
             uint16_t D : 1;
             uint16_t SHIFT : 1;
             uint16_t CTRL : 1;
+						uint16_t SPACE : 1;
             uint16_t Q : 1;
             uint16_t E : 1;
             uint16_t R : 1;
+						uint16_t T : 1;
             uint16_t F : 1;
             uint16_t G : 1;
             uint16_t Z : 1;

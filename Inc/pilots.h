@@ -28,7 +28,7 @@ typedef struct
 	float sensitivity_chassis_mouse_W;
 	
 	float coefficient_ShiftChassis;
-	float coefficient_EChassis;
+	float coefficient_CTRLChassis;
 
 } pilot_t;
 

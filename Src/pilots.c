@@ -33,8 +33,8 @@ void pilot_init(uint8_t pilot_id){
 	pilot.sensitivity_chassis_mouse_W = 160;
 	
 	/* Chassis speed multipliers */
-	pilot.coefficient_ShiftChassis = 0.5;
-	pilot.coefficient_EChassis = 1.2;
+	pilot.coefficient_ShiftChassis = 1;
+	pilot.coefficient_CTRLChassis = 0.25;
 	
 	// TO DO : Changer les valeurs par défaut pour chaque pilote dans les case
 	switch(pilot_id){ // Personalised configuration

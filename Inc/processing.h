@@ -3,8 +3,8 @@
    Auteur : S�bastien FAGUET
 *****************/
 
-#ifndef TRAITEMENT
-#define TRAITEMENT
+#ifndef PROCESSING
+#define PROCESSING
 
 #include "BoardA_handle.h"
 #include "oled_debug.h"

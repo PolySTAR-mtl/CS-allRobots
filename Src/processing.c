@@ -104,6 +104,8 @@ void process_general_inputs(){
 				break;
 		}
 		
+		// On a inversé par erreur les channel x et y
+		// TODO: Corriger ceci (pas encore corrigé puisque beaucoup de code dépend de cette fonction)
 		chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
 
 	} else {
@@ -166,13 +168,13 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	}*/
 	if (invert_leftright) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
-		// mais la ligne 132 de ce fichier étant erronée, on inverse le gauche-droite en inversant le Y et non le X
+		// mais il y a une erreur dans process_general_inputs(), donc on inverse le gauche-droite en inversant le Y et non le X
 		Vy = -Vy;
 	}
 	
 	if (invert_frontback) {
 		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
-		// mais la ligne 132 de ce fichier étant erronée, on inverse le avant-arrière en inversant le X et non le Y
+		// mais il y a une erreur dans process_general_inputs, donc on inverse le avant-arrière en inversant le X et non le Y
 		Vx = -Vx;
 	}
 	

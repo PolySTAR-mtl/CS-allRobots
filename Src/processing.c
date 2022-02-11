@@ -24,6 +24,7 @@ extern float snail_vel;
 extern float cadence_mult;
 extern bool  invert_leftright;
 extern bool  invert_frontback;
+extern int robot_type;
 
 /* Current control mode */
 enum mode_assistance_ai_t mode_assistance_ai = manual;
@@ -80,10 +81,13 @@ void process_general_inputs(){
 	
 	if (!receiver_RadioController.keyboard_mode) {
 		//if(mode_assistance_ai==automatic) auto_follow_target();
-	
-		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
-		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
-
+		if(robot_type == 7){
+			add_setpoint_position(&motors[TURRET_PITCH], -receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+			add_setpoint_position(&motors[TURRET_YAW], 	-receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+		}else{
+			add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+			add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+		}
 		switch(receiver_RadioController.data.sw1){
 			case 1:
 				break;
@@ -106,8 +110,13 @@ void process_general_inputs(){
 		
 		// On a inversé par erreur les channel x et y
 		// TODO: Corriger ceci (pas encore corrigé puisque beaucoup de code dépend de cette fonction)
-		chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
-
+		if (robot_type ==7){
+			sentry_setpoint(receiver_RadioController.data.ch4); 
+		}
+		else{
+			chassis_setpoint(receiver_RadioController.data.ch4, receiver_RadioController.data.ch3, receiver_RadioController.data.wheel); 
+		}
+			
 	} else {
 		double chassis_w;
 		double turret_yaw;
@@ -212,6 +221,45 @@ void chassis_setpoint(double Vx, double Vy, double W){
 		motors[BACK_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
 		motors[BACK_LEFT].setpoint 		= (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power; 
 	}
+	
+}	
+
+void sentry_setpoint(double Vx){ 
+	/*
+		Vx: left / right translation
+	*/
+	double sensitivity_Vx;
+	double sensitivity_deadzone;
+	
+	double coefficient_Power = 1;
+	/*
+	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
+		if(coefficient_Power == 1) {
+			coefficient_Power = 0.8;
+		} else if (coefficient_Power < 1) {
+			coefficient_Power /= 2;
+		}
+	}
+	else {
+		coefficient_Power = 1;
+	}*/
+	
+	if (invert_leftright) {
+		// channels 3 et 4 inversés... le 3 c'est en x et le 4 c'est en y normalement (selon la datasheet)
+		// mais il y a une erreur dans process_general_inputs, donc on inverse le avant-arrière en inversant le X et non le Y
+		Vx = -Vx;
+	}
+	
+	
+	sensitivity_Vx = pilot.sensitivity_chassis_RC_Vx;
+	sensitivity_deadzone = pilot.sensitivity_RC_deadzone;
+
+	if(Vx > -sensitivity_deadzone && Vx < sensitivity_deadzone) Vx = 0;
+	
+	// Apply coefficients on chassis velocity if SHIFT or E are pressed
+	
+	motors[FRONT_LEFT].setpoint 	= (sensitivity_Vx*Vx) * coefficient_Power;
+	motors[BACK_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx) * coefficient_Power);
 	
 }	
 

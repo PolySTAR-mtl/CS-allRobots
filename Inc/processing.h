@@ -31,7 +31,11 @@ void pid_compute_command(void);
 // Function that links inputs (sensors, radio controller, CV, etc.) and outputs (motor setpoints)
 void process_general_inputs(void);
 
+/* Set setpoint for chassis movement */
 void chassis_setpoint(double Vx, double Vy, double W);
+
+/* Set setpoint for sentry movement */
+void sentry_setpoint(double Vx);
 
 /* Automatically follows target */
 void auto_follow_target(void);

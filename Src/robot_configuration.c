@@ -62,6 +62,7 @@ void robot_init(uint8_t robot_id){
 	float pid_chassis_p = 5.0;
 	float pid_chassis_i = 5.0;
 	float pid_chassis_d = 0.0;
+	robot_type = robot_id;
 	
 	switch(robot_id){
 		/* Standard */
@@ -396,6 +397,88 @@ void robot_init(uint8_t robot_id){
 							// TODO : Magic numbers
 							0.5, 0.5, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_limits(&motors[FEEDER2].pid, -10000, 10000); // Minimum and maximum command that can be sent to motor
+
+			break;
+			
+		case 7: // Sentry
+			snail_vel = 0.33;
+			cadence_mult = 1;
+		  invert_leftright = false;
+		  invert_frontback = false;
+		
+			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
+			motors[FRONT_LEFT].type = M3508;
+			motors[FRONT_LEFT].can_rx_id = 0x200+1; // ID = 1
+			motors[FRONT_LEFT].can_tx_frame = 0x200; 
+			motors[FRONT_LEFT].can_tx_id = 1;
+			pid_create(&motors[FRONT_LEFT].pid, 
+							&motors[FRONT_LEFT].info.speed, // PID input : feedback value on which we want to reach setpoint 
+							&motors[FRONT_LEFT].command, 	// PID output : command sent to motor
+							&motors[FRONT_LEFT].setpoint, 	// Setpoint : speed or position to be reached by motor
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FRONT_LEFT].pid, -16384, 16384); // Minimum and maximum command that can be sent to motor
+			
+			strcpy(motors[BACK_RIGHT].debug_name, "BACK RIGHT");
+			motors[BACK_RIGHT].type = M3508;
+			motors[BACK_RIGHT].can_rx_id = 0x200+3; // ID = 3
+			motors[BACK_RIGHT].can_tx_frame = 0x200; 
+			motors[BACK_RIGHT].can_tx_id = 3;
+			pid_create(&motors[BACK_RIGHT].pid, 
+							&motors[BACK_RIGHT].info.speed, // PID input : feedback value on which we want to reach setpoint 
+							&motors[BACK_RIGHT].command, 	// PID output : command sent to motor
+							&motors[BACK_RIGHT].setpoint, 	// Setpoint : speed or position to be reached by motor
+							pid_chassis_p, pid_chassis_i, pid_chassis_d); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[BACK_RIGHT].pid, -16384, 16384); // Minimum and maximum command that can be sent to motor
+			
+			strcpy(motors[TURRET_PITCH].debug_name, "TURRET PITCH");
+			motors[TURRET_PITCH].type = GM6020;
+			motors[TURRET_PITCH].can_rx_id = 0x204+1; // ID = 1
+			motors[TURRET_PITCH].can_tx_frame = 0x1FF; 
+			motors[TURRET_PITCH].can_tx_id = 1;
+			motors[TURRET_PITCH].MIN_POSITION = 65; // Degrees
+			motors[TURRET_PITCH].MAX_POSITION = 85; // Degrees
+			motors[TURRET_PITCH].setpoint = 54; // Degrees //Initial value
+			motors[TURRET_PITCH].direction = -1; // Selects control direction (-1 or 1)
+			pid_create(&motors[TURRET_PITCH].pid, 
+							&motors[TURRET_PITCH].info.angle_360, // PID input : feedback value on which we want to reach setpoint  
+							&motors[TURRET_PITCH].command, 		  // PID output : command sent to motor
+							&motors[TURRET_PITCH].setpoint, 	  // Setpoint : speed or position to be reached by motor
+							// TODO : Magic numbers
+							200, 100, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_circular(&motors[TURRET_PITCH].pid, 360); // Circular control : allows motor setpoint to go from 359 deg to 001 deg without doing a full revolution
+			pid_limits(&motors[TURRET_PITCH].pid, -30000, 30000); // Minimum and maximum command that can be sent to motor
+			
+			strcpy(motors[TURRET_YAW].debug_name, "TURRET YAW");
+			motors[TURRET_YAW].type = GM6020;
+			motors[TURRET_YAW].can_rx_id = 0x204+2; // ID = 2
+			motors[TURRET_YAW].can_tx_frame = 0x1FF; 
+			motors[TURRET_YAW].can_tx_id = 2;
+			motors[TURRET_YAW].MIN_POSITION = 15; // Degrees
+			motors[TURRET_YAW].MAX_POSITION = 160; // Degrees
+			motors[TURRET_YAW].setpoint = 325; // Degrees //Initial value
+			motors[TURRET_YAW].direction = -1; // Selects control direction (-1 or 1)
+			pid_create(&motors[TURRET_YAW].pid, 
+							&motors[TURRET_YAW].info.angle_360, // PID input : feedback value on which we want to reach setpoint 
+							&motors[TURRET_YAW].command, 		// PID output : command sent to motor
+							&motors[TURRET_YAW].setpoint, 	  	// Setpoint : speed or position to be reached by motor
+							// TODO : Magic numbers
+							200, 100, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_circular(&motors[TURRET_YAW].pid, 360); // Circular control : allows motor setpoint to go from 359 deg to 001 deg without doing a full revolution
+			pid_limits(&motors[TURRET_YAW].pid, -30000, 30000); // Minimum and maximum command that can be sent to motor
+			
+			strcpy(motors[FEEDER].debug_name, "FEEDER");
+			motors[FEEDER].type = M2006;
+			motors[FEEDER].can_rx_id = 0x200+7; // ID = 7
+			motors[FEEDER].can_tx_frame = 0x1FF; 
+			motors[FEEDER].can_tx_id = 7-4; 
+			motors[FEEDER].direction = 1;	
+			pid_create(&motors[FEEDER].pid, 
+							&motors[FEEDER].info.speed, // PID input : feedback value on which we want to reach setpoint 
+							&motors[FEEDER].command, 	// PID output : command sent to motor
+							&motors[FEEDER].setpoint, 	// Setpoint : speed or position to be reached by motor
+							// TODO : Magic numbers
+							0.5, 0.5, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+			pid_limits(&motors[FEEDER].pid, -10000, 10000); // Minimum and maximum command that can be sent to motor
 
 			break;
 			

@@ -231,7 +231,7 @@ void sentry_setpoint(double Vx){
 	double sensitivity_Vx;
 	double sensitivity_deadzone;
 	
-	double coefficient_Power = 1;
+	double coefficient_Power = 0.5;
 	/*
 	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
 		if(coefficient_Power == 1) {

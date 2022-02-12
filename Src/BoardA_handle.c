@@ -24,6 +24,7 @@ uint32_t signOfLife_CAN1_tick = 0;
 extern motor_t motors[MAX_MOTORS];
 extern receiver_RadioController_t receiver_RadioController;
 extern jetson_t jetson;
+extern int robot_type;
 
 /* Manages signs of life. LED RED : Program is running */
 void signOfLife(){
@@ -76,7 +77,7 @@ void signOfLife_can1(){
 		BOARD_LED_E_ON();
 	}else{
 		BOARD_LED_E_OFF();
-		killMotors();
+		if (robot_type != 7) killMotors();
 	}
 	if ((HAL_GetTick() - motors[FRONT_LEFT].signOfLife_tick) < 100){
 		BOARD_LED_F_ON();
@@ -94,7 +95,7 @@ void signOfLife_can1(){
 		BOARD_LED_H_ON();
 	}else{
 		BOARD_LED_H_OFF();
-		killMotors();
+		if (robot_type != 7) killMotors();
 	}
 }
 

@@ -15,6 +15,9 @@ receiver_RadioController_t receiver_RadioController = {false};
 /* On récupère les variables exterieurs */
 extern uint32_t signOfLife_Receiver_RadioController_tick;
 bool is_g_pressed = false;
+bool is_q_pressed = false;
+bool is_e_pressed = false;
+bool is_v_pressed = false;
 
 /* fonction appelée lorsqu'on recoit une unformation du récepteur */
 void receiver_RadioController_callback_handler()
@@ -62,7 +65,25 @@ void receiver_RadioController_callback_handler()
 	}else if (receiver_RadioController.data.kb.bit.G == 0){
 		is_g_pressed = false;
 	}
+	
+	if(receiver_RadioController.data.kb.bit.Q != 0 && !is_q_pressed){
+		is_q_pressed = true;
+	}else if (receiver_RadioController.data.kb.bit.Q == 0){
+		is_q_pressed = false;
+	}
+	
+	if(receiver_RadioController.data.kb.bit.E != 0 && !is_e_pressed){
+		is_e_pressed = true;
+	}else if (receiver_RadioController.data.kb.bit.E == 0){
+		is_e_pressed = false;
+	}
 					
+	if(receiver_RadioController.data.kb.bit.V != 0 && !is_v_pressed){
+		is_v_pressed = true;
+	}else if (receiver_RadioController.data.kb.bit.V == 0){
+		is_v_pressed = false;
+	}
+	
 	//Envoie a la jetson l'info de changer de cible dès que le bouton X ou Z est presse
 	if(receiver_RadioController.data.kb.bit.X && !receiver_RadioController.last_data.kb.bit.X){
 		jetson_uart_send_command('R');

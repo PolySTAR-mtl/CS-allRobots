@@ -24,6 +24,9 @@ extern float snail_vel;
 extern float cadence_mult;
 extern bool  invert_leftright;
 extern bool  invert_frontback;
+extern bool  is_q_pressed;
+extern bool  is_e_pressed;
+extern bool  is_v_pressed;
 
 /* Current control mode */
 enum mode_assistance_ai_t mode_assistance_ai = manual;
@@ -109,16 +112,16 @@ void process_general_inputs(){
 	} else {
 		double chassis_rotation = 0;
 		
-		if(receiver_RadioController.data.kb.bit.Q){
+		if(is_q_pressed){
 			chassis_rotation = -1;
-		}else if (receiver_RadioController.data.kb.bit.E){
+		}else if (is_e_pressed){
 			chassis_rotation = 1;
 		} else {
 			chassis_rotation = 0;
 		}
 		
 		// Manages aim assist
-		if(receiver_RadioController.data.kb.bit.T) switch_assistance_ai();
+		if(receiver_RadioController.data.kb.bit.V) switch_assistance_ai();
 		if(mode_assistance_ai==automatic) auto_follow_target();
 		
 		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.mouse.y, pilot.sensitivity_mouse_y);

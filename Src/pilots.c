@@ -24,13 +24,13 @@ void pilot_init(uint8_t pilot_id){
 	pilot.sensitivity_chassis_RC_W = 6;
 	
 	/* Mouse Keyboard */
-	pilot.sensitivity_mouse_deadzone = 50; //Between 0 and 6600
-	pilot.sensitivity_mouse_x = 0.0005;
-	pilot.sensitivity_mouse_y = 0.0005;
+	pilot.sensitivity_mouse_deadzone = 5; //Between 0 and 6600
+	pilot.sensitivity_mouse_x = 0.00005;
+	pilot.sensitivity_mouse_y = 0.00005;
 
 	pilot.sensitivity_chassis_keyboard_Vx = 4300;
 	pilot.sensitivity_chassis_keyboard_Vy = 4300;
-	pilot.sensitivity_chassis_mouse_W = 160;
+	pilot.sensitivity_chassis_mouse_W = 4300;
 	
 	/* Chassis speed multipliers */
 	pilot.coefficient_ShiftChassis = 1;

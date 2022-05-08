@@ -124,24 +124,36 @@ int main(void)
 	
 	bool buzz_on = false;
 	
-	while(1){
-		
-		signOfLife_Receiver_RadioController();
-		if(signOfLife_Receiver_RadioController_tick != 0){
-			if(is_controller_neutral()){
-				buzzer_stop();
-				buzz_on = false;
-				break;     // Get out of infinite loop when controller is in neutral position
-			} else if (!buzz_on) {
-				buzzer_start();    // Otherwise, buzz until controller OK
-				buzz_on = true;
-			}
-		}
-		HAL_Delay(100); // Important for buzzer to wait for a delay!
+	HAL_TIM_Base_Start(&htim12);
+  HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
+	
+	while(signOfLife_Receiver_RadioController_tick == 0){
 		error_boardA(2);
+		HAL_Delay(200);
 	}
-
-  BOARD_LED_A_OFF();
+	
+	BOARD_LED_ALL_OFF();
+	HAL_Delay(200);
+			
+	while(signOfLife_Receiver_RadioController_tick != 0){
+		if(is_controller_neutral()){
+			buzzer_stop();
+			buzz_on = false;
+			break;     // Get out of infinite loop when controller is in neutral position
+		} else if (!buzz_on) {
+			buzzer_start();    // Otherwise, buzz until controller OK
+			error_boardA(3);
+			buzz_on = true;
+		} else if (buzz_on) {
+			buzzer_stop();
+			error_boardA(3);
+			buzz_on = false;
+		}
+		HAL_Delay(500);
+	}
+	
+	BOARD_LED_ALL_OFF();
+	HAL_Delay(200);
 	
   while (1)
   {

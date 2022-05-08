@@ -94,6 +94,10 @@ void init_turret_data(motor_t* motor){
 	}
 }
 
+void throw_turret_error(){
+	
+}
+
 /*Rempli la structure motor.info avec les donn�es provenant du moteur */
 void fill_motor_data (motor_t* motor, uint8_t* rx_buff){
 	int16_t speed;

@@ -10,7 +10,8 @@
 
 #include "main.h"                                                                                     
 
-#define DEFAULT_PITCH_BUZZ      1000
+#define DEFAULT_PITCH_BUZZ      40000
+#define MAX_PSC                 2
 
 
 void buzzer_set_pitch(uint16_t pitch);

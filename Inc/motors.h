@@ -83,4 +83,7 @@ void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection);
 /* Fills motor.info structure with information from motor */
 void fill_motor_data (motor_t* motor, uint8_t* rx_buff);
 
+/* Deal with turret errors */
+void throw_turret_error();
+
 #endif

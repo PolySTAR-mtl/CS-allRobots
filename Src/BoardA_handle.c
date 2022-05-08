@@ -47,7 +47,7 @@ void signOfLife_Receiver_RadioController(){
 		pid_enable(true);
 	}else{
 		killMotors();
-		error_boardA(3);
+		error_boardA(4);
 	}
 }
 
@@ -213,17 +213,17 @@ int uart_receive_dma_no_it(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t S
 void error_boardA(uint8_t errorCode){    
 	BOARD_LED_ALL_OFF();    
 	if (errorCode & 0x1){
-        BOARD_LED_A_ON();
+    BOARD_LED_A_ON();
 	}    
 	if (errorCode & 0x2){
 		BOARD_LED_B_ON();
 	}    
 	if (errorCode & 0x4){
 		BOARD_LED_C_ON();
-		while((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50);
 	}    
 	if (errorCode & 0x8){
 		BOARD_LED_D_ON();
+		while((HAL_GetTick() - signOfLife_Receiver_RadioController_tick) < 50);
 	}    
 	if (errorCode & 0x10){
 		BOARD_LED_E_ON();

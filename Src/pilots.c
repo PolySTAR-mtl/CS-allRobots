@@ -17,11 +17,11 @@ void pilot_init(uint8_t pilot_id){
 	/* Receiver */
 	pilot.sensitivity_RC_deadzone = 10; //Between 0 and 6600
 	pilot.sensitivity_ch_1 = 0.00003;  // Turret YAW
-	pilot.sensitivity_ch_2 = 0.00001;  // Turret PITCH
+	pilot.sensitivity_ch_2 = 0.00002;  // Turret PITCH
 
-	pilot.sensitivity_chassis_RC_Vx = 20; // TO DO : TESTER AVEC DES VALEURS PLUS PETITES SUR LE ROBOT
-	pilot.sensitivity_chassis_RC_Vy = 20;
-	pilot.sensitivity_chassis_RC_W = 6;
+	pilot.sensitivity_chassis_RC_Vx = 10; // TO DO : TESTER AVEC DES VALEURS PLUS PETITES SUR LE ROBOT
+	pilot.sensitivity_chassis_RC_Vy = 10;
+	pilot.sensitivity_chassis_RC_W = 3;
 	
 	/* Mouse Keyboard */
 	pilot.sensitivity_mouse_deadzone = 5; //Between 0 and 6600

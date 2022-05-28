@@ -340,10 +340,10 @@ void robot_init(uint8_t robot_id){
 			motors[TURRET_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TURRET_PITCH].can_tx_frame = 0x1FF; 
 			motors[TURRET_PITCH].can_tx_id = 1;
-			motors[TURRET_PITCH].MIN_POSITION = 223; // Degrees
-			motors[TURRET_PITCH].MAX_POSITION = 243; // Degrees
+			motors[TURRET_PITCH].MIN_POSITION = 203; // Degrees
+			motors[TURRET_PITCH].MAX_POSITION = 285; // Degrees
 			motors[TURRET_PITCH].setpoint = 250; // Degrees //Initial value
-			motors[TURRET_PITCH].direction = 1; // Selects control direction (-1 or 1)
+			motors[TURRET_PITCH].direction = -1; // Selects control direction (-1 or 1)
 			pid_create(&motors[TURRET_PITCH].pid, 
 							&motors[TURRET_PITCH].info.angle_360, // PID input : feedback value on which we want to reach setpoint  
 							&motors[TURRET_PITCH].command, 		  // PID output : command sent to motor

@@ -20,8 +20,8 @@ float shoot_rate2 = 0; // Fire rate for feeder #2, if it exists (ex. HEROS)
 // Initiate firing start sequence
 void canon_shoot_start(float speed, float rate){
 	
-	double speed_multiplier = 1;
-	double rate_multiplier = 1;
+	//double speed_multiplier = 1;
+	//double rate_multiplier = 1;
 	/*
 	if((refereeSystem.shoot_data.bullet_speed / refereeSystem.game_robot_status.shooter_id2_17mm_speed_limit) > 0.90){
 		speed_multiplier /= 1.2;

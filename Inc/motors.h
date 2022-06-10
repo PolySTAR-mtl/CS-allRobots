@@ -51,10 +51,8 @@ typedef struct
 	float MAX_POSITION;
 	float MIN_POSITION;
 	uint32_t signOfLife_tick;
-	char debug_name[50];
+	char debug_name[40];
 } motor_t;
-
-
 
 /* Sends commands on CAN bus for all CAN motors*/
 void can_send_command(void);
@@ -84,6 +82,6 @@ void PWM_ScaleAll(TIM_HandleTypeDef *tim, bool switchRotationalDirection);
 void fill_motor_data (motor_t* motor, uint8_t* rx_buff);
 
 /* Deal with turret errors */
-void throw_turret_error();
+void throw_turret_error(void);
 
 #endif

@@ -37,7 +37,7 @@ void chassis_setpoint(double Vx, double Vy, double W);
 void auto_follow_target(void);
 
 /* Convert milirad to degrees */
-float mrad_to_deg(float angle_in_millirad);
+double mrad_to_deg(float angle_in_millirad);
 
 /* Returns true if controller is in neutral state */
 bool is_controller_neutral(void);

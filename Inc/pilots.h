@@ -8,8 +8,8 @@
 
 #include "main.h"
 
-#define PILOT_DEFAULT 0
-#define PILOT_ANTONIN 1
+#define PILOT_STANDARD 0
+#define PILOT_HERO 1
 
 typedef struct
 {
@@ -25,7 +25,7 @@ typedef struct
 	double sensitivity_chassis_RC_W;
 	float sensitivity_chassis_keyboard_Vx;
 	float sensitivity_chassis_keyboard_Vy;
-	float sensitivity_chassis_mouse_W;
+	float sensitivity_chassis_rot;
 	
 	float coefficient_ShiftChassis;
 	float coefficient_CTRLChassis;

@@ -120,9 +120,9 @@ void process_general_inputs(){
 		double chassis_rotation = 0;
 		
 		if(is_q_pressed){
-			chassis_rotation = -1;
-		}else if (is_e_pressed){
 			chassis_rotation = 1;
+		}else if (is_e_pressed){
+			chassis_rotation = -1;
 		} else {
 			chassis_rotation = 0;
 		}
@@ -189,7 +189,7 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	if(receiver_RadioController.keyboard_mode){
 		sensitivity_Vx = pilot.sensitivity_chassis_keyboard_Vx;
 		sensitivity_Vy = pilot.sensitivity_chassis_keyboard_Vy;
-		sensitivity_W = pilot.sensitivity_chassis_mouse_W;
+		sensitivity_W = pilot.sensitivity_chassis_rot;
 		sensitivity_deadzone = 0;
 		
 		coefficient_ShiftChassis = pilot.coefficient_ShiftChassis;

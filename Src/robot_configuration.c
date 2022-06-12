@@ -155,7 +155,7 @@ void robot_init(uint8_t robot_id){
 							&motors[TURRET_YAW].command, 		// PID output : command sent to motor
 							&motors[TURRET_YAW].setpoint, 	  	// Setpoint : speed or position to be reached by motor
 							// TODO : Magic numbers
-							200, 100, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+							300, 100, 30); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_circular(&motors[TURRET_YAW].pid, 360); // Circular control : allows motor setpoint to go from 359 deg to 001 deg without doing a full revolution
 			pid_limits(&motors[TURRET_YAW].pid, -30000, 30000); // Minimum and maximum command that can be sent to motor
 			
@@ -349,7 +349,7 @@ void robot_init(uint8_t robot_id){
 							&motors[TURRET_PITCH].command, 		  // PID output : command sent to motor
 							&motors[TURRET_PITCH].setpoint, 	  // Setpoint : speed or position to be reached by motor
 							// TODO : Magic numbers
-							400, 100, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+							400, 100, 30); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_circular(&motors[TURRET_PITCH].pid, 360); // Circular control : allows motor setpoint to go from 359 deg to 001 deg without doing a full revolution
 			pid_limits(&motors[TURRET_PITCH].pid, -30000, 30000); // Minimum and maximum command that can be sent to motor
 			
@@ -367,7 +367,7 @@ void robot_init(uint8_t robot_id){
 							&motors[TURRET_YAW].command, 		// PID output : command sent to motor
 							&motors[TURRET_YAW].setpoint, 		// Setpoint : speed or position to be reached by motor
 							// TODO : Magic numbers
-							200, 100, 0); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
+							200, 100, 10); // Kp, Ki, Kd : Regulation coefficients : http://www.ferdinandpiette.com/blog/2011/08/implementer-un-pid-sans-faire-de-calculs/
 			pid_circular(&motors[TURRET_YAW].pid, 360); // Circular control : allows motor setpoint to go from 359 deg to 001 deg without doing a full revolution
 			pid_limits(&motors[TURRET_YAW].pid, -30000, 30000); // Minimum and maximum command that can be sent to motor
 			

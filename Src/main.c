@@ -111,12 +111,12 @@ int main(void)
 	uart6_init();
 	uart7_init();
 	can1_init();
-	robot_init(6); // Initializes robot as STD. The aim is to have initialization handled by referee system
+	robot_init(4); // Initializes robot as STD. The aim is to have initialization handled by referee system
 	extern motor_t motors[MAX_MOTORS];
 	extern pilot_t pilot;
 	extern jetson_t jetson;
 	extern uint32_t signOfLife_Receiver_RadioController_tick;
-	pilot_init(PILOT_DEFAULT);
+	pilot_init(PILOT_STANDARD);
   /* USER CODE END 2 */
 
   /* Infinite loop */

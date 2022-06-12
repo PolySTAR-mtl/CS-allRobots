@@ -300,7 +300,7 @@ void auto_follow_target(void){
 	if(tickstart == 0){
 		tickstart = HAL_GetTick();
 	}
-	if ((HAL_GetTick() - tickstart) < 1000){
+	if ((HAL_GetTick() - tickstart) < 100){
 		return;
 	} else {
 		tickstart = HAL_GetTick();
@@ -342,13 +342,13 @@ void auto_follow_target(void){
 		// phi = 0 => No movement
 		// phi > 0 => Yaw left
 		// phi < 0 => Yaw right
-		setpoint_yaw = motors[TURRET_YAW].setpoint - mrad_to_deg(phi) * 0.00001; //* coeff_ralentissement_yaw;
+		setpoint_yaw = motors[TURRET_YAW].setpoint + mrad_to_deg(phi) * 0.1; //* coeff_ralentissement_yaw;
 		
 		// angle_pitch = 0 => No movement
 		// angle_pitch > 0 => Pitch up
 		// angle_pitch < 0 => Pitch down
 		double angle_pitch = (PI/2)*1000 - theta; // Difference between current angle and target location (in millirads)
-		setpoint_pitch = motors[TURRET_PITCH].setpoint - mrad_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
+		setpoint_pitch = motors[TURRET_PITCH].setpoint - mrad_to_deg(angle_pitch) *0.01; //* coeff_ralentissement_pitch;
 		
 		
 		// TODO : Peut �tre utiliser add_setpoint_position() a la place des lignes 246 � 272
@@ -361,33 +361,50 @@ void auto_follow_target(void){
 		if(setpoint_pitch < 0) 	setpoint_pitch += (float) 360.0;
 	
 		// Makes sure setpoint respects upper and lower limits
-		if(motors[TURRET_YAW].MAX_POSITION > 0 && setpoint_yaw > motors[TURRET_YAW].MAX_POSITION) {
-			setpoint_yaw = motors[TURRET_YAW].MAX_POSITION;
-		}
-		if(motors[TURRET_YAW].MIN_POSITION > 0 && setpoint_yaw < motors[TURRET_YAW].MIN_POSITION){
-			setpoint_yaw = motors[TURRET_YAW].MIN_POSITION;
-		}
-		if(motors[TURRET_PITCH].MAX_POSITION > 0 && setpoint_pitch > motors[TURRET_PITCH].MAX_POSITION){
-			setpoint_pitch = motors[TURRET_PITCH].MAX_POSITION;
-		}
-		if(motors[TURRET_PITCH].MIN_POSITION > 0 && setpoint_pitch < motors[TURRET_PITCH].MIN_POSITION){
-			setpoint_pitch = motors[TURRET_PITCH].MIN_POSITION;
+		if(motors[TURRET_YAW].MAX_POSITION > motors[TURRET_YAW].MIN_POSITION){
+			if(setpoint_yaw > motors[TURRET_YAW].MAX_POSITION){
+				setpoint_yaw = motors[TURRET_YAW].MAX_POSITION;
+			} else if (setpoint_yaw < motors[TURRET_YAW].MIN_POSITION){
+				setpoint_yaw = motors[TURRET_YAW].MIN_POSITION;
+			}
+		} else if(motors[TURRET_YAW].MAX_POSITION < motors[TURRET_YAW].MIN_POSITION){
+				if(setpoint_yaw > motors[TURRET_YAW].MAX_POSITION && setpoint_yaw < motors[TURRET_YAW].MIN_POSITION) {
+					if((setpoint_yaw - motors[TURRET_YAW].MAX_POSITION) < (motors[TURRET_YAW].MIN_POSITION - setpoint_yaw)){
+						setpoint_yaw = motors[TURRET_YAW].MAX_POSITION;
+					}else{
+						setpoint_yaw = motors[TURRET_YAW].MIN_POSITION;
+					}
+				}
 		}
 		
+		if(motors[TURRET_PITCH].MAX_POSITION > motors[TURRET_PITCH].MIN_POSITION){
+			if(setpoint_pitch > motors[TURRET_PITCH].MAX_POSITION){
+				setpoint_pitch = motors[TURRET_PITCH].MAX_POSITION;
+			} else if (setpoint_pitch < motors[TURRET_PITCH].MIN_POSITION){
+				setpoint_pitch = motors[TURRET_PITCH].MIN_POSITION;
+			}
+		} else if(motors[TURRET_PITCH].MAX_POSITION < motors[TURRET_PITCH].MIN_POSITION){
+			if(motors[TURRET_PITCH].MAX_POSITION < setpoint_pitch && setpoint_pitch < motors[TURRET_PITCH].MIN_POSITION) {
+				if(setpoint_pitch < motors[TURRET_PITCH].MAX_POSITION) {
+					if((setpoint_pitch - motors[TURRET_PITCH].MAX_POSITION) < (motors[TURRET_PITCH].MIN_POSITION - setpoint_yaw)){
+						setpoint_pitch = motors[TURRET_PITCH].MAX_POSITION;
+					}else{
+						setpoint_pitch = motors[TURRET_PITCH].MIN_POSITION;
+					}
+				}
+			}
+		}		
 		/*
 		TODO : ajustement du "setpoint_pitch" en fonction de la distance "d" de la cible
 		*/
 		
 		motors[TURRET_YAW].setpoint = setpoint_yaw;
-		
 		motors[TURRET_PITCH].setpoint = setpoint_pitch;
 	 
 	}
 	else {
 		motors[TURRET_YAW].setpoint = motors[TURRET_YAW].info.angle_360;
-		//motors[TURRET_YAW].command = motors[TURRET_YAW].info.angle_360;
 		motors[TURRET_PITCH].setpoint = motors[TURRET_PITCH].info.angle_360;
-		//motors[TURRET_PITCH].command = motors[TURRET_PITCH].info.angle_360;
 	}
 }
 

@@ -32,6 +32,8 @@ extern bool  is_v_pressed;
 enum mode_assistance_ai_t mode_assistance_ai = manual;
 enum mode_assistance_ai_t previous_mode_ai = automatic;
 
+double old_cmds[4] = {0, 0, 0, 0};
+
 // Calculates PID control for all motors (calculate commands as functions of setpoints)
 void pid_compute_command(){
 	for(int i = 0; i < MAX_MOTORS ; i++){
@@ -159,6 +161,8 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	double coefficient_ShiftChassis;
 	double coefficient_CTRLChassis;
 	double coefficient_Power = 1;
+	
+	double new_cmds[4];
 	/*
 	if(refereeSystem.power_heat_data.chassis_power / refereeSystem.game_robot_status.chassis_power_limit > 0.90){
 		if(coefficient_Power == 1) {
@@ -201,27 +205,52 @@ void chassis_setpoint(double Vx, double Vy, double W){
 	
 	// Apply coefficients on chassis velocity if SHIFT or E are pressed
 	if(receiver_RadioController.data.kb.bit.SHIFT){
-		motors[FRONT_LEFT].setpoint 	= (coefficient_ShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-		motors[FRONT_RIGHT].setpoint 	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_RIGHT].setpoint 	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_LEFT].setpoint 		= (coefficient_ShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_LEFT]	= (coefficient_ShiftChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_RIGHT]	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_RIGHT]	= (coefficient_ShiftChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_LEFT]	= (coefficient_ShiftChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
 	} else if(receiver_RadioController.data.kb.bit.CTRL){ 
-		motors[FRONT_LEFT].setpoint 	= (coefficient_CTRLChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-		motors[FRONT_RIGHT].setpoint 	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_RIGHT].setpoint 	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_LEFT].setpoint 		= (coefficient_CTRLChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_LEFT]	= (coefficient_CTRLChassis * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_RIGHT]	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_RIGHT]	= (coefficient_CTRLChassis * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_LEFT]	= (coefficient_CTRLChassis * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
 	} else if (receiver_RadioController.keyboard_mode){
-		motors[FRONT_LEFT].setpoint 	= (0.5 * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
-		motors[FRONT_RIGHT].setpoint 	= (0.5 * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_RIGHT].setpoint 	= (0.5 * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
-		motors[BACK_LEFT].setpoint 		= (0.5 * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_LEFT]	= (0.5 * (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
+		new_cmds[FRONT_RIGHT]	= (0.5 * (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_RIGHT]	= (0.5 * (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W))) * coefficient_Power;
+		new_cmds[BACK_LEFT] = (0.5 * (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W)) * coefficient_Power;
 	} else {
-		motors[FRONT_LEFT].setpoint 	= (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power;
-		motors[FRONT_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
-		motors[BACK_RIGHT].setpoint 	= (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
-		motors[BACK_LEFT].setpoint 		= (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power; 
+		new_cmds[FRONT_LEFT]	= (sensitivity_Vx*Vx - sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power;
+		new_cmds[FRONT_RIGHT]	= (-(sensitivity_Vx*Vx + sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
+		new_cmds[BACK_RIGHT]	= (-(sensitivity_Vx*Vx - sensitivity_Vy*Vy + sensitivity_W*W)) * coefficient_Power;
+		new_cmds[BACK_LEFT]	= (sensitivity_Vx*Vx + sensitivity_Vy*Vy - sensitivity_W*W) * coefficient_Power; 
 	}
-	
+		
+	for(uint8_t i = 0; i < 4; i++){
+		if(new_cmds[i] != 0){
+			if(new_cmds[i] > old_cmds[i] ){
+				if (new_cmds[i] > (old_cmds[i] + 0.2)){
+					new_cmds[i] = old_cmds[i] + 0.2;
+				}
+			} else {
+				if (new_cmds[i] < (old_cmds[i] - 0.2)){
+					new_cmds[i] = old_cmds[i] - 0.2;
+				}		
+			}
+		} else {
+			if(new_cmds[i] > old_cmds[i] ){
+				if (new_cmds[i] > (old_cmds[i] + 0.5)){
+					new_cmds[i] = old_cmds[i] + 0.5;
+				}
+			} else {
+				if (new_cmds[i] < (old_cmds[i] - 0.5)){
+					new_cmds[i] = old_cmds[i] - 0.5;
+				}		
+			}
+		}
+		motors[i].setpoint = new_cmds[i];
+		old_cmds[i] = new_cmds[i];
+	}
 }	
 
 // Change targeting mode
@@ -274,7 +303,8 @@ void auto_follow_target(void){
 		return;
 	}
   
-	uint16_t theta,d;
+	uint16_t theta;
+	//uint16_t d;
 	int16_t phi;
 	uint8_t target_located;
 	
@@ -283,13 +313,13 @@ void auto_follow_target(void){
 		case 0x72 : // If target is a robot
 			theta = jetson.robot_target_coordinates.theta_target_location;
 			phi = jetson.robot_target_coordinates.phi_target_location;
-			d = jetson.robot_target_coordinates.d_target_location;
+			//d = jetson.robot_target_coordinates.d_target_location;
 			target_located = jetson.robot_target_coordinates.target_located;
 			break;
 		case 0x52 : // If target is a rune
 			theta = jetson.rune_target_coordinates.theta_target_location;
 			phi = jetson.rune_target_coordinates.phi_target_location;
-			d = jetson.rune_target_coordinates.d_target_location;
+			//d = jetson.rune_target_coordinates.d_target_location;
 	  	target_located = jetson.rune_target_coordinates.target_located;
 			break;
 	}
@@ -298,13 +328,13 @@ void auto_follow_target(void){
 	// to delete soon (keep lines 181-194) :
 			theta = jetson.robot_target_coordinates.theta_target_location;
 			phi = jetson.robot_target_coordinates.phi_target_location;
-			d = jetson.robot_target_coordinates.d_target_location;
+			//d = jetson.robot_target_coordinates.d_target_location;
 			target_located = jetson.robot_target_coordinates.target_located;
 	//
 	
 	if(target_located=='Y'){ // Changes setpoints only if a target is located
-		float setpoint_yaw;
-		float setpoint_pitch;		
+		double setpoint_yaw;
+		double setpoint_pitch;		
 		
 		// phi = 0 => No movement
 		// phi > 0 => Yaw left
@@ -314,7 +344,7 @@ void auto_follow_target(void){
 		// angle_pitch = 0 => No movement
 		// angle_pitch > 0 => Pitch up
 		// angle_pitch < 0 => Pitch down
-		float angle_pitch = (PI/2)*1000 - theta; // Difference between current angle and target location (in millirads)
+		double angle_pitch = (PI/2)*1000 - theta; // Difference between current angle and target location (in millirads)
 		setpoint_pitch = motors[TURRET_PITCH].setpoint - mrad_to_deg(angle_pitch) *0.0001; //* coeff_ralentissement_pitch;
 		
 		
@@ -359,7 +389,7 @@ void auto_follow_target(void){
 }
 
 // Converts millirads into degrees
-float mrad_to_deg(float angle_in_millirad){
+double mrad_to_deg(float angle_in_millirad){
 	// 1 millirad = (180/PI)*0.001 degrees
 	return angle_in_millirad * (180/PI) * 0.001;
 }

@@ -76,7 +76,6 @@ void signOfLife_can1(){
 		BOARD_LED_E_ON();
 	}else{
 		BOARD_LED_E_OFF();
-		killMotors();
 	}
 	if ((HAL_GetTick() - motors[FRONT_LEFT].signOfLife_tick) < 100){
 		BOARD_LED_F_ON();
@@ -94,7 +93,6 @@ void signOfLife_can1(){
 		BOARD_LED_H_ON();
 	}else{
 		BOARD_LED_H_OFF();
-		killMotors();
 	}
 }
 
@@ -126,7 +124,7 @@ Example : uart_debug_printf("\tAngle: %u (%x)\r\n", motors[TURRET_YAW].info.angl
 void uart_debug(){
 	static uint32_t tickstart = 0;
 	//static char buff[1000] = {0};
-	static char buff2[1000] = {0};
+	//static char buff2[1000] = {0};
 	if(tickstart == 0){
 		tickstart = HAL_GetTick();
 	}

@@ -28,9 +28,9 @@ void pilot_init(uint8_t pilot_id){
 	pilot.sensitivity_mouse_x = 0.00005;
 	pilot.sensitivity_mouse_y = 0.00005;
 
-	pilot.sensitivity_chassis_keyboard_Vx = 4300;
-	pilot.sensitivity_chassis_keyboard_Vy = 4300;
-	pilot.sensitivity_chassis_mouse_W = 4300;
+	pilot.sensitivity_chassis_keyboard_Vx = 3300;
+	pilot.sensitivity_chassis_keyboard_Vy = 3300;
+	pilot.sensitivity_chassis_mouse_W = 3300;
 	
 	/* Chassis speed multipliers */
 	pilot.coefficient_ShiftChassis = 1;

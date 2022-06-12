@@ -436,7 +436,7 @@ void robot_init(uint8_t robot_id){
 			motors[TURRET_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TURRET_PITCH].can_tx_frame = 0x1FF; 
 			motors[TURRET_PITCH].can_tx_id = 1;
-			motors[TURRET_PITCH].MIN_POSITION = 140; // Degrees
+			motors[TURRET_PITCH].MIN_POSITION = 173; // Degrees
 			motors[TURRET_PITCH].MAX_POSITION = 225; // Degrees
 			motors[TURRET_PITCH].setpoint = 54; // Degrees //Initial value
 			motors[TURRET_PITCH].direction = -1; // Selects control direction (-1 or 1)
@@ -454,8 +454,8 @@ void robot_init(uint8_t robot_id){
 			motors[TURRET_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TURRET_YAW].can_tx_frame = 0x1FF; 
 			motors[TURRET_YAW].can_tx_id = 2;
-			motors[TURRET_YAW].MIN_POSITION = 140; // Degrees
-			motors[TURRET_YAW].MAX_POSITION = 260; // Degrees
+			motors[TURRET_YAW].MIN_POSITION = 260; // Degrees
+			motors[TURRET_YAW].MAX_POSITION = 140; // Degrees
 			motors[TURRET_YAW].setpoint = 190; // Degrees //Initial value
 			motors[TURRET_YAW].direction = -1; // Selects control direction (-1 or 1)
 			pid_create(&motors[TURRET_YAW].pid, 

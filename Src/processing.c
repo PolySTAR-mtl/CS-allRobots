@@ -382,9 +382,9 @@ void auto_follow_target(void){
 	}
 	else {
 		motors[TURRET_YAW].setpoint = motors[TURRET_YAW].info.angle_360;
-		motors[TURRET_YAW].command = motors[TURRET_YAW].info.angle_360;
+		//motors[TURRET_YAW].command = motors[TURRET_YAW].info.angle_360;
 		motors[TURRET_PITCH].setpoint = motors[TURRET_PITCH].info.angle_360;
-		motors[TURRET_PITCH].command = motors[TURRET_PITCH].info.angle_360;
+		//motors[TURRET_PITCH].command = motors[TURRET_PITCH].info.angle_360;
 	}
 }
 

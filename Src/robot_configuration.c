@@ -283,7 +283,7 @@ void robot_init(uint8_t robot_id){
 		case 6: // HERO
 			snail_vel = 0.80;
 			cadence_mult = 2;
-		  invert_leftright = false;
+		  invert_leftright = true;
 		  invert_frontback = false;
 		
 			strcpy(motors[FRONT_LEFT].debug_name, "FRONT_LEFT");
@@ -340,8 +340,8 @@ void robot_init(uint8_t robot_id){
 			motors[TURRET_PITCH].can_rx_id = 0x204+1; // ID = 1
 			motors[TURRET_PITCH].can_tx_frame = 0x1FF; 
 			motors[TURRET_PITCH].can_tx_id = 1;
-			motors[TURRET_PITCH].MIN_POSITION = 203; // Degrees
-			motors[TURRET_PITCH].MAX_POSITION = 285; // Degrees
+			motors[TURRET_PITCH].MIN_POSITION = 222; // Degrees
+			motors[TURRET_PITCH].MAX_POSITION = 265; // Degrees
 			motors[TURRET_PITCH].setpoint = 250; // Degrees //Initial value
 			motors[TURRET_PITCH].direction = -1; // Selects control direction (-1 or 1)
 			pid_create(&motors[TURRET_PITCH].pid, 
@@ -358,7 +358,7 @@ void robot_init(uint8_t robot_id){
 			motors[TURRET_YAW].can_rx_id = 0x204+2; // ID = 2
 			motors[TURRET_YAW].can_tx_frame = 0x1FF; 
 			motors[TURRET_YAW].can_tx_id = 2;
-			motors[TURRET_YAW].MIN_POSITION = 176; // Degrees
+			motors[TURRET_YAW].MIN_POSITION = 56; // Degrees
 			motors[TURRET_YAW].MAX_POSITION = 242; // Degrees
 			motors[TURRET_YAW].setpoint = 208; // Degrees //Initial value
 			motors[TURRET_YAW].direction = -1; // Selects control direction (-1 or 1)

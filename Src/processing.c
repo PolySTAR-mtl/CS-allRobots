@@ -82,17 +82,22 @@ bool is_controller_neutral(){
 void process_general_inputs(){
 	
 	if (!receiver_RadioController.keyboard_mode) {
-		//if(mode_assistance_ai==automatic) auto_follow_target();
-	
-		add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
-		add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+		if(mode_assistance_ai==automatic) {
+			auto_follow_target();
+		} else {
+			add_setpoint_position(&motors[TURRET_PITCH], receiver_RadioController.data.ch2_float, pilot.sensitivity_ch_2);
+			add_setpoint_position(&motors[TURRET_YAW], 	receiver_RadioController.data.ch1_float, pilot.sensitivity_ch_1);
+		}
 
 		switch(receiver_RadioController.data.sw1){
 			case 1:
-				break;
 			case 3:
+				mode_assistance_ai = automatic;
+				previous_mode_ai = manual;
 				break;
 			case 2:
+				mode_assistance_ai = manual;
+				previous_mode_ai = automatic;
 				break;
 		}
 		switch(receiver_RadioController.data.sw2){

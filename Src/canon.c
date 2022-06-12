@@ -105,9 +105,9 @@ void canon_shoot_end(){
 	begin_canon_shoot = 0;
 	if(shooting != 0){
 		// If currently firing
-		motors[FEEDER].setpoint = -7000; // Remove balls
+		motors[FEEDER].setpoint = -motors[FEEDER].direction*(7000); // Remove balls
 		if (motors[FEEDER2].type == M2006) {
-		  motors[FEEDER2].setpoint = -7000; // Remove balls from second feeder if present
+		  motors[FEEDER2].setpoint = -motors[FEEDER2].direction*(7000); // Remove balls from second feeder if present
 		}
 		shooting = 0;
 	}

@@ -34,6 +34,8 @@ enum mode_assistance_ai_t previous_mode_ai = automatic;
 
 double old_cmds[4] = {0, 0, 0, 0};
 
+uint32_t tickstart = 0;
+
 // Calculates PID control for all motors (calculate commands as functions of setpoints)
 void pid_compute_command(){
 	for(int i = 0; i < MAX_MOTORS ; i++){
@@ -295,12 +297,13 @@ void switch_assistance_ai(void){
 // TODO : Tester la vitesse de suivi des cibles de la tourelle et changer le coefficient de ralentissement si besoin
 void auto_follow_target(void){
   
-	static uint32_t tickstart = 0;
 	if(tickstart == 0){
 		tickstart = HAL_GetTick();
 	}
-		if ((HAL_GetTick() - tickstart) < 100){
+	if ((HAL_GetTick() - tickstart) < 1000){
 		return;
+	} else {
+		tickstart = HAL_GetTick();
 	}
   
 	uint16_t theta;
@@ -339,7 +342,7 @@ void auto_follow_target(void){
 		// phi = 0 => No movement
 		// phi > 0 => Yaw left
 		// phi < 0 => Yaw right
-		setpoint_yaw = motors[TURRET_YAW].setpoint - mrad_to_deg(phi) * 0.0001; //* coeff_ralentissement_yaw;
+		setpoint_yaw = motors[TURRET_YAW].setpoint - mrad_to_deg(phi) * 0.00001; //* coeff_ralentissement_yaw;
 		
 		// angle_pitch = 0 => No movement
 		// angle_pitch > 0 => Pitch up

@@ -11,7 +11,7 @@
 refereeSystem_t refereeSystem;
 
 // Create data retrieval buffer for Referee System
-uint8_t uart6_rx_buff[UART6_RX_BUFFLEN];
+//uint8_t uart6_rx_buff[UART6_RX_BUFFLEN];
 
 // Retrieve external variables
 extern uint32_t signOfLife_refereeSystem_tick;
@@ -19,66 +19,66 @@ extern uint32_t signOfLife_refereeSystem_tick;
 // Function called went data is received from receiver
 void refereeSystem_callback_handler(int8_t length) {
 	/* frame_header (5-byte) */
-	uint8_t 	SOF 			= uart6_rx_buff[0];
-	uint16_t 	data_length 	= (uart6_rx_buff[1] << 8 | uart6_rx_buff[2]);
+	//uint8_t 	SOF 			= uart6_rx_buff[0];
+	//uint16_t 	data_length 	= (uart6_rx_buff[1] << 8 | uart6_rx_buff[2]);
 	//uint8_t 	seq 	    	= uart6_rx_buff[3];
 	//uint8_t 	cr8 	    	= uart6_rx_buff[4];
 	
-    if(SOF != 0xA5) return;
+   // if(SOF != 0xA5) return;
 	signOfLife_refereeSystem_tick = HAL_GetTick();
 	
 	/* cmd_id (2-byte) */
-	uint16_t 	cmd_id 	        = (uart6_rx_buff[5] << 8 | uart6_rx_buff[6]);
+	//uint16_t 	cmd_id 	        = (uart6_rx_buff[5] << 8 | uart6_rx_buff[6]);
 	
 	
 	/* data (n-byte) */
-	switch(cmd_id){
-		case 0x0001:
+	//switch(cmd_id){
+		//case 0x0001:
 			/* Competition status data: 0x0001. Transmission frequency: 1Hz. Transmission scope: all robots. */
-			memcpy(&refereeSystem.game_status, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0002:
-			/* Competition result data: 0x0002. Transmission frequency: send after the competition. Transmission scope: all robots. */
-			memcpy(&refereeSystem.game_result, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0003:
-			/* Robot HP data: 0x0003. Transmission frequency: 1Hz. Transmission scope: all robots. */
-			memcpy(&refereeSystem.game_robot_HP, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0004:
-			/* Dart launching status: 0x0004. Transmission frequency: send after the dart is launched. Transmission scope: all robots. */
-			memcpy(&refereeSystem.dart_status, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0005:
-			/* Buff and Debuff Zone status of the AI Challenge: 0x0005. Transmission frequency: 1Hz. Transmission scope: all robots. */
-			memcpy(&refereeSystem.ICRA_buff_debuff_zone_status, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0101:
-			/* Battlefield event data: 0x0101. Transmission frequency: 1Hz. Transmission scope: own side robots. */
-			memcpy(&refereeSystem.event_data, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0102:
-			/* Projectile Supplier Zone action identification: 0x0102. Transmission frequency: send after the action is triggered. Transmission scope: own side robots. */
-			memcpy(&refereeSystem.supply_projectile_action, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0201:
+//			memcpy(&refereeSystem.game_status, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0002:
+//			/* Competition result data: 0x0002. Transmission frequency: send after the competition. Transmission scope: all robots. */
+//			memcpy(&refereeSystem.game_result, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0003:
+//			/* Robot HP data: 0x0003. Transmission frequency: 1Hz. Transmission scope: all robots. */
+//			memcpy(&refereeSystem.game_robot_HP, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0004:
+//			/* Dart launching status: 0x0004. Transmission frequency: send after the dart is launched. Transmission scope: all robots. */
+//			memcpy(&refereeSystem.dart_status, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0005:
+//			/* Buff and Debuff Zone status of the AI Challenge: 0x0005. Transmission frequency: 1Hz. Transmission scope: all robots. */
+//			memcpy(&refereeSystem.ICRA_buff_debuff_zone_status, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0101:
+//			/* Battlefield event data: 0x0101. Transmission frequency: 1Hz. Transmission scope: own side robots. */
+//			memcpy(&refereeSystem.event_data, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0102:
+//			/* Projectile Supplier Zone action identification: 0x0102. Transmission frequency: send after the action is triggered. Transmission scope: own side robots. */
+//			memcpy(&refereeSystem.supply_projectile_action, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0201:
 			/*Robot status in competition: 0x0201. Transmission frequency: 10Hz*/
-			memcpy(&refereeSystem.game_robot_status, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0202:
-			/*Real-time power and heat data: 0x0202. Transmission frequency: 50 Hz*/
-			memcpy(&refereeSystem.power_heat_data, &uart6_rx_buff[7], data_length);
-			break;
-		case 0x0206 :
-			/* Damage status data : 0x206. Transmission frequency: Transmitted after the damage occurs*/
-			memcpy(&refereeSystem.robot_hurt, &uart6_rx_buff[7], data_length);
-		break;
-		case 0x0207 :
-			/* 6 Real-time launching information: 0x0207. Transmission frequency: Transmitted after launching*/
-			memcpy(&refereeSystem.shoot_data, &uart6_rx_buff[7], data_length);
-		break;
-		default: return;
-	}
+//			memcpy(&refereeSystem.game_robot_status, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0202:
+//			/*Real-time power and heat data: 0x0202. Transmission frequency: 50 Hz*/
+//			memcpy(&refereeSystem.power_heat_data, &uart6_rx_buff[7], data_length);
+//			break;
+//		case 0x0206 :
+//			/* Damage status data : 0x206. Transmission frequency: Transmitted after the damage occurs*/
+//			memcpy(&refereeSystem.robot_hurt, &uart6_rx_buff[7], data_length);
+//		break;
+//		case 0x0207 :
+//			/* 6 Real-time launching information: 0x0207. Transmission frequency: Transmitted after launching*/
+//			memcpy(&refereeSystem.shoot_data, &uart6_rx_buff[7], data_length);
+//		break;
+//		default: return;
+//	}
 	
 	/* frame_tail (2-byte, CRC16, whole package check)  */
 	//uint16_t crc16 = (uart6_rx_buff[7+data_length] << 8 | uart6_rx_buff[7+data_length+1]);
@@ -89,14 +89,14 @@ void refereeSystem_callback_handler(int8_t length) {
   * @param   
   * @retval  
   */
-void uart6_init(void)
+/*void uart6_init(void)
 {
-	/* open uart idle it */
+	 //open uart idle it 
 	__HAL_UART_CLEAR_IDLEFLAG(&huart6);
 	__HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
 
 	uart_receive_dma_no_it(&huart6, uart6_rx_buff, UART6_MAX_LEN);
-}
+}*/
 
 
 

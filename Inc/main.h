@@ -64,12 +64,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define DEBUG_TX_Pin GPIO_PIN_1
-#define DEBUG_TX_GPIO_Port GPIOE
-#define DEBUG_RX_Pin GPIO_PIN_0
-#define DEBUG_RX_GPIO_Port GPIOE
-#define RefereeSystem_Tx_Pin GPIO_PIN_14
-#define RefereeSystem_Tx_GPIO_Port GPIOG
+#define RASP_PI1_TX_Pin GPIO_PIN_1
+#define RASP_PI1_TX_GPIO_Port GPIOE
+#define RASP_PI1_RX_Pin GPIO_PIN_0
+#define RASP_PI1_RX_GPIO_Port GPIOE
+#define RASP_PI2_TX_Pin GPIO_PIN_14
+#define RASP_PI2_TX_GPIO_Port GPIOG
 #define OLED_SCK_Pin GPIO_PIN_3
 #define OLED_SCK_GPIO_Port GPIOB
 #define OLED_DC_Pin GPIO_PIN_9
@@ -80,8 +80,8 @@ void Error_Handler(void);
 #define ReceiverRC_TX_GPIO_Port GPIOB
 #define CAN1_RX_Pin GPIO_PIN_0
 #define CAN1_RX_GPIO_Port GPIOD
-#define RefereeSystem_Rx_Pin GPIO_PIN_9
-#define RefereeSystem_Rx_GPIO_Port GPIOG
+#define RASP_PI2_RX_Pin GPIO_PIN_9
+#define RASP_PI2_RX_GPIO_Port GPIOG
 #define CAN1_TX_Pin GPIO_PIN_1
 #define CAN1_TX_GPIO_Port GPIOD
 #define BOARD_POWER1_CTRL_Pin GPIO_PIN_2

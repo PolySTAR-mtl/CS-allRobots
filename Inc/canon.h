@@ -7,7 +7,7 @@
 #define CANON
 
 #include "main.h"
-#include "referee_system.h"
+#include "rasp_pi1.h"
 
 void canon_shoot_start(float speed, float rate);
 void canon_process_inputs(void);

@@ -18,7 +18,7 @@ extern receiver_RadioController_t receiver_RadioController;
 extern motor_t motors[MAX_MOTORS];
 extern pilot_t pilot;
 extern jetson_t jetson;
-extern refereeSystem_t refereeSystem;
+//extern refereeSystem_t refereeSystem;
 
 extern float snail_vel; 
 extern float cadence_mult;

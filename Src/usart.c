@@ -31,6 +31,7 @@ UART_HandleTypeDef huart6;
 DMA_HandleTypeDef hdma_uart7_rx;
 DMA_HandleTypeDef hdma_uart7_tx;
 DMA_HandleTypeDef hdma_uart8_tx;
+DMA_HandleTypeDef hdma_uart8_rx;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart6_rx;
@@ -192,7 +193,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     PE1     ------> UART8_TX
     PE0     ------> UART8_RX
     */
-    GPIO_InitStruct.Pin = DEBUG_TX_Pin|DEBUG_RX_Pin;
+    GPIO_InitStruct.Pin = RASP_PI1_TX_Pin|RASP_PI1_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -217,6 +218,24 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     }
 
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_uart8_tx);
+
+    /* UART8_RX Init */
+    hdma_uart8_rx.Instance = DMA1_Stream6;
+    hdma_uart8_rx.Init.Channel = DMA_CHANNEL_5;
+    hdma_uart8_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_uart8_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_uart8_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_uart8_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_uart8_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_uart8_rx.Init.Mode = DMA_CIRCULAR;
+    hdma_uart8_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_uart8_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    if (HAL_DMA_Init(&hdma_uart8_rx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(uartHandle,hdmarx,hdma_uart8_rx);
 
     /* UART8 interrupt Init */
     HAL_NVIC_SetPriority(UART8_IRQn, 0, 0);
@@ -304,9 +323,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     PG14     ------> USART6_TX
     PG9     ------> USART6_RX
     */
-    GPIO_InitStruct.Pin = RefereeSystem_Tx_Pin|RefereeSystem_Rx_Pin;
+    GPIO_InitStruct.Pin = RASP_PI2_TX_Pin|RASP_PI2_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
@@ -397,10 +416,11 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PE1     ------> UART8_TX
     PE0     ------> UART8_RX
     */
-    HAL_GPIO_DeInit(GPIOE, DEBUG_TX_Pin|DEBUG_RX_Pin);
+    HAL_GPIO_DeInit(GPIOE, RASP_PI1_TX_Pin|RASP_PI1_RX_Pin);
 
     /* UART8 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmatx);
+    HAL_DMA_DeInit(uartHandle->hdmarx);
 
     /* UART8 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART8_IRQn);
@@ -444,7 +464,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PG14     ------> USART6_TX
     PG9     ------> USART6_RX
     */
-    HAL_GPIO_DeInit(GPIOG, RefereeSystem_Tx_Pin|RefereeSystem_Rx_Pin);
+    HAL_GPIO_DeInit(GPIOG, RASP_PI2_TX_Pin|RASP_PI2_RX_Pin);
 
     /* USART6 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);

@@ -26,7 +26,7 @@
 #include "oled.h"
 #include "leds.h"
 #include "receiver_RadioController.h"
-#include "referee_system.h"
+#include "rasp_pi1.h"
 #include "motors.h"
 #include "jetson.h"
 /* USER CODE END Includes */
@@ -66,6 +66,7 @@ extern CAN_HandleTypeDef hcan1;
 extern DMA_HandleTypeDef hdma_uart7_rx;
 extern DMA_HandleTypeDef hdma_uart7_tx;
 extern DMA_HandleTypeDef hdma_uart8_tx;
+extern DMA_HandleTypeDef hdma_uart8_rx;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart6_rx;
@@ -257,6 +258,20 @@ void DMA1_Stream3_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles DMA1 stream6 global interrupt.
+  */
+void DMA1_Stream6_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream6_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream6_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_uart8_rx);
+  /* USER CODE BEGIN DMA1_Stream6_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream6_IRQn 1 */
+}
+
+/**
   * @brief This function handles CAN1 TX interrupts.
   */
 void CAN1_TX_IRQHandler(void)
@@ -389,7 +404,7 @@ void USART6_IRQHandler(void)
 		
 		uint16_t dma_data_counter = (uint16_t)(huart6.hdmarx->Instance->NDTR);
 
-		refereeSystem_callback_handler(UART6_MAX_LEN - dma_data_counter);
+		rasp_pi1_callback_handler(UART6_MAX_LEN - dma_data_counter);
 		
 		/* restart dma transmission */
 		__HAL_DMA_SET_COUNTER(huart6.hdmarx, UART6_MAX_LEN);

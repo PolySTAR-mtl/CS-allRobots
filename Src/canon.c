@@ -10,7 +10,7 @@
 #define SHUTDOWN_DELAY 100
 
 extern motor_t motors[MAX_MOTORS];
-extern refereeSystem_t refereeSystem;
+//extern refereeSystem_t refereeSystem;
 uint32_t begin_canon_shoot = 0; // If 0, no firing start sequence initiated. Otherwise, timestamp of sequence start
 uint32_t end_canon_shoot = 0; 	// If 0, no firing end sequence initiated. Otherwise, timestamp of sequence start
 uint32_t shooting = 0; 			// If 0, not currently firing. Otherwise, timestamp of sequence start

@@ -10,7 +10,7 @@
 #include "main.h"
 #include "oled.h"
 #include "receiver_RadioController.h"
-#include "referee_system.h"
+#include "rasp_pi1.h"
 
 void oled_debug(void);
 void oled_debug_display(void);

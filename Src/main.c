@@ -75,9 +75,6 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-
-
-
   HAL_Init();
 
   /* USER CODE BEGIN Init */
@@ -167,11 +164,11 @@ int main(void)
 		canon_process_inputs();		// Input processing for firing system
 		pid_compute_command(); 	  // Calculates motor commands
 		can_send_command(); 			// Sends command to motors
-		
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+		
   /* USER CODE END 3 */
 }
 

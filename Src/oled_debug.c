@@ -10,7 +10,7 @@ int8_t oled_debug_page = 0;
 
 /* On récupère les variables exterieurs pour affichage de debug */
 extern receiver_RadioController_t receiver_RadioController;
-extern refereeSystem_t refereeSystem;
+//extern refereeSystem_t refereeSystem;
 
 void oled_debug(){
 	static uint32_t tickstart = 0;
@@ -121,12 +121,12 @@ void oled_debug_display_RefereeSystem(int16_t button){
 	for(int16_t i = scroll ; i < scroll + 4 ; i++ ){
 		switch(i){
 			case 0: oled_printf(ligne, 1,"<- Referee System ->"); break;
-			case 1: oled_printf(ligne, 1,"0x0001:", refereeSystem.game_status.game_type); break;
-			case 2: oled_printf(ligne, 2,"game_type: %i", refereeSystem.game_status.game_type); break;
-			case 3: oled_printf(ligne, 2,"game_progress: %i", refereeSystem.game_status.game_progress); break;
-			case 4: oled_printf(ligne, 2,"remain_time: %i", refereeSystem.game_status.stage_remain_time); break;
-			case 5: oled_printf(ligne, 1,"0x0002:"); break;
-			case 6: oled_printf(ligne, 2,"winner: %i", refereeSystem.game_result.winner); break;
+			//case 1: oled_printf(ligne, 1,"0x0001:", refereeSystem.game_status.game_type); break;
+			//case 2: oled_printf(ligne, 2,"game_type: %i", refereeSystem.game_status.game_type); break;
+			//case 3: oled_printf(ligne, 2,"game_progress: %i", refereeSystem.game_status.game_progress); break;
+			//case 4: oled_printf(ligne, 2,"remain_time: %i", refereeSystem.game_status.stage_remain_time); break;
+			//case 5: oled_printf(ligne, 1,"0x0002:"); break;
+			//case 6: oled_printf(ligne, 2,"winner: %i", refereeSystem.game_result.winner); break;
 		}
 		ligne++;
 	}

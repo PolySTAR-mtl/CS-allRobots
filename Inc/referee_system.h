@@ -169,6 +169,6 @@ typedef __packed struct
 /* Function called when data is recieved from referee system */
 void refereeSystem_callback_handler(int8_t length);
 
-void uart6_init(void);
+//void uart6_init(void);
 
 #endif // __REFEREE_SYSTEM_H__

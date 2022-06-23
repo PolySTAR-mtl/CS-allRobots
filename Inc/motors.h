@@ -12,7 +12,7 @@
 #include "leds.h"
 #include "tim.h"
 #include "robot_configuration.h"
-#include "referee_system.h"
+#include "rasp_pi1.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
